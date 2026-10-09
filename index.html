@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campagna Mediterraneo — Quadro Comando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link id="side-css" rel="stylesheet" href="./css/regia.css">
+<link rel="stylesheet" href="./css/nhost.css">
+</head>
+<body>
+<main id="login-page" class="login-shell">
+  <div class="login-original card">
+    <div class="login-motto">Mediterraneo 1940–43</div>
+    <h1>Campagna W@S Mediterraneo</h1>
+    <p class="note">Accesso riservato ai Quadri Comando Axis e Allies</p>
+    <form id="login-form" autocomplete="on">
+      <label for="email">Email della fazione</label>
+      <input id="email" name="email" type="email" autocomplete="username" placeholder="axis@… oppure allies@…" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <label class="login-check"><input type="checkbox" id="remember"> Ricorda l'accesso</label>
+      <div class="login-buttons"><button type="submit" class="btn primary" id="login-submit">Accedi</button><button type="button" class="btn" id="show-password">Mostra password</button></div>
+      <p class="login-error" id="login-error" role="alert" hidden></p>
+    </form>
+  </div>
+</main>
+<div id="app-page" hidden><div id="command-root"></div></div>
+<template id="header-axis"><header class="top">
+  <div class="mast header-grid">
+    <div class="header-left">
+      <div class="sub" style="font-size: 15px; font-weight: 500;">Mediterraneo 1940&ndash;43</div>
+    </div>
+    <div class="header-center">
+      <h1>
+        <!-- Bandiera Regia Marina Sinistra -->
+        <svg width="26" height="18" viewBox="0 0 60 40" style="vertical-align: middle; border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,0.4); flex-shrink: 0; margin-right: 6px;">
+          <rect x="0" y="0" width="20" height="40" fill="#008C45" />
+          <rect x="20" y="0" width="20" height="40" fill="#F4F5F0" />
+          <rect x="40" y="0" width="20" height="40" fill="#CD212A" />
+          <!-- Stemma Sabaudo -->
+          <rect x="23" y="10" width="14" height="20" rx="1" fill="#0033A0" />
+          <rect x="24" y="11" width="12" height="18" fill="#CD212A" />
+          <path d="M 30 11 V 29 M 24 20 H 36" stroke="#F4F5F0" stroke-width="2.5" />
+        </svg>
+        
+        Quadro Comando Regia Marina
+        
+        <!-- Bandiera Regia Marina Destra -->
+        <svg width="26" height="18" viewBox="0 0 60 40" style="vertical-align: middle; border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,0.4); flex-shrink: 0; margin-left: 6px;">
+          <rect x="0" y="0" width="20" height="40" fill="#008C45" />
+          <rect x="20" y="0" width="20" height="40" fill="#F4F5F0" />
+          <rect x="40" y="0" width="20" height="40" fill="#CD212A" />
+          <!-- Stemma Sabaudo -->
+          <rect x="23" y="10" width="14" height="20" rx="1" fill="#0033A0" />
+          <rect x="24" y="11" width="12" height="18" fill="#CD212A" />
+          <path d="M 30 11 V 29 M 24 20 H 36" stroke="#F4F5F0" stroke-width="2.5" />
+        </svg>
+      </h1>
+    </div>
+    
+    <div class="tools header-right">
+       <button class="btn sm" id="btn-refresh" type="button">Aggiorna dati</button>
+       <button class="btn sm" id="btn-tema" type="button" title="Chiaro / scuro">◐</button>
+       <button class="btn sm" id="btn-logout" type="button">Esci</button>
+     </div>
+   </div>  <div class="pennant" id="pennant"></div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Sezioni Quadro Comando"></nav>
+</header></template>
+<template id="header-allies"><header class="top">
+  <div class="mast header-grid">
+    <div class="header-left">
+      <div class="sub" style="font-size: 15px; font-weight: 500;">Mediterraneo 1940&ndash;43</div>
+    </div>
+    <div class="header-center">
+      <h1>
+        <!-- White Ensign Sinistra -->
+        <svg width="26" height="18" viewBox="0 0 60 30" style="vertical-align: middle; border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,0.4); flex-shrink: 0; margin-right: 6px;">
+          <rect width="60" height="30" fill="#ffffff" />
+          <path d="M26,0 h8 v30 h-8 Z M0,11 h60 v8 h-60 Z" fill="#C8102E" />
+          <svg x="0" y="0" width="26" height="11" viewBox="0 0 60 30" preserveAspectRatio="none">
+            <clipPath id="uj-s1"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+            <clipPath id="uj-t1"><path d="M30,15 h30 v15 z v-15 h-30 z h-30 v-15 z v15 h30 z"/></clipPath>
+            <g clip-path="url(#uj-s1)">
+              <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+              <path d="M0,0 l60,30 m0,-30 l-60,30" stroke="#fff" stroke-width="6"/>
+              <path d="M0,0 l60,30 m0,-30 l-60,30" clip-path="url(#uj-t1)" stroke="#C8102E" stroke-width="4"/>
+              <path d="M30,0 v30 m-30,-15 h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30,0 v30 m-30,-15 h60" stroke="#C8102E" stroke-width="6"/>
+            </g>
+          </svg>
+        </svg>
+        
+        Quadro Comando Royal Navy
+        
+        <!-- White Ensign Destra -->
+        <svg width="26" height="18" viewBox="0 0 60 30" style="vertical-align: middle; border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,0.4); flex-shrink: 0; margin-left: 6px;">
+          <rect width="60" height="30" fill="#ffffff" />
+          <path d="M26,0 h8 v30 h-8 Z M0,11 h60 v8 h-60 Z" fill="#C8102E" />
+          <svg x="0" y="0" width="26" height="11" viewBox="0 0 60 30" preserveAspectRatio="none">
+            <clipPath id="uj-s2"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+            <clipPath id="uj-t2"><path d="M30,15 h30 v15 z v-15 h-30 z h-30 v-15 z v15 h30 z"/></clipPath>
+            <g clip-path="url(#uj-s2)">
+              <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+              <path d="M0,0 l60,30 m0,-30 l-60,30" stroke="#fff" stroke-width="6"/>
+              <path d="M0,0 l60,30 m0,-30 l-60,30" clip-path="url(#uj-t2)" stroke="#C8102E" stroke-width="4"/>
+              <path d="M30,0 v30 m-30,-15 h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30,0 v30 m-30,-15 h60" stroke="#C8102E" stroke-width="6"/>
+            </g>
+         </svg>
+        </svg>
+      </h1>
+    </div>
+    
+    <div class="tools header-right">
+       <button class="btn sm" id="btn-refresh" type="button">Aggiorna dati</button>
+       <button class="btn sm" id="btn-tema" type="button" title="Chiaro / scuro">◐</button>
+       <button class="btn sm" id="btn-logout" type="button">Esci</button>
+     </div>
+   </div>  <div class="pennant" id="pennant"></div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Sezioni Quadro Comando"></nav>
+</header></template>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="dlg"><div class="dbody"><h3 id="dlg-t"></h3><div class="note" id="dlg-m"></div></div><div class="dfoot"><button class="btn primary" id="dlg-ok">Chiudi</button></div></dialog>
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
