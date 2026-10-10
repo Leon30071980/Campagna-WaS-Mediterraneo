@@ -180,14 +180,30 @@ function renderPort(p){
   rand.onclick=async()=>{
     const draft=cloneState();for(const s of sortedSquads()){
       const arr=Array.isArray(draft.porto[s.id])?[...draft.porto[s.id]]:[];
-      const {len}=squadSlots(s,arr);
-      for(let i=0;i<len;i++){
+      // CV1: il numero di caselle cambia in base alla portaerei estratta
+      // (es. EAGLE: 2 aerei; ARK ROYAL: 4 aerei).
+      for(let i=0;i<squadSlots(s,arr).len;i++){
         if(arr[i])continue;
         // Il pool rispetta le stesse condizioni visibili al giocatore.
-        const pool=optionPool(s,i,'').filter(u=>!isShip(u)||!assignedShips(draft).has(u.nome));
+        const pool=optionPool(s,i,'').filter(u=>
+          (!isShip(u)||!assignedShips(draft).has(u.nome)) &&
+          // Non scegliere una portaerei con hangar insufficiente per
+          // eventuali slot gia' compilati piu' avanti nella squadra.
+          (s.id!=='CV1'||i!==0||u.cls!=='CV'||
+           !arr.slice(1+Number(u.hangar??3)).some(Boolean))
+        );
         if(pool.length)arr[i]=pool[Math.floor(Math.random()*pool.length)].nome;
         draft.porto[s.id]=arr;
       }
+      // La validazione SQL controlla anche la lunghezza dell'array:
+      // rimuovere solo eventuali caselle vuote oltre la capacita'.
+      const capacity=squadSlots(s,arr).len;
+      if(arr.slice(capacity).some(Boolean)){
+        toast('La squadra '+s.id+' ha unità oltre la capienza consentita: correggere le assegnazioni.',true);
+        return;
+      }
+      if(arr.length>capacity)arr.length=capacity;
+      draft.porto[s.id]=arr;
     }
     try{await persistDraft(draft);}catch{}
   };info.append(rand);
