@@ -1,0 +1,53 @@
+/* Soltanto login, pannelli di sincronizzazione e rifiniture Nhost. Tutto il resto viene
+   dal CSS ORIGINALE REGIA MARINA 27.html / ROYAL NAVY 28.html, senza modifiche. */
+[hidden]{display:none!important}
+.login-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.login-original{width:min(440px,100%);padding:26px 30px;background:var(--surface);box-shadow:var(--shadow)}
+.login-original h1{font-size:23px;margin:4px 0 12px}
+.login-motto{text-transform:uppercase;color:var(--brass);font-size:14px;letter-spacing:.12em;font-weight:600}
+.login-original form{margin-top:18px;display:flex;flex-direction:column;gap:9px}
+.login-original label{font-size:14px;color:var(--ink-dim)}
+.login-original input[type=email],.login-original input[type=password],.login-original input[type=text]{
+ background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;width:100%;color:var(--ink);min-height:41px}
+.login-check{display:flex;align-items:center;gap:8px;margin:6px 0}
+.login-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.login-error{color:var(--sunk);font-weight:600;margin-top:6px}
+.nhost-status{margin-bottom:14px;padding:9px 12px;border:1px solid var(--line);border-left:3px solid var(--brass);background:var(--surface);color:var(--ink-dim);font-size:14px}
+.nhost-synced{border-left-color:var(--ok)}
+.nhost-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px}
+.nhost-card-body{padding:12px}
+.nhost-muted{color:var(--ink-dim);font-size:14px}
+.nhost-info{border-left:3px solid var(--sea);padding:8px 12px;margin-bottom:12px;background:var(--surface2);font-size:14px;color:var(--ink-dim)}
+.nhost-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.nhost-search{padding:6px 11px;min-width:min(340px,100%);background:var(--surface2);border:1px solid var(--line);border-radius:var(--r)}
+.nhost-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px}
+.nhost-summary > div{background:var(--surface2);padding:9px;border:1px solid var(--line-soft)}
+.nhost-summary .k{color:var(--ink-faint);font-size:13px}.nhost-summary .v{font-size:20px;font-weight:600}
+.nhost-row{padding:4px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line-soft)}
+.nhost-slot-readonly{cursor:default}
+.nhost-slot-readonly .nhost-slot-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.nhost-slot-readonly .nhost-slot-name.missing{opacity:.75}
+.nhost-tab-badge{color:var(--ink-faint);font-size:12px;font-weight:400}
+.nhost-table-search{max-width:370px}
+.nhost-lock{padding:14px 16px;border:1px dashed var(--line);background:var(--surface2);color:var(--ink-dim)}
+.nhost-squadcard{min-width:0}
+.nhost-results-grid{display:flex;gap:12px;flex-wrap:wrap}
+.nhost-results-grid > .card{flex:1 1 250px}
+.nhost-score{font-family:"IBM Plex Mono",monospace;font-size:20px;color:var(--brass)}
+.nhost-notification{font-size:13px;color:var(--ink-dim);margin-top:8px}
+.nhost-statusbar{max-width:1180px;margin:0 auto;padding:5px 18px;color:var(--ink-faint);font-size:13px}
+.nhost-actions .btn:disabled{opacity:.43}
+@media(max-width:640px){.login-original{padding:20px 16px}.nhost-search{min-width:100%}}
+/* v0.3: controlli dello stesso stile del Quadro Comando originale */
+.nhost-slot-select{flex:1;min-width:0;background:transparent;border:0;color:#fff;font:inherit;font-size:14px;cursor:pointer;outline-offset:1px}
+.nhost-slot-select option{background:#27363e;color:#fff}
+.nhost-slot-select:disabled{cursor:default;opacity:.8}
+.nhost-catalog-actions{white-space:nowrap;display:flex;gap:5px;align-items:center}
+.nhost-edit-dialog{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);max-height:90vh;max-width:min(520px,96vw);width:100%;padding:0;box-shadow:0 20px 75px #0008}
+.nhost-edit-dialog::backdrop{background:#0009}
+.nhost-edit-form{display:grid;gap:11px;padding:22px}
+.nhost-edit-form h3{margin:0 0 6px}
+.nhost-form-field{display:grid;gap:4px;font-size:13px;color:var(--ink-dim)}
+.nhost-form-field input,.nhost-form-field select{width:100%;text-align:left;background:var(--surface2);color:var(--ink);border:1px solid var(--line);padding:8px 10px}
+.nhost-form-buttons{display:flex;justify-content:flex-end;gap:9px;margin-top:6px}
+@media(max-width:650px){.nhost-catalog-actions{flex-wrap:wrap}.nhost-slot-select{font-size:12px}}
