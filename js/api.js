@@ -144,3 +144,142 @@ export async function markReady(revision) {
   }`;
   return campaignMutation(query,{revision},'campaign_mark_ready');
 }
+
+// v0.6: sincronizzazione della campagna. La sottoscrizione legge
+// soltanto lo stato condiviso della campagna.
+// Non legge le formazioni dell'avversario né modifica alcun dato.
+const CAMPAIGN_WATCH_FIELDS = `
+  campaigns(where: {lifecycle: {_eq: "active"}}, limit: 1) {
+    id turn_index phase axis_concluded allies_concluded axis_ready allies_ready revision
+  }
+`;
+
+function campaignWatchKey(data) {
+  const campaign = data?.campaigns?.[0];
+  if (!campaign) return null;
+  return JSON.stringify([
+    campaign.id, Number(campaign.turn_index), campaign.phase,
+    !!campaign.axis_concluded, !!campaign.allies_concluded,
+    !!campaign.axis_ready, !!campaign.allies_ready,
+    String(campaign.revision)
+  ]);
+}
+
+/**
+ * Sottoscrizione Hasura (WebSocket) con controllo HTTP di riserva ogni 5 secondi
+ * se il collegamento in tempo reale non e' disponibile.
+ * Restituisce una funzione per interrompere tutto al logout.
+ */
+export function watchCampaign({ campaign, onChange, onStatus }) {
+  let stopped = false;
+  let socket = null;
+  let live = false;
+  let retryTimer = null;
+  let polling = false;
+  let retryDelay = 1500;
+  const watchQuery = `query WatchCampaign { ${CAMPAIGN_WATCH_FIELDS} }`;
+  const watchSubscription = `subscription WatchCampaign { ${CAMPAIGN_WATCH_FIELDS} }`;
+  let previous = campaignWatchKey({ campaigns: [campaign] });
+
+  function accept(data) {
+    if (stopped) return;
+    const current = campaignWatchKey(data);
+    if (current !== null && current !== previous) {
+      previous = current;
+      onChange?.();
+    }
+  }
+
+  function connectionStatus(isLive) {
+    if (stopped || live === isLive) return;
+    live = isLive;
+    onStatus?.(isLive);
+  }
+
+  async function poll() {
+    if (stopped || live || polling || document.hidden) return;
+    polling = true;
+    try {
+      let token = await getAccessToken();
+      if (!token || stopped) return;
+      let result = await requestWithToken(token, watchQuery);
+      if (result.expired) result = await requestWithToken(await refreshAccessToken(), watchQuery);
+      if (!result.expired) accept(result.data);
+    } catch (e) {
+      // Una temporanea assenza di rete non interferisce con i dati gia' visibili.
+      // La verifica sara' ripetuta automaticamente al successivo intervallo.
+      console.warn('Sincronizzazione automatica Nhost:', e.message);
+    } finally { polling = false; }
+  }
+
+  function scheduleReconnect() {
+    if (stopped || retryTimer !== null) return;
+    retryTimer = setTimeout(() => {
+      retryTimer = null;
+      connect();
+    }, retryDelay);
+    retryDelay = Math.min(retryDelay * 2, 30000);
+  }
+
+  function connect() {
+    if (stopped || socket || typeof WebSocket === 'undefined') return;
+    let ws;
+    try {
+      ws = new WebSocket(NHOST.graphUrl.replace(/^http/, 'ws'), 'graphql-transport-ws');
+    } catch {
+      scheduleReconnect();
+      return;
+    }
+    socket = ws;
+    const send = message => {
+      if (!stopped && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(message));
+    };
+    ws.onopen = async () => {
+      try {
+        const token = await getAccessToken();
+        if (stopped || socket !== ws || !token) { ws.close(); return; }
+        send({ type: 'connection_init', payload: { headers: { Authorization: 'Bearer ' + token } } });
+      } catch { ws.close(); }
+    };
+    ws.onmessage = event => {
+      if (stopped || socket !== ws) return;
+      let msg;
+      try { msg = JSON.parse(event.data); } catch { return; }
+      if (msg.type === 'connection_ack') {
+        retryDelay = 1500;
+        connectionStatus(true);
+        send({ id: 'campagna-condivisa', type: 'subscribe', payload: { query: watchSubscription } });
+      } else if (msg.type === 'next') {
+        if (msg.payload?.errors?.length) { ws.close(); return; }
+        accept(msg.payload?.data);
+      } else if (msg.type === 'ping') {
+        send({ type: 'pong', payload: msg.payload ?? null });
+      } else if (msg.type === 'error' || msg.type === 'complete') {
+        ws.close();
+      }
+    };
+    ws.onerror = () => { /* onclose gestisce la riconnessione */ };
+    ws.onclose = () => {
+      if (socket !== ws) return;
+      socket = null;
+      connectionStatus(false);
+      scheduleReconnect();
+    };
+  }
+
+  const pollInterval = setInterval(poll, 5000);
+  const visibilityChanged = () => {
+    if (!document.hidden) poll();
+  };
+  document.addEventListener('visibilitychange', visibilityChanged);
+  onStatus?.(false);
+  connect();
+
+  return () => {
+    stopped = true;
+    clearInterval(pollInterval);
+    if (retryTimer !== null) clearTimeout(retryTimer);
+    document.removeEventListener('visibilitychange', visibilityChanged);
+    if (socket) { const ws = socket; socket = null; ws.onclose = null; ws.close(); }
+  };
+}
