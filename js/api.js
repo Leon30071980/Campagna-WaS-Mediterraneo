@@ -160,6 +160,9 @@ export async function createCampaignSave(label) {
 export async function renameCampaignSave(snapshotId,label) {
   return campaignMutation(`mutation($id:uuid!,$label:String!){campaign_rename_save(args:{p_snapshot_id:$id,p_label:$label}){snapshot_id label turn_index}}`,{id:snapshotId,label},'campaign_rename_save');
 }
+export async function deleteCampaignSave(snapshotId) {
+  return campaignMutation(`mutation($id:uuid!){campaign_delete_save(args:{p_snapshot_id:$id}){snapshot_id label}}`,{id:snapshotId},'campaign_delete_save');
+}
 export async function requestCampaignLoad(snapshotId) {
   return campaignMutation(`mutation($id:uuid!){campaign_request_load(args:{p_snapshot_id:$id}){id status requested_by axis_approved allies_approved}}`,{id:snapshotId},'campaign_request_load');
 }
