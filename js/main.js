@@ -1,5 +1,5 @@
 import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, resolveCampaignRequest } from './api.js';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js';
 import { generateBattle } from './battle-engine.js';
 import { SEASONS } from './config.js';
 
@@ -698,8 +698,40 @@ function renderManagement(p) {
   }
   sav.append(sb);p.append(sav);
 
+  // Punteggi di partenza: soltanto dopo un reset da stagione successiva
+  // al primo turno, e prima che una delle fazioni generi una battaglia.
+  const scenarioOpen=Number(model.campaign.turn_index)>0 &&
+    Number(model.state.scenario_start_turn)===Number(model.campaign.turn_index) &&
+    Object.hasOwn(model.state,'scenario_start_turn') &&
+    model.campaign.phase==='battle' &&
+    !model.campaign.axis_concluded && !model.campaign.allies_concluded &&
+    !model.state.battaglia;
+  if(scenarioOpen){
+    const setup=card('Punteggio iniziale dello scenario');
+    const setupBody=make('div','nhost-card-body');
+    note(setupBody,'Prima di generare la prima battaglia, ciascuna fazione può impostare il proprio punteggio di partenza. Non è possibile modificare quello avversario. Il salvataggio aggiorna automaticamente entrambe le visualizzazioni.');
+    const line=make('div','nhost-actions');
+    const label=make('label','',model.side==='axis'?'Punti iniziali Regia Marina':'Punti iniziali Royal Navy');
+    const points=make('input','btn sm num');
+    points.type='number';points.min='0';points.max='1000000';points.step='0.01';
+    points.value=String(Number(model.state.punteggioBaseAll)||0);
+    points.setAttribute('aria-label','Punteggio iniziale della propria fazione');
+    line.append(label,points);
+    appendAction(line,'Salva punteggio iniziale',async()=>{
+      const value=Number(points.value);
+      if(points.value.trim()===''||!Number.isFinite(value)||value<0||value>1000000||Math.round(value*100)!==value*100){
+        toast('Inserire un punteggio valido, massimo due decimali.',true);return;
+      }
+      saving=true;
+      try{await setScenarioScore(value);await refresh();toast('Punteggio iniziale salvato.');}
+      catch(e){toast(e.message,true);await refresh();}
+      finally{saving=false;}
+    },saving||!!pending,'btn primary');
+    setupBody.append(line);setup.append(setupBody);p.append(setup);
+  }
+
   const reset=card('Reset / nuova campagna');const rb=make('div','nhost-card-body');
-  note(rb,'Il reset azzera porto, perdite, storico, battaglie e punteggi, mantenendo i cataloghi delle unità e le configurazioni delle squadre. Selezioni la stagione iniziale.');
+  note(rb,'Il reset azzera porto, perdite, storico, battaglie e punteggi, mantenendo cataloghi e squadre. Selezioni la stagione: dopo il reset, se parte da un turno successivo al primo, ciascuna fazione potrà impostare il proprio punteggio iniziale prima della battaglia.');
   const controls=make('div','nhost-actions');const start=make('select','btn sm');
   SEASONS.forEach((season,index)=>{const o=make('option','',season);o.value=String(index);start.append(o);});
   start.value='0';controls.append(start);
