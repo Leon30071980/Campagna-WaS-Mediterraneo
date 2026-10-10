@@ -25,12 +25,17 @@ function themeApply(){if(theme)document.documentElement.setAttribute('data-theme
 function showLogin(){ sessionEpoch++;stopLiveSync();model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso'; }
 function campaignYear(){return Number((SEASONS[model.campaign.turn_index]||'1940').match(/20\d\d/)?.[0]||1940);}
 function shipBase(name){return String(name||'').replace(/\s*\((I|II|III)\)$/,'');}
-function lossStatus(name) {
- const loss=model.state.perdite||{};let r=loss[name];
- if(!r){for(const [k,v] of Object.entries(loss))if(shipBase(k)===shipBase(name)){r=v;if(v.stato==='affondata')break;}}
- if(!r)return 'attiva';
- if(r.stato==='affondata')return 'affondata';
- return model.campaign.turn_index <= Number(r.turno)+1?'riparazione':'attiva';
+// Valutare TUTTE le versioni dello stesso scafo, esattamente come Nhost.
+// Una vecchia versione con danni o affondamento blocca anche l'omonima.
+function lossStatus(name, state = model.state) {
+ const losses=state.perdite||{};
+ let repairing=false;
+ for(const [key,loss] of Object.entries(losses)) {
+  if(shipBase(key)!==shipBase(name))continue;
+  if(loss?.stato==='affondata')return 'affondata';
+  if(model.campaign.turn_index<=Number(loss?.turno)+1)repairing=true;
+ }
+ return repairing?'riparazione':'attiva';
 }
 function fleetTotals(){
  const year=campaignYear(), seen=new Set();const lists={attiva:[],riparazione:[],affondata:[]};
@@ -99,19 +104,19 @@ function canEdit(){return model && !saving && model.campaign.phase==='battle' &&
 function cloneState(){return structuredClone(model.state);}
 function catalogMap(state=model.state){return new Map([...(state.navi||[]),...(state.aerei||[])].map(u=>[u.nome,u]));}
 function isShip(unit){return unit && Object.hasOwn(unit,'cls');}
-function available(unit){if(!unit)return false;const yr=campaignYear();return Number(unit.anno)<=yr && (!unit.ritirato || yr<Number(unit.ritirato)) && (!isShip(unit)||lossStatus(unit.nome)==='attiva');}
+function available(unit, state=model.state){if(!unit)return false;const yr=campaignYear();return Number(unit.anno)<=yr && (!unit.ritirato || yr<Number(unit.ritirato)) && (!isShip(unit)||lossStatus(unit.nome,state)==='attiva');}
 function matchClass(unit,cls){return unit && (cls||[]).some(x=>x===unit.cls||x===unit.tipo);}
 function baseName(name){return String(name).replace(/\s*\((I|II|III)\)$/,'');}
 function assignedShips(state){const all=new Set();for(const entries of Object.values(state.porto||{}))for(const name of entries||[])if(name&&state.navi.some(x=>x.nome===name))all.add(name);return all;}
-function hasCarrier(){return(model.state.navi||[]).some(x=>x.cls==='CV'&&available(x));}
-function optionPool(squad,index,current){
-  const cat=[...(model.state.navi||[]),...(model.state.aerei||[])];let accepted=[],classList=[];
+function hasCarrier(state=model.state){return(state.navi||[]).some(x=>x.cls==='CV'&&available(x,state));}
+function optionPool(squad,index,current,state=model.state){
+  const cat=[...(state.navi||[]),...(state.aerei||[])];let accepted=[],classList=[];
   const nN=Number(squad.nucleo?.n)||0;
   if(squad.id==='AIR'){
     const t=squad.nucleo?.clsPerSlot?.[index];classList=t?[t]:squad.nucleo?.cls||[];
     accepted=cat.filter(u=>!isShip(u));
   }else if(squad.id==='CV1'){
-    if(!hasCarrier()){
+    if(!hasCarrier(state)){
       classList=[index===0?'TB':'DB'];accepted=cat.filter(u=>!isShip(u));
     }else if(index===0){classList=['CV'];accepted=cat.filter(isShip);}
     else{classList=['AEREO_IMB'];accepted=cat.filter(u=>!isShip(u)&&u.base==='IMBARCABILE');}
@@ -119,7 +124,7 @@ function optionPool(squad,index,current){
     classList=index<nN?(squad.nucleo?.clsPerSlot?.[index]?[squad.nucleo.clsPerSlot[index]]:squad.nucleo?.cls||[]):squad.scorta?.cls||[];
     accepted=cat.filter(isShip);
   }
-  const used=assignedShips(model.state);const list=accepted.filter(u=>available(u)&&(
+  const used=assignedShips(state);const list=accepted.filter(u=>available(u,state)&&(
     (classList.includes('AEREO_IMB')&&u.base==='IMBARCABILE')||matchClass(u,classList)
   )&&(!isShip(u)||!used.has(u.nome)||u.nome===current));
   if(current&&!list.some(x=>x.nome===current)){const existing=cat.find(x=>x.nome===current);if(existing)list.unshift(existing);}
@@ -140,10 +145,10 @@ async function persistDraft(draft){
     throw error;
   }finally{saving=false;}
 }
-function squadSlots(s,names){let nN=Number(s.nucleo?.n)||0,nS=Number(s.scorta?.n)||0;
+function squadSlots(s,names,state=model.state){let nN=Number(s.nucleo?.n)||0,nS=Number(s.scorta?.n)||0;
   if(s.id==='CV1'){
-    if(!hasCarrier())return{nN:0,nS:2,len:2};
-    const map=catalogMap();const cv=map.get(names[0]);nS=cv?.cls==='CV'?Number(cv.hangar??3):3;
+    if(!hasCarrier(state))return{nN:0,nS:2,len:2};
+    const map=catalogMap(state);const cv=map.get(names[0]);nS=cv?.cls==='CV'?Number(cv.hangar??3):3;
   }
   return {nN,nS,len:nN+nS};
 }
@@ -178,34 +183,75 @@ function renderPort(p){
   const intro=make('div','note',canEdit()?'Assegna le unità alle squadre. Sono selezionabili solo quelle disponibili; ogni modifica viene salvata su Nhost.':'Porto in sola lettura: modifiche bloccate durante o dopo una battaglia.');intro.style.flex='1';info.append(intro);
   const rand=make('button','btn sm','Compila a caso le caselle vuote');rand.disabled=!canEdit();
   rand.onclick=async()=>{
-    const draft=cloneState();for(const s of sortedSquads()){
+    const draft=cloneState();
+    const squads=sortedSquads();
+    for(const s of squads){
       const arr=Array.isArray(draft.porto[s.id])?[...draft.porto[s.id]]:[];
-      // CV1: il numero di caselle cambia in base alla portaerei estratta
-      // (es. EAGLE: 2 aerei; ARK ROYAL: 4 aerei).
-      for(let i=0;i<squadSlots(s,arr).len;i++){
+      // Le disponibilita' e le navi gia' assegnate vanno lette dal DRAFT,
+      // non dal porto precedentemente salvato. CV1 ha capacita' dinamica.
+      for(let i=0;i<squadSlots(s,arr,draft).len;i++){
         if(arr[i])continue;
-        // Il pool rispetta le stesse condizioni visibili al giocatore.
-        const pool=optionPool(s,i,'').filter(u=>
-          (!isShip(u)||!assignedShips(draft).has(u.nome)) &&
-          // Non scegliere una portaerei con hangar insufficiente per
-          // eventuali slot gia' compilati piu' avanti nella squadra.
+        const pool=optionPool(s,i,'',draft).filter(u=>
+          (!isShip(u)||!assignedShips(draft).has(u.nome))&&
           (s.id!=='CV1'||i!==0||u.cls!=='CV'||
            !arr.slice(1+Number(u.hangar??3)).some(Boolean))
         );
         if(pool.length)arr[i]=pool[Math.floor(Math.random()*pool.length)].nome;
         draft.porto[s.id]=arr;
       }
-      // La validazione SQL controlla anche la lunghezza dell'array:
-      // rimuovere solo eventuali caselle vuote oltre la capacita'.
-      const capacity=squadSlots(s,arr).len;
+      const capacity=squadSlots(s,arr,draft).len;
       if(arr.slice(capacity).some(Boolean)){
-        toast('La squadra '+s.id+' ha unità oltre la capienza consentita: correggere le assegnazioni.',true);
+        toast('Squadra '+s.id+': unita oltre la capacita consentita. Correggere le assegnazioni esistenti.',true);
         return;
       }
       if(arr.length>capacity)arr.length=capacity;
       draft.porto[s.id]=arr;
     }
-    try{await persistDraft(draft);}catch{}
+    try{
+      await persistDraft(draft);
+      return;
+    }catch(error){
+      if(!/database query error/i.test(error.message||''))return;
+    }
+
+    // Se il database rifiuta ancora un unico grande aggiornamento,
+    // identificare la squadra incriminata salvando SOLO cambiamenti gia'
+    // convalidati da Nhost, una squadra per volta. Mai svuotare il porto.
+    let completed=0;
+    const failed=[];
+    saving=true;
+    try{
+      for(const squad of squads){
+        const id=squad.id;
+        const current=Array.isArray(model.state.porto[id])?model.state.porto[id]:[];
+        const expected=Array.isArray(draft.porto[id])?draft.porto[id]:[];
+        if(JSON.stringify(current)===JSON.stringify(expected))continue;
+        const part=cloneState();
+        part.porto[id]=[...expected];
+        try{
+          const saved=await saveLogistics(part,model.stateRevision);
+          model.state=saved.state;
+          model.stateRevision=saved.revision;
+          model.updatedAt=saved.updatedAt;
+          completed++;
+        }catch(e){
+          failed.push(squad.id+' ('+squad.nome+'): '+(e.message||'errore sconosciuto'));
+        }
+      }
+    }finally{
+      saving=false;
+      render();renderPennant();
+    }
+    if(failed.length){
+      const message='Compilazione: '+completed+' squadre salvate, '+failed.length+
+        ' rifiutate da Nhost.\n\n'+failed.join('\n')+
+        '\n\nComunichi il nome della squadra indicata per completare la diagnosi.';
+      console.warn('Compilazione automatica Royal Navy',message);
+      alert(message);
+      toast('Compilazione parziale. Legga la diagnostica mostrata.',true);
+    }else{
+      toast('Porto compilato e salvato su Nhost, una squadra per volta.');
+    }
   };info.append(rand);
   const clear=make('button','btn sm','Svuota tutte le squadre');clear.disabled=!canEdit();clear.onclick=async()=>{
     if(!confirm('Svuotare il porto? Lo storico e le perdite resteranno invariati.'))return;
