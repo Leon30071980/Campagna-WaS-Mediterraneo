@@ -1,4 +1,3 @@
-
 import { NHOST } from './config.js';
 import { getAccessToken, refreshAccessToken } from './auth.js';
 
