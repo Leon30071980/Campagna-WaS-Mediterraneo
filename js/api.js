@@ -12,6 +12,9 @@ const STATE_QUERY = `query MyCampaignData {
   campaign_turn_results(order_by: {turn_index: desc}) {
     campaign_id turn_index side own_score opponent_score damage_inflicted damage_suffered
   }
+  campaign_battle_reports(order_by: {turn_index: desc}) {
+    turn_index side report generated_at
+  }
 }`;
 
 async function requestWithToken(token, query) {
@@ -50,7 +53,10 @@ export async function loadCampaign() {
     state: typeof own.state === 'string' ? JSON.parse(own.state) : own.state,
     stateRevision: own.revision,
     updatedAt: own.updated_at,
-    results: data.campaign_turn_results || []
+    results: data.campaign_turn_results || [],
+    reports: (data.campaign_battle_reports || []).map(row=>({
+      ...row, report: typeof row.report === 'string' ? JSON.parse(row.report) : row.report
+    }))
   };
 }
 
