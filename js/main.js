@@ -1,5 +1,5 @@
 import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign } from './api.js';
+import { loadCampaign, saveLogistics } from './api.js';
 import { SEASONS } from './config.js';
 
 // Fedeltà visiva: fogli CSS e testate sono estratti senza modifiche dagli HTML originali.
@@ -9,7 +9,7 @@ const $ = id => document.getElementById(id);
 const TABS = [['porto','Porto'],['battaglia','Battaglia'],['storico','Storico'],['navi','Naviglio'],['aerei','Aerei'],['regole','Regole']];
 const ORDER = ['BB1','BB2','BB3','AIR','CA1','CA2','CA3','CL1','CL2','CL3','CL4','CV1','SUB'];
 const COLORS = Object.freeze({BB:'#B33939',BC:'#E08283',CA:'#1B4F72',CL:'#7FB3D5',DD:'#2E8B57',CV:'#17A398',SUB:'#6C3483',B:'#6B4A32',DB:'#8B6F47',F:'#7E7E7E',FB:'#54585B',HB:'#4A3728',PB:'#6E6259',TB:'#5C6670'});
-let model = null, activeTab = 'porto', term = '', catalogFilter = '', theme = '';
+let model = null, activeTab = 'porto', term = '', catalogFilter = '', theme = '', saving = false;
 
 function make(tag, className = '', content) { const x=document.createElement(tag); if(className)x.className=className; if(content!==undefined && content!==null)x.textContent=String(content); return x; }
 function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.append(e);return e;}
@@ -53,10 +53,10 @@ function showApp(){
  $('side-css').href=model.side==='axis'?'./css/regia.css':'./css/royal.css';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
- const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent='Nhost connesso · '+(model.side==='axis'?'Axis':'Allies')+' · Stato privato in sola lettura · Revisione '+model.stateRevision;
+ const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent='Nhost connesso · '+(model.side==='axis'?'Axis':'Allies')+' · Salvataggio protetto · Revisione '+model.stateRevision;
  root.append(status);
  const wrap=make('div','wrap');
- const warning=make('div','nhost-status nhost-synced','Database collegato · Grafica originale ripristinata. Modifica porto, cataloghi, estrazioni e conclusione battaglia non ancora abilitate finché non saranno installate le scritture protette.');wrap.append(warning);
+ const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Porto e cataloghi modificabili quando non è stata generata una battaglia. Le estrazioni e la conclusione rimangono in preparazione.');wrap.append(warning);
  for(const [id] of TABS){const p=make('section','panel');p.id='p-'+id;wrap.append(p);}
  root.append(wrap);
  $('btn-refresh').addEventListener('click',async()=>{try{await refresh();toast('Dati aggiornati da Nhost.');}catch(e){toast(e.message,true);}});
@@ -87,53 +87,176 @@ function card(title,tag=''){const c=make('div','card');const hd=make('h3');text(
 function note(p,message){text(p,'div',message,'nhost-info');}
 function summary(p,pairs){const grid=make('div','nhost-summary');for(const [l,val]of pairs){const box=make('div');text(box,'div',l,'k');text(box,'div',val,'v num');grid.append(box);}p.append(grid);}
 function sortedSquads(){const x=model.state.ui_squadre;const list=Array.isArray(x)?x:[];const fromDb=new Map(list.map(s=>[s.id,s]));const keys=new Set([...ORDER,...Object.keys(model.state.porto||{})]);return [...keys].map(id=>fromDb.get(id)||{id,nome:id,forma:'mista',nucleo:{n:2,cls:[]},scorta:{n:0,cls:[]}});}
-function slotCard(container,id,label,names,metadata){
- const catalog=new Map([...(model.state.navi||[]),...(model.state.aerei||[])].map(n=>[n.nome,n]));
- const sq=card(label,`${id} · ${names.reduce((s,n)=>s+(catalog.get(n)?.pt||0),0)} pt`);sq.dataset.id=id;sq.classList.add('nhost-squadcard');
- const isAir=id==='AIR';let nN=Number(metadata.nucleo?.n)||0,nS=Number(metadata.scorta?.n)||0;
- if(id==='CV1'){
-  const carriers=(model.state.navi||[]).filter(n=>n.cls==='CV'&&Number(n.anno)<=campaignYear()&&lossStatus(n.nome)==='attiva');
-  if(!carriers.length){nN=0;nS=2;}else if(names[0]&&catalog.get(names[0])?.hangar!=null)nS=Number(catalog.get(names[0]).hangar)||nS;
- }
- const len=isAir?Math.max(nN,names.length):Math.max(nN+nS,names.length);
- for(let i=0;i<len;i++){
-  const name=names[i]||'',u=catalog.get(name)||{},type=u.tipo||'';
-  if(isAir&&!name){const typeAt=metadata.nucleo?.clsPerSlot?.[i];if(typeAt&&!model.state.aerei.some(a=>a.tipo===typeAt))continue;}
-  const row=make('div','slot nhost-slot-readonly');row.style.background=name?(COLORS[type]||'#555'):'#485764';row.style.opacity=name?'1':'.62';
-  text(row,'span',isAir?(metadata.nucleo?.clsPerSlot?.[i]||'·'):(i<nN?'·':'›'),'role');
-  text(row,'span',type,'sigla');
-  text(row,'span',name||'— libera —','nhost-slot-name'+(name?'':' missing'));
-  text(row,'span',name?(u.pt??''):'','pt num');
-  sq.append(row);
- }
- if(len===0)text(sq,'div','Nessuna casella configurata.','nhost-card-body nhost-muted');
- container.append(sq);
+function canEdit(){return model && !saving && model.campaign.phase==='battle' && !model.campaign[model.side+'_concluded'] && !model.state.battaglia;}
+function cloneState(){return structuredClone(model.state);}
+function catalogMap(state=model.state){return new Map([...(state.navi||[]),...(state.aerei||[])].map(u=>[u.nome,u]));}
+function isShip(unit){return unit && Object.hasOwn(unit,'cls');}
+function available(unit){if(!unit)return false;const yr=campaignYear();return Number(unit.anno)<=yr && (!unit.ritirato || yr<Number(unit.ritirato)) && (!isShip(unit)||lossStatus(unit.nome)==='attiva');}
+function matchClass(unit,cls){return unit && (cls||[]).some(x=>x===unit.cls||x===unit.tipo);}
+function baseName(name){return String(name).replace(/\s*\((I|II|III)\)$/,'');}
+function assignedShips(state){const all=new Set();for(const entries of Object.values(state.porto||{}))for(const name of entries||[])if(name&&state.navi.some(x=>x.nome===name))all.add(name);return all;}
+function hasCarrier(){return(model.state.navi||[]).some(x=>x.cls==='CV'&&available(x));}
+function optionPool(squad,index,current){
+  const cat=[...(model.state.navi||[]),...(model.state.aerei||[])];let accepted=[],classList=[];
+  const nN=Number(squad.nucleo?.n)||0;
+  if(squad.id==='AIR'){
+    const t=squad.nucleo?.clsPerSlot?.[index];classList=t?[t]:squad.nucleo?.cls||[];
+    accepted=cat.filter(u=>!isShip(u));
+  }else if(squad.id==='CV1'){
+    if(!hasCarrier()){
+      classList=[index===0?'TB':'DB'];accepted=cat.filter(u=>!isShip(u));
+    }else if(index===0){classList=['CV'];accepted=cat.filter(isShip);}
+    else{classList=['AEREO_IMB'];accepted=cat.filter(u=>!isShip(u)&&u.base==='IMBARCABILE');}
+  }else{
+    classList=index<nN?(squad.nucleo?.clsPerSlot?.[index]?[squad.nucleo.clsPerSlot[index]]:squad.nucleo?.cls||[]):squad.scorta?.cls||[];
+    accepted=cat.filter(isShip);
+  }
+  const used=assignedShips(model.state);const list=accepted.filter(u=>available(u)&&(
+    (classList.includes('AEREO_IMB')&&u.base==='IMBARCABILE')||matchClass(u,classList)
+  )&&(!isShip(u)||!used.has(u.nome)||u.nome===current));
+  if(current&&!list.some(x=>x.nome===current)){const existing=cat.find(x=>x.nome===current);if(existing)list.unshift(existing);}
+  return list.sort((a,b)=>a.nome.localeCompare(b.nome,'it'));
+}
+async function persistDraft(draft){
+  if(!canEdit())throw new Error('Le modifiche sono bloccate durante una battaglia.');
+  saving=true;
+  try{
+    const saved=await saveLogistics(draft,model.stateRevision);
+    model.state=saved.state;model.stateRevision=saved.revision;model.updatedAt=saved.updatedAt;
+    saving=false;render();renderPennant();toast('Modifica salvata su Nhost.');
+  }catch(error){
+    toast(error.message,true);
+    if(/revisione|concorren|scadut/i.test(error.message)){
+      try{await refresh();}catch{}
+    }
+    throw error;
+  }finally{saving=false;}
+}
+function squadSlots(s,names){let nN=Number(s.nucleo?.n)||0,nS=Number(s.scorta?.n)||0;
+  if(s.id==='CV1'){
+    if(!hasCarrier())return{nN:0,nS:2,len:2};
+    const map=catalogMap();const cv=map.get(names[0]);nS=cv?.cls==='CV'?Number(cv.hangar??3):3;
+  }
+  return {nN,nS,len:nN+nS};
+}
+function slotCard(container,s,names){
+  const id=s.id, cat=catalogMap(),pts=names.reduce((acc,n)=>acc+Number(cat.get(n)?.pt||0),0);
+  const sq=card(s.nome,`${id} · ${pts} pt`);sq.dataset.id=id;sq.classList.add('nhost-squadcard');
+  const {nN,len}=squadSlots(s,names);
+  for(let i=0;i<len;i++){
+    const name=names[i]||'',u=cat.get(name)||{},type=u.tipo||'';
+    const role=id==='AIR'?(s.nucleo?.clsPerSlot?.[i]||'·'):(i<nN?'·':'›');
+    const r=make('div','slot nhost-slot-readonly');r.style.background=name?(COLORS[type]||'#555'):'#485764';r.style.opacity=name?'1':'.62';
+    text(r,'span',role,'role');text(r,'span',type,'sigla');
+    const sel=make('select','nhost-slot-select');sel.disabled=!canEdit();sel.setAttribute('aria-label',`${s.nome}, casella ${i+1}`);
+    const blank=make('option','','— libera —');blank.value='';sel.append(blank);
+    for(const entry of optionPool(s,i,name)){const o=make('option','',entry.nome);o.value=entry.nome;sel.append(o);}
+    if(name&&!Array.from(sel.options).some(o=>o.value===name)){const o=make('option','',name+' (non disponibile)');o.value=name;sel.append(o);}
+    sel.value=name;
+    sel.onchange=async()=>{
+      const draft=cloneState();const arr=Array.isArray(draft.porto[id])?[...draft.porto[id]]:[];
+      arr[i]=sel.value;
+      if(id==='CV1'&&i===0){const c=catalogMap(draft).get(sel.value);const capacity=c?.cls==='CV'?Number(c.hangar??3):3;arr.length=Math.min(arr.length,1+capacity);}
+      draft.porto[id]=arr;
+      try{await persistDraft(draft);}catch{render();}
+    };
+    r.append(sel);text(r,'span',name?String(u.pt??''):'','pt num');sq.append(r);
+  }
+  if(!len)text(sq,'div','Nessuna casella configurata.','nhost-card-body nhost-muted');
+  container.append(sq);
 }
 function renderPort(p){
- const info=make('div','row');info.style.marginBottom='14px';const intro=make('div','note','Assegna le unità alle squadre. I menu mostreranno solo le unità disponibili nella stagione corrente; la configurazione sarà abilitata dopo il completamento del salvataggio protetto.');intro.style.flex='1';info.append(intro);
- for(const label of ['Compila a caso le caselle vuote','Svuota tutte le squadre']){const b=make('button','btn sm',label);b.disabled=true;b.title='Disponibile nella prossima fase: salvataggio protetto';info.append(b);}
- p.append(info);
- const container=make('div','port-container');const port=model.state.porto||{};
- for(const s of sortedSquads()){slotCard(container,s.id,s.nome,Array.isArray(port[s.id])?port[s.id]:[],s);}
- p.append(container);
+  const info=make('div','row');info.style.marginBottom='14px';
+  const intro=make('div','note',canEdit()?'Assegna le unità alle squadre. Sono selezionabili solo quelle disponibili; ogni modifica viene salvata su Nhost.':'Porto in sola lettura: modifiche bloccate durante o dopo una battaglia.');intro.style.flex='1';info.append(intro);
+  const rand=make('button','btn sm','Compila a caso le caselle vuote');rand.disabled=!canEdit();
+  rand.onclick=async()=>{
+    const draft=cloneState();for(const s of sortedSquads()){
+      const arr=Array.isArray(draft.porto[s.id])?[...draft.porto[s.id]]:[];
+      const {len}=squadSlots(s,arr);
+      for(let i=0;i<len;i++){
+        if(arr[i])continue;
+        // Il pool rispetta le stesse condizioni visibili al giocatore.
+        const pool=optionPool(s,i,'').filter(u=>!isShip(u)||!assignedShips(draft).has(u.nome));
+        if(pool.length)arr[i]=pool[Math.floor(Math.random()*pool.length)].nome;
+        draft.porto[s.id]=arr;
+      }
+    }
+    try{await persistDraft(draft);}catch{}
+  };info.append(rand);
+  const clear=make('button','btn sm','Svuota tutte le squadre');clear.disabled=!canEdit();clear.onclick=async()=>{
+    if(!confirm('Svuotare il porto? Lo storico e le perdite resteranno invariati.'))return;
+    const draft=cloneState();draft.porto={};try{await persistDraft(draft);}catch{}
+  };info.append(clear);p.append(info);
+  const container=make('div','port-container');for(const s of sortedSquads())slotCard(container,s,Array.isArray(model.state.porto?.[s.id])?model.state.porto[s.id]:[]);
+  p.append(container);
 }
-function renderCatalog(p,tab){const ships=tab==='navi';const source=(ships?model.state.navi:model.state.aerei)||[];
- const add=card(ships?'Aggiungi nave':'Aggiungi aereo');const body=make('div','nhost-card-body');const bt=make('button','btn primary',ships?'Aggiungi nave':'Aggiungi aereo');bt.disabled=true;body.append(bt);text(body,'div','La modifica del catalogo sarà attiva dopo l’installazione delle funzioni di scrittura autorizzate.','nhost-notification');add.append(body);p.append(add);
+function controlField(form,label,value,kind,values){
+  const wrapper=make('label','nhost-form-field');text(wrapper,'span',label);
+  const field=values?make('select','btn sm'):make('input','btn sm');
+  if(values)for(const v of values){const opt=make('option','',v[1]||v[0]);opt.value=v[0];field.append(opt);}
+  else field.type=kind==='number'?'number':'text';
+  if(kind==='number'){field.step='1';field.min='0';}
+  field.value=value==null?'':String(value);wrapper.append(field);form.append(wrapper);return field;
+}
+function dialogUnit(kind,source){
+  if(!canEdit())return;
+  const isNave=kind==='navi',original=source||null;
+  const dialog=make('dialog','nhost-edit-dialog');const form=make('form','nhost-edit-form');form.method='dialog';
+  text(form,'h3',original?'Modifica '+original.nome:(isNave?'Aggiungi nave':'Aggiungi aereo'));
+  const name=controlField(form,'Nome',original?.nome||'','text');name.maxLength=120;
+  const cls=isNave?controlField(form,'Classe',original?.cls||'C','select', [['BB','Corazzata'],['C','Incrociatore'],['DD','Cacciatorpediniere'],['CV','Portaerei'],['SUB','Sommergibile']]):null;
+  const tipo=controlField(form,'Tipo',original?.tipo|| (isNave?'CA':'F'),'text');tipo.maxLength=12;
+  const anno=controlField(form,'Anno entrata in servizio',original?.anno??campaignYear(),'number');
+  const ritirato=controlField(form,'Anno ritiro (vuoto = nessuno)',original?.ritirato||'','number');
+  const points=controlField(form,'Punti',original?.pt??0,'number');
+  const extra=isNave?controlField(form,'Hangar (solo portaerei)',original?.hangar??'','number'):controlField(form,'Base',original?.base||'LAND BASED','select',[['LAND BASED','Terrestre'],['IDRO','Idrovolante'],['IMBARCABILE','Imbarcabile']]);
+  const buttons=make('div','nhost-form-buttons');const cancel=make('button','btn','Annulla');cancel.type='button';cancel.onclick=()=>dialog.close();const save=make('button','btn primary','Salva su Nhost');save.type='submit';buttons.append(cancel,save);form.append(buttons);dialog.append(form);document.body.append(dialog);
+  dialog.addEventListener('close',()=>dialog.remove());
+  form.onsubmit=async e=>{
+    e.preventDefault();if(!canEdit())return;
+    const newName=name.value.trim();const year=Number(anno.value),score=Number(points.value),retired=ritirato.value.trim()?Number(ritirato.value):null;
+    if(!newName||!tipo.value.trim()||!Number.isInteger(year)||year<1900||year>2050||!Number.isFinite(score)||score<0||score>1000|| (retired!==null&&(!Number.isInteger(retired)||retired<1900||retired>2050))){toast('Verificare nome, anno e punti.',true);return;}
+    const draft=cloneState(),items=draft[kind],other=draft[isNave?'aerei':'navi'];
+    if([...items,...other].some(u=>u.nome===newName&&u.nome!==original?.nome)){toast('Nome già presente nel catalogo.',true);return;}
+    const value=original?{...original}:{},prevName=original?.nome;
+    Object.assign(value,{nome:newName,tipo:tipo.value.trim(),anno:year,pt:score,ritirato:retired});
+    if(isNave){value.cls=cls.value;value.stato=value.stato||'';if(cls.value==='CV')value.hangar=extra.value===''?3:Number(extra.value);else delete value.hangar;}
+    else value.base=extra.value;
+    if(original){const idx=items.findIndex(u=>u.nome===prevName);if(idx<0){toast('Unità non più presente.',true);return;}items[idx]=value;}
+    else items.push(value);
+    if(prevName&&prevName!==newName)for(const slots of Object.values(draft.porto||{}))for(let i=0;i<slots.length;i++)if(slots[i]===prevName)slots[i]=newName;
+    save.disabled=true;
+    try{await persistDraft(draft);dialog.close();}catch{save.disabled=false;}
+  };
+  dialog.showModal();
+}
+async function removeUnit(kind,item){
+ if(!canEdit())return;const oldName=item.nome;
+ const msg='Rimuovere '+oldName+' dal catalogo? Le eventuali caselle occupate saranno liberate. Unità presenti nello storico o fra le perdite non possono essere rimosse.';
+ if(!confirm(msg))return;
+ const draft=cloneState();draft[kind]=draft[kind].filter(u=>u.nome!==oldName);
+ for(const arr of Object.values(draft.porto||{}))for(let i=0;i<arr.length;i++)if(arr[i]===oldName)arr[i]='';
+ try{await persistDraft(draft);}catch{}
+}
+function renderCatalog(p,tab){
+ const ships=tab==='navi',source=(ships?model.state.navi:model.state.aerei)||[];
+ const add=card(ships?'Aggiungi nave':'Aggiungi aereo');const body=make('div','nhost-card-body');const bt=make('button','btn primary',ships?'Aggiungi nave':'Aggiungi aereo');bt.disabled=!canEdit();bt.onclick=()=>dialogUnit(tab);body.append(bt);
+ text(body,'div',canEdit()?'Può modificare le anagrafiche; ogni salvataggio è immediato sul database.':'Modifiche bloccate finché è in corso una battaglia.','nhost-notification');add.append(body);p.append(add);
  const bar=make('div','nhost-actions');bar.style.marginTop='12px';const sel=make('select','btn sm');
  const opts=ships?[['','Tutte le classi'],['BB','Corazzate'],['C','Incrociatori'],['DD','Cacciatorpediniere'],['CV','Portaerei'],['SUB','Sommergibili']]:[['','Tutte le basi'],['LAND BASED','Terrestri'],['IDRO','Idrovolanti'],['IMBARCABILE','Imbarcati']];
  for(const [value,label] of opts){const o=make('option','',label);o.value=value;sel.append(o);}sel.value=catalogFilter;
  const search=make('input','btn sm nhost-search');search.type='search';search.placeholder='Cerca un nome';search.value=term;search.setAttribute('aria-label','Cerca unità');
- bar.append(sel,search);text(bar,'span',`Catalogo privato: ${source.length} voci · Solo lettura`,'note');p.append(bar);
+ bar.append(sel,search);text(bar,'span',`Catalogo privato: ${source.length} voci`,'note');p.append(bar);
  const wrap=make('div','card scroll-x');p.append(wrap);
  const update=()=>{
-  const filtered=source.filter(x=>{
-   const classMatch=!catalogFilter||(ships?(catalogFilter==='C'?x.cls==='C':x.cls===catalogFilter):x.base===catalogFilter);
-   return classMatch&&(String(x.nome||'')+' '+String(x.tipo||'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));
-  });
-  wrap.replaceChildren();const tbl=make('table');const thead=make('thead');const header=make('tr');const fields=ships?['Nome','Tipo','Punti','Anno','Ritiro','Stato']:['Nome','Tipo','Punti','Anno','Base'];
+  const filtered=source.filter(x=>{const c=!catalogFilter||(ships?x.cls===catalogFilter:x.base===catalogFilter);return c&&(String(x.nome||'')+' '+String(x.tipo||'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));});
+  wrap.replaceChildren();const tbl=make('table');const thead=make('thead');const header=make('tr');const fields=ships?['Nome','Tipo','Punti','Anno','Ritiro','Stato','Azioni']:['Nome','Tipo','Punti','Anno','Base','Azioni'];
   for(const col of fields)text(header,'th',col);thead.append(header);tbl.append(thead);const tbody=make('tbody');
   for(const u of filtered){const row=make('tr');const values=ships?[u.nome,u.tipo,u.pt,u.anno,u.ritirato||'—',lossStatus(u.nome)]:[u.nome,u.tipo,u.pt,u.anno,u.base||'—'];
-   values.forEach((v,i)=>{const td=make('td',i===2?'r num':'',v??'—');if(i===1&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];row.append(td);});tbody.append(row);}
+   values.forEach((v,i)=>{const td=make('td',i===2?'r num':'',v??'—');if(i===1&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];row.append(td);});
+   const action=make('td','nhost-catalog-actions');const edit=make('button','btn sm','Modifica');edit.disabled=!canEdit();edit.onclick=()=>dialogUnit(tab,u);
+   const del=make('button','btn sm danger','Rimuovi');del.disabled=!canEdit();del.onclick=()=>removeUnit(tab,u);action.append(edit,del);row.append(action);tbody.append(row);
+  }
   tbl.append(tbody);wrap.append(tbl);if(!filtered.length)text(wrap,'div','Nessuna unità trovata.','nhost-card-body note');
  };
  sel.onchange=()=>{catalogFilter=sel.value;update();};search.oninput=()=>{term=search.value;update();};update();
@@ -161,7 +284,7 @@ function renderRules(p){const row=make('div','row');
 async function refresh(){const m=await loadCampaign();if(!['axis','allies'].includes(m.side))throw new Error('Fazione non valida.');
  if(!Array.isArray(m.state.navi)||!Array.isArray(m.state.aerei)||!m.state.porto)throw new Error('Catalogo Nhost incompleto: verificare importazione 005.');
  const oldSide=model?.side;model=m;
- if(oldSide!==m.side || !$('p-porto'))showApp();else{const status=$('nhost-statusbar');if(status)status.textContent=`Nhost connesso · ${m.side} · Stato privato in sola lettura · Revisione ${m.stateRevision}`;render();}
+ if(oldSide!==m.side || !$('p-porto'))showApp();else{const status=$('nhost-statusbar');if(status)status.textContent=`Nhost connesso · ${m.side} · Salvataggio protetto · Revisione ${m.stateRevision}`;render();}
 }
 $('login-form').addEventListener('submit',async ev=>{ev.preventDefault();const b=$('login-submit');b.disabled=true;b.textContent='Accesso…';$('login-error').hidden=true;
  try{await signIn($('email').value.trim(),$('password').value,$('remember').checked);await refresh();toast('Accesso riuscito: Quadro Comando caricato.');}
