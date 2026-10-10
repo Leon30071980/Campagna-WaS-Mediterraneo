@@ -1,5 +1,5 @@
 import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, requestCampaignLoad, requestCampaignReset, resolveCampaignRequest } from './api.js';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, resolveCampaignRequest } from './api.js';
 import { generateBattle } from './battle-engine.js';
 import { SEASONS } from './config.js';
 
@@ -687,6 +687,13 @@ function renderManagement(p) {
       saving=true;try{await requestCampaignLoad(save.snapshot_id);await refresh();toast('Richiesta di caricamento inviata.');}
       catch(e){toast(e.message,true);}finally{saving=false;}
     },saving||!!pending,'btn sm');
+    appendAction(r,'Elimina',async()=>{
+      if(!confirm('Eliminare definitivamente il salvataggio «'+save.label+'»?\nLa campagna attiva non verrà modificata. Questa operazione non è reversibile.'))return;
+      saving=true;
+      try{await deleteCampaignSave(save.snapshot_id);await refresh();toast('Salvataggio eliminato.');}
+      catch(e){toast(e.message,true);alert('Impossibile eliminare: '+e.message);}
+      finally{saving=false;}
+    },saving||!!pending,'btn sm danger');
     sb.append(r);
   }
   sav.append(sb);p.append(sav);
