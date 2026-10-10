@@ -23,7 +23,8 @@ function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.appen
 function toast(message,isError=false){ const x=$('toast');x.textContent=message;x.style.color=isError?'var(--sunk)':'';x.classList.add('on');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('on'),3800); }
 function themeApply(){if(theme)document.documentElement.setAttribute('data-theme',theme);else document.documentElement.removeAttribute('data-theme');}
 function showLogin(){ sessionEpoch++;stopLiveSync();model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso'; }
-function campaignYear(){return Number((SEASONS[model.campaign.turn_index]||'1940').match(/20\d\d/)?.[0]||1940);}
+// Stessa tabella stagioni utilizzata dalla validazione SQL di Nhost.
+function campaignYear(){return [1940,1940,1941,1941,1941,1942,1942,1942,1943,1943][Number(model.campaign.turn_index)] ?? 1940;}
 function shipBase(name){return String(name||'').replace(/\s*\((I|II|III)\)$/,'');}
 // Valutare TUTTE le versioni dello stesso scafo, esattamente come Nhost.
 // Una vecchia versione con danni o affondamento blocca anche l'omonima.
@@ -110,25 +111,40 @@ function baseName(name){return String(name).replace(/\s*\((I|II|III)\)$/,'');}
 function assignedShips(state){const all=new Set();for(const entries of Object.values(state.porto||{}))for(const name of entries||[])if(name&&state.navi.some(x=>x.nome===name))all.add(name);return all;}
 function hasCarrier(state=model.state){return(state.navi||[]).some(x=>x.cls==='CV'&&available(x,state));}
 function optionPool(squad,index,current,state=model.state){
-  const cat=[...(state.navi||[]),...(state.aerei||[])];let accepted=[],classList=[];
+  const cat=[...(state.navi||[]),...(state.aerei||[])];
   const nN=Number(squad.nucleo?.n)||0;
+  const nucleus=squad.nucleo||{},escort=squad.scorta||{};
+  const slotClass=Array.isArray(nucleus.clsPerSlot)?nucleus.clsPerSlot[index]:undefined;
+  let accepted,allowed;
   if(squad.id==='AIR'){
-    const t=squad.nucleo?.clsPerSlot?.[index];classList=t?[t]:squad.nucleo?.cls||[];
     accepted=cat.filter(u=>!isShip(u));
+    // Il database controlla il TIPO esatto per ogni slot AIR.
+    allowed=slotClass?[slotClass]:[];
   }else if(squad.id==='CV1'){
     if(!hasCarrier(state)){
-      classList=[index===0?'TB':'DB'];accepted=cat.filter(u=>!isShip(u));
-    }else if(index===0){classList=['CV'];accepted=cat.filter(isShip);}
-    else{classList=['AEREO_IMB'];accepted=cat.filter(u=>!isShip(u)&&u.base==='IMBARCABILE');}
+      accepted=cat.filter(u=>!isShip(u));
+      allowed=[index===0?'TB':'DB'];
+    }else if(index===0){
+      accepted=cat.filter(isShip);allowed=['CV'];
+    }else{
+      accepted=cat.filter(u=>!isShip(u)&&u.base==='IMBARCABILE');
+      allowed=['AEREO_IMB'];
+    }
   }else{
-    classList=index<nN?(squad.nucleo?.clsPerSlot?.[index]?[squad.nucleo.clsPerSlot[index]]:squad.nucleo?.cls||[]):squad.scorta?.cls||[];
     accepted=cat.filter(isShip);
+    allowed=index<nN?(slotClass!==undefined?[slotClass]:nucleus.cls||[]):escort.cls||[];
   }
-  const used=assignedShips(state);const list=accepted.filter(u=>available(u,state)&&(
-    (classList.includes('AEREO_IMB')&&u.base==='IMBARCABILE')||matchClass(u,classList)
-  )&&(!isShip(u)||!used.has(u.nome)||u.nome===current));
-  if(current&&!list.some(x=>x.nome===current)){const existing=cat.find(x=>x.nome===current);if(existing)list.unshift(existing);}
-  return list.sort((a,b)=>a.nome.localeCompare(b.nome,'it'));
+  const used=assignedShips(state);
+  const list=accepted.filter(u=>{
+    if(!available(u,state))return false;
+    if(isShip(u)&&used.has(u.nome)&&u.nome!==current)return false;
+    if(squad.id==='AIR')return !allowed.length||allowed.includes(u.tipo);
+    if(squad.id==='CV1'&&allowed.includes('AEREO_IMB'))return u.base==='IMBARCABILE';
+    return matchClass(u,allowed);
+  });
+  // NON reinserire versioni ritirate tra le opzioni selezionabili.
+  // Eventuali vecchie assegnazioni sono mostrate separatamente, disabilitate.
+  return list.sort((a,b)=>a.nome.localeCompare(b.nome,'it',{numeric:true}));
 }
 async function persistDraft(draft){
   if(!canEdit())throw new Error('Le modifiche sono bloccate durante una battaglia.');
@@ -163,8 +179,10 @@ function slotCard(container,s,names){
     text(r,'span',role,'role');text(r,'span',type,'sigla');
     const sel=make('select','nhost-slot-select');sel.disabled=!canEdit();sel.setAttribute('aria-label',`${s.nome}, casella ${i+1}`);
     const blank=make('option','','— libera —');blank.value='';sel.append(blank);
-    for(const entry of optionPool(s,i,name)){const o=make('option','',entry.nome);o.value=entry.nome;sel.append(o);}
-    if(name&&!Array.from(sel.options).some(o=>o.value===name)){const o=make('option','',name+' (non disponibile)');o.value=name;sel.append(o);}
+    const candidates=optionPool(s,i,name);
+     for(const entry of candidates){const o=make('option','',entry.nome);o.value=entry.nome;sel.append(o);}
+     if(!candidates.length&&!name){const o=make('option','','Nessuna unità disponibile per questa casella');o.disabled=true;sel.append(o);}
+    if(name&&!Array.from(sel.options).some(o=>o.value===name)){const o=make('option','',name+' (non disponibile: liberare la casella)');o.value=name;o.disabled=true;sel.append(o);sel.title='Questa versione non è più utilizzabile nel turno corrente.';}
     sel.value=name;
     sel.onchange=async()=>{
       const draft=cloneState();const arr=Array.isArray(draft.porto[id])?[...draft.porto[id]]:[];
