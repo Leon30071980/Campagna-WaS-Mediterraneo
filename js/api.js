@@ -3,6 +3,12 @@ import { getAccessToken, refreshAccessToken } from './auth.js';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }
+  campaign_snapshot_catalog(order_by: {created_at: desc}) {
+    snapshot_id campaign_id turn_index label created_at
+  }
+  campaign_restore_requests(where: {status: {_eq: "pending"}}, limit: 1) {
+    id campaign_id snapshot_id requested_by axis_approved allies_approved status created_at
+  }
   campaigns(where: {lifecycle: {_eq: "active"}}, limit: 1) {
     id name turn_index phase axis_concluded allies_concluded axis_ready allies_ready revision
   }
@@ -54,6 +60,8 @@ export async function loadCampaign() {
     stateRevision: own.revision,
     updatedAt: own.updated_at,
     results: data.campaign_turn_results || [],
+    saves: data.campaign_snapshot_catalog || [],
+    pendingRequest: data.campaign_restore_requests?.[0] || null,
     reports: (data.campaign_battle_reports || []).map(row=>({
       ...row, report: typeof row.report === 'string' ? JSON.parse(row.report) : row.report
     }))
@@ -143,6 +151,23 @@ export async function markReady(revision) {
     }
   }`;
   return campaignMutation(query,{revision},'campaign_mark_ready');
+}
+
+// v0.7: mutazioni protette. Il payload degli snapshot non entra mai nel browser.
+export async function createCampaignSave(label) {
+  return campaignMutation(`mutation($label:String!){campaign_create_save(args:{p_label:$label}){snapshot_id label turn_index}}`,{label},'campaign_create_save');
+}
+export async function renameCampaignSave(snapshotId,label) {
+  return campaignMutation(`mutation($id:uuid!,$label:String!){campaign_rename_save(args:{p_snapshot_id:$id,p_label:$label}){snapshot_id label turn_index}}`,{id:snapshotId,label},'campaign_rename_save');
+}
+export async function requestCampaignLoad(snapshotId) {
+  return campaignMutation(`mutation($id:uuid!){campaign_request_load(args:{p_snapshot_id:$id}){id status requested_by axis_approved allies_approved}}`,{id:snapshotId},'campaign_request_load');
+}
+export async function requestCampaignReset(turnIndex) {
+  return campaignMutation(`mutation($turn:Int!){campaign_request_reset(args:{p_start_turn:$turn}){id status requested_by axis_approved allies_approved}}`,{turn:turnIndex},'campaign_request_reset');
+}
+export async function resolveCampaignRequest(requestId,approve) {
+  return campaignMutation(`mutation($id:uuid!,$approve:Boolean!){campaign_resolve_request(args:{p_request_id:$id,p_approve:$approve}){id status axis_approved allies_approved}}`,{id:requestId,approve},'campaign_resolve_request');
 }
 
 // v0.6: sincronizzazione della campagna. La sottoscrizione legge
