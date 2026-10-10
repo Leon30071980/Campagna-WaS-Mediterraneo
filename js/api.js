@@ -169,6 +169,9 @@ export async function requestCampaignLoad(snapshotId) {
 export async function requestCampaignReset(turnIndex) {
   return campaignMutation(`mutation($turn:Int!){campaign_request_reset(args:{p_start_turn:$turn}){id status requested_by axis_approved allies_approved}}`,{turn:turnIndex},'campaign_request_reset');
 }
+export async function setScenarioScore(score) {
+  return campaignMutation(`mutation($score:numeric!){campaign_set_scenario_score(args:{p_score:$score}){side revision}}`,{score},'campaign_set_scenario_score');
+}
 export async function resolveCampaignRequest(requestId,approve) {
   return campaignMutation(`mutation($id:uuid!,$approve:Boolean!){campaign_resolve_request(args:{p_request_id:$id,p_approve:$approve}){id status axis_approved allies_approved}}`,{id:requestId,approve},'campaign_resolve_request');
 }
