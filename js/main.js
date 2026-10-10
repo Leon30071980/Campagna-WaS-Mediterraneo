@@ -1,10 +1,11 @@
 import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign, saveLogistics } from './api.js';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady } from './api.js';
+import { generateBattle } from './battle-engine.js';
 import { SEASONS } from './config.js';
 
 // Fedeltà visiva: fogli CSS e testate sono estratti senza modifiche dagli HTML originali.
 // Sicurezza: nessun dato di flotta o nome di squadra avversario è presente nei file pubblici.
-// Questa versione è in SOLA LETTURA finché non saranno implementate le funzioni Nhost protette.
+// I cataloghi e il porto restano privati e sono salvati con mutazioni protette Nhost.
 const $ = id => document.getElementById(id);
 const TABS = [['porto','Porto'],['battaglia','Battaglia'],['storico','Storico'],['navi','Naviglio'],['aerei','Aerei'],['regole','Regole']];
 const ORDER = ['BB1','BB2','BB3','AIR','CA1','CA2','CA3','CL1','CL2','CL3','CL4','CV1','SUB'];
@@ -56,7 +57,7 @@ function showApp(){
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent='Nhost connesso · '+(model.side==='axis'?'Axis':'Allies')+' · Salvataggio protetto · Revisione '+model.stateRevision;
  root.append(status);
  const wrap=make('div','wrap');
- const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Porto e cataloghi modificabili quando non è stata generata una battaglia. Le estrazioni e la conclusione rimangono in preparazione.');wrap.append(warning);
+ const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Le formazioni restano segrete fino alla doppia conclusione. Le due fazioni avanzano insieme.');wrap.append(warning);
  for(const [id] of TABS){const p=make('section','panel');p.id='p-'+id;wrap.append(p);}
  root.append(wrap);
  $('btn-refresh').addEventListener('click',async()=>{try{await refresh();toast('Dati aggiornati da Nhost.');}catch(e){toast(e.message,true);}});
@@ -261,17 +262,157 @@ function renderCatalog(p,tab){
  };
  sel.onchange=()=>{catalogFilter=sel.value;update();};search.oninput=()=>{term=search.value;update();};update();
 }
-function renderBattle(p){const battle=model.state.battaglia;
- if(!battle){const empty=make('div','empty');text(empty,'div',`Nessuna formazione in mare per ${SEASONS[model.campaign.turn_index]||'questa stagione'}.`);const b=make('button','btn primary','Genera formazione');b.style.marginTop='10px';b.disabled=true;empty.append(b);p.append(empty);}
- else {const c=card('Forza in mare',`${battle.totale||0} pt · seme ${battle.seed??'—'}`);const body=make('div','nhost-card-body');for(const g of battle.gruppi||[]){const sq=card(g.squadra,`${g.pt||0} pt`);const rows=make('div','nhost-card-body');for(const unit of g.unita||[]){const row=make('div','nhost-row');text(row,'span',unit.nome);text(row,'span',`${unit.pt} pt · ${unit.esito}`,'num');rows.append(row);}sq.append(rows);body.append(sq);}c.append(body);p.append(c);}
- const box=card('Conclusione battaglia');const inner=make('div','nhost-card-body');note(inner,'I tre dati dell’avversario vengono calcolati automaticamente, ma soltanto dopo le conferme finali di Axis e Allies. Le formazioni avversarie non diventano pubbliche.');
- summary(inner,[['Axis conclusa',model.campaign.axis_concluded?'Sì':'No'],['Allies conclusa',model.campaign.allies_concluded?'Sì':'No'],['Axis pronto',model.campaign.axis_ready?'Sì':'No'],['Allies pronto',model.campaign.allies_ready?'Sì':'No']]);
- const b=make('button','btn primary','Concludi battaglia');b.style.marginTop='14px';b.disabled=true;inner.append(b);text(inner,'div','Funzione non ancora attiva. Nessun risultato può essere inviato finché non saranno installati i controlli server.','nhost-notification');box.append(inner);p.append(box);
+// Solo la fazione proprietaria puo modificare la propria battaglia prima di concluderla.
+function canEditBattle(){return model&&!saving&&model.campaign.phase==='battle'&&!model.campaign[model.side+'_concluded'];}
+function damageFromBattle(b){return (b?.gruppi||[]).flatMap(g=>g.unita||[]).reduce((s,u)=>
+ s+(u.esito==='affondata'?Number(u.pt):u.esito==='danneggiata'?Number(u.pt)/2:0),0);}
+function appendAction(parent,label,handler,disabled=false,klass='btn sm'){
+ const b=make('button',klass,label);b.type='button';b.disabled=disabled;
+ b.onclick=handler;parent.append(b);return b;
 }
+async function storeBattle(battle){
+ if(!canEditBattle())return;
+ saving=true;
+ try{
+  const result=await saveBattle(battle,model.stateRevision);
+  model.state=result.state;model.stateRevision=result.revision;
+  toast('Battaglia salvata su Nhost.');
+ }catch(e){toast(e.message,true);throw e;}
+ finally{saving=false;await refresh();}
+}
+function battleRolls(container,b){
+ const c=card('Log estrazione','Seme '+String(b.seed));
+ const body=make('div','log');
+ for(const r of b.log||[]){const line=make('div',r.unita?.length?'y':'n',
+   (r.id||'')+' · tiro '+r.tiro+' · '+(r.esito||'')+(r.unita?.length?' · '+r.unita.join(', '):''));
+  body.append(line);
+ }
+ c.append(body);container.append(c);
+}
+function battleGroups(container,b,reinforcement){
+ const groups=(b.gruppi||[]).filter(g=>!!g.rinforzo===reinforcement);
+ const wave=make('div','battle-wave '+(reinforcement?'support':'primary'));
+ const header=make('div','battle-wave-head');
+ text(header,'strong',reinforcement?'Forze di supporto':'Prima ondata');
+ text(header,'small',reinforcement?'Rinforzi arrivati dopo la prima ondata':'Forza iniziale in mare');
+ text(header,'span',groups.length+' squadre · '+groups.reduce((a,g)=>a+Number(g.pt||0),0)+' pt','tag');
+ wave.append(header);
+ if(!groups.length)text(wave,'div','Nessuna unità disponibile.','note');
+ for(const g of groups){
+  const block=make('div','force-sq');const h=make('div','hd');
+  text(h,'span',g.squadra,'nm');text(h,'span',g.modo==='completa'?'al completo':g.modo,'md');
+  text(h,'span',String(g.pt)+' pt','tot num');block.append(h);
+  for(const u of g.unita){
+   const row=make('div','unit'+(u.esito==='affondata'?' is-sunk':u.esito==='danneggiata'?' is-hurt':''));
+   const type=make('span','type-badge',u.tipo);type.style.background=COLORS[u.tipo]||'#555';row.append(type);
+   text(row,'span',u.nome,'nm');text(row,'span',u.pt,'pt num');
+   const seg=make('div','seg');
+   const isPlane=(model.state.aerei||[]).some(a=>a.nome===u.nome);
+   for(const [value,label,css] of (isPlane?
+     [['illesa','illeso',''],['affondata','distrutto','b-sunk']]:
+     [['illesa','illesa',''],['danneggiata','danni','b-hurt'],['affondata','affondata','b-sunk']])){
+    const button=make('button',css,label);button.type='button';button.disabled=!canEditBattle();
+    button.setAttribute('aria-pressed',String(u.esito===value));
+    button.onclick=async()=>{
+      if(u.esito===value)return;
+      const next=structuredClone(model.state.battaglia);
+      const target=next.gruppi.find(x=>x.id===g.id)?.unita.find(x=>x.nome===u.nome);
+      if(!target)return;
+      target.esito=value;
+      try{await storeBattle(next);}catch{}
+    };
+    seg.append(button);
+   }
+   row.append(seg);block.append(row);
+  }
+  wave.append(block);
+ }
+ container.append(wave);
+}
+function renderBattle(p){
+ const b=model.state.battaglia;
+ const phase=model.campaign.phase;
+ const mineConcluded=!!model.campaign[model.side+'_concluded'];
+ const otherConcluded=!!model.campaign[(model.side==='axis'?'allies':'axis')+'_concluded'];
+ const mineReady=!!model.campaign[model.side+'_ready'];
+ const toolbar=make('div','row');toolbar.style.marginBottom='14px';
+ if(phase==='battle'&&!mineConcluded){
+  appendAction(toolbar,b?'Estrai un’altra formazione':'Genera formazione',async()=>{
+   if(b&&!confirm('Sostituire la formazione? Tutti gli esiti segnati verranno cancellati.'))return;
+   const seed=new Uint32Array(1);crypto.getRandomValues(seed);
+   try{await storeBattle(generateBattle(model.state,model.campaign.turn_index,seed[0]));}
+   catch(e){if(!/Nhost|revisione|errore|scadut/i.test(e.message))toast(e.message,true);}
+  },saving,'btn primary');
+  const seedInput=make('input','btn sm num');seedInput.type='number';seedInput.min='0';seedInput.max='4294967295';seedInput.placeholder='Seme';seedInput.style.width='110px';
+  if(b)seedInput.value=b.seed;toolbar.append(seedInput);
+  appendAction(toolbar,'Carica seme',async()=>{
+   const seed=Number(seedInput.value);
+   if(!seedInput.value||!Number.isInteger(seed)||seed<0||seed>4294967295){toast('Seme non valido.',true);return;}
+   if(b&&!confirm('Caricare un altro seme? Si perderanno gli esiti registrati.'))return;
+   try{await storeBattle(generateBattle(model.state,model.campaign.turn_index,seed));}
+   catch(e){toast(e.message,true);}
+  },saving);
+  if(b)appendAction(toolbar,'Scarta formazione',async()=>{
+   if(!confirm('Scartare la formazione attuale?'))return;
+   try{await storeBattle(null);}catch{}
+  },saving,'btn sm danger');
+ }
+ appendAction(toolbar,'Aggiorna dati',async()=>{try{await refresh();toast('Dati aggiornati.');}catch(e){toast(e.message,true);}},saving);
+ p.append(toolbar);
+ if(b){
+  const force=card('Forza in mare',b.totale+' pt · seme '+b.seed+' · '+b.tentativi+' estrazioni');
+  const box=make('div','nhost-card-body');
+  battleGroups(box,b,false);battleGroups(box,b,true);
+  force.append(box);p.append(force);
+  const results=card('Riepilogo danni');const detail=make('div','nhost-card-body');
+  summary(detail,[['Totale in mare',b.totale],['Prima ondata',b.primaOndata],['Danni subiti',damageFromBattle(b)]]);
+  if(b.fuoriRange)note(detail,'Attenzione: impossibile rispettare il limite 150–280 pt dopo 500 tentativi, come previsto dal motore originale.');
+  results.append(detail);p.append(results);
+  battleRolls(p,b);
+ }else if(phase==='battle'&&!mineConcluded){
+  const empty=make('div','empty','Nessuna formazione in mare per '+(SEASONS[model.campaign.turn_index]||'questo turno')+'.');p.append(empty);
+ }
+ const control=card('Conclusione della battaglia');const inner=make('div','nhost-card-body');
+ summary(inner,[['Axis conclusa',model.campaign.axis_concluded?'Sì':'No'],
+  ['Allies conclusa',model.campaign.allies_concluded?'Sì':'No'],
+  ['Axis pronto',model.campaign.axis_ready?'Sì':'No'],['Allies pronto',model.campaign.allies_ready?'Sì':'No']]);
+ if(phase==='battle'){
+  if(mineConcluded){
+   note(inner,'Battaglia conclusa. I Suoi dati sono bloccati. In attesa della conclusione dell’avversario.');
+  }else{
+   note(inner,'I valori avversari saranno calcolati automaticamente SOLTANTO dopo entrambe le conclusioni. Nessuna formazione viene comunicata all’avversario.');
+   appendAction(inner,'Concludi battaglia',async()=>{
+    if(!confirm('Concludere definitivamente questa battaglia? Dopo la conferma non potrà più modificare gli esiti.'))return;
+    saving=true;
+    try{await concludeBattle(model.stateRevision);toast('Battaglia conclusa.');}
+    catch(e){toast(e.message,true);}
+    finally{saving=false;await refresh();}
+   },!b||saving,'btn primary');
+  }
+ }else if(phase==='results'){
+  const ownResult=model.results.find(r=>Number(r.turn_index)===Number(model.campaign.turn_index));
+  if(ownResult){
+   summary(inner,[['Punteggio proprio',Number(ownResult.own_score).toFixed(1)],
+     ['Punteggio nemico',Number(ownResult.opponent_score).toFixed(1)],
+     ['Danni inflitti',Number(ownResult.damage_inflicted).toFixed(1)],
+     ['Danni subiti',Number(ownResult.damage_suffered).toFixed(1)]]);
+  }
+  if(mineReady)note(inner,'Pronto confermato. Attendere la conferma dell’altra fazione.');
+  else appendAction(inner,model.campaign.turn_index===9?'Pronto per chiudere la campagna':'Pronto per il prossimo turno',async()=>{
+    if(!confirm('Confermare che ha consultato il risultato ed è pronto a procedere?'))return;
+    saving=true;
+    try{await markReady(model.campaign.revision);toast('Conferma registrata.');}
+    catch(e){toast(e.message,true);}
+    finally{saving=false;await refresh();}
+  },saving,'btn primary');
+ }else note(inner,'Campagna conclusa. Tutti i risultati sono disponibili nello Storico.');
+ control.append(inner);p.append(control);
+}
+
 function renderHistory(p){const rows=Array.isArray(model.state.storico)?model.state.storico:[];const results=model.results||[];
  if(!rows.length&&!results.length){const blank=make('div','empty','Nessuna battaglia registrata. Lo storico sarà compilato dopo le due conclusioni.');p.append(blank);return;}
  const c=card('Andamento della campagna');const table=make('table');const head=make('thead');const tr=make('tr');for(const x of ['Stagione','Punti propri','Punti nemici','Danni subiti','Navi perse'])text(tr,'th',x);head.append(tr);table.append(head);const tbody=make('tbody');
- if(results.length){for(const r of results){const line=make('tr');for(const x of [SEASONS[r.turn_index]||r.turn_index,Number(r.own_score).toFixed(1),Number(r.opponent_score).toFixed(1),Number(r.damage_suffered).toFixed(1),'—'])text(line,'td',x);tbody.append(line);}}
+ if(!rows.length && results.length){for(const r of results){const line=make('tr');for(const x of [SEASONS[r.turn_index]||r.turn_index,Number(r.own_score).toFixed(1),Number(r.opponent_score).toFixed(1),Number(r.damage_suffered).toFixed(1),'—'])text(line,'td',x);tbody.append(line);}}
  else for(const r of rows){const line=make('tr');for(const x of [r.turno,Number(r.pAll||0).toFixed(1),Number(r.pAsse||0).toFixed(1),Number(r.danniSubiti||0).toFixed(1),r.navi?.perse?.length??'—'])text(line,'td',x);tbody.append(line);}
  table.append(tbody);const wrapper=make('div','scroll-x');wrapper.append(table);c.append(wrapper);p.append(c);
 }
