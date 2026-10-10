@@ -1,5 +1,5 @@
 import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign } from './api.js';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, requestCampaignLoad, requestCampaignReset, resolveCampaignRequest } from './api.js';
 import { generateBattle } from './battle-engine.js';
 import { SEASONS } from './config.js';
 
@@ -7,7 +7,7 @@ import { SEASONS } from './config.js';
 // Sicurezza: nessun dato di flotta o nome di squadra avversario è presente nei file pubblici.
 // I cataloghi e il porto restano privati e sono salvati con mutazioni protette Nhost.
 const $ = id => document.getElementById(id);
-const TABS = [['porto','Porto'],['battaglia','Battaglia'],['storico','Storico'],['navi','Naviglio'],['aerei','Aerei'],['regole','Regole']];
+const TABS = [['porto','Porto'],['battaglia','Battaglia'],['storico','Storico'],['navi','Naviglio'],['aerei','Aerei'],['gestione','Gestione campagna'],['regole','Regole']];
 const ORDER = ['BB1','BB2','BB3','AIR','CA1','CA2','CA3','CL1','CL2','CL3','CL4','CV1','SUB'];
 const COLORS = Object.freeze({BB:'#B33939',BC:'#E08283',CA:'#1B4F72',CL:'#7FB3D5',DD:'#2E8B57',CV:'#17A398',SUB:'#6C3483',B:'#6B4A32',DB:'#8B6F47',F:'#7E7E7E',FB:'#54585B',HB:'#4A3728',PB:'#6E6259',TB:'#5C6670'});
 let model = null, activeTab = 'porto', term = '', catalogFilter = '', theme = '', saving = false;
@@ -81,7 +81,7 @@ function showApp(){
 }
 function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+activeTab);if(!p)return;p.replaceChildren();
  if(activeTab==='porto')renderPort(p);else if(activeTab==='battaglia')renderBattle(p);else if(activeTab==='storico')renderHistory(p);
- else if(activeTab==='navi'||activeTab==='aerei')renderCatalog(p,activeTab);else renderRules(p);
+ else if(activeTab==='navi'||activeTab==='aerei')renderCatalog(p,activeTab);else if(activeTab==='gestione')renderManagement(p);else renderRules(p);
 }
 function renderTabs(){const nav=$('tabs');nav.replaceChildren();for(const [id,label]of TABS){
  const b=make('button','',label);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',String(id===activeTab));b.onclick=()=>{if(activeTab!==id){activeTab=id;term='';catalogFilter='';}render();};nav.append(b);
@@ -630,6 +630,79 @@ function renderHistory(p){
  }
  if(!reports.length)note(p,'I rapporti con la composizione delle due flotte compariranno qui dopo entrambe le conclusioni.');
 }
+// v0.7: catalogo pubblico dei soli NOMI. Gli snapshot veri rimangono privati.
+function renderManagement(p) {
+  const pending=model.pendingRequest;
+  const intro=card('Gestione campagna');
+  const ib=make('div','nhost-card-body');
+  note(ib,'I salvataggi comprendono entrambe le flotte, porti, perdite, battaglie, punteggi e rapporti. Il caricamento e il reset richiedono la conferma di Axis e Allies.');
+  summary(ib,[['Campagna',model.campaign.name],['Stagione attuale',SEASONS[model.campaign.turn_index]||'—'],['Salvataggi',model.saves.length]]);
+  intro.append(ib);p.append(intro);
+
+  if(pending){
+    const save=model.saves.find(x=>x.snapshot_id===pending.snapshot_id);
+    const box=card('Richiesta in attesa della seconda fazione','Conferma obbligatoria');
+    const body=make('div','nhost-card-body');
+    note(body,'Operazione proposta da '+(pending.requested_by==='axis'?'Regia Marina':'Royal Navy')+': '+(save?.label||'Salvataggio')+'.');
+    summary(body,[['Regia Marina',pending.axis_approved?'Ha confermato':'In attesa'],['Royal Navy',pending.allies_approved?'Ha confermato':'In attesa']]);
+    const buttons=make('div','nhost-actions');
+    const ownApproved=model.side==='axis'?pending.axis_approved:pending.allies_approved;
+    if(!ownApproved){
+      appendAction(buttons,'Approva ripristino / reset',async()=>{
+        if(!confirm('Confermare il caricamento? Tutti i dati della campagna corrente saranno sostituiti. Verrà prima creato un backup automatico.'))return;
+        saving=true;try{await resolveCampaignRequest(pending.id,true);toast('Conferma registrata.');await refresh();}
+        catch(e){toast(e.message,true);await refresh();}finally{saving=false;}
+      },saving,'btn primary');
+    }else note(body,'Ha già confermato. Attendere l’altra fazione.');
+    appendAction(buttons,'Rifiuta richiesta',async()=>{
+      if(!confirm('Rifiutare la richiesta senza modificare la campagna?'))return;
+      saving=true;try{await resolveCampaignRequest(pending.id,false);await refresh();toast('Richiesta rifiutata.');}
+      catch(e){toast(e.message,true);}finally{saving=false;}
+    },saving,'btn sm danger');
+    body.append(buttons);box.append(body);p.append(box);
+  }
+
+  const sav=card('Salvataggi della campagna');const sb=make('div','nhost-card-body');
+  const newRow=make('div','nhost-actions');const name=make('input','btn sm');
+  name.type='text';name.maxLength=80;name.placeholder='Nome del nuovo salvataggio';name.style.minWidth='min(100%,260px)';
+  newRow.append(name);
+  appendAction(newRow,'Salva campagna',async()=>{
+    const label=name.value.trim();if(!label){toast('Inserire un nome per il salvataggio.',true);return;}
+    saving=true;try{await createCampaignSave(label);await refresh();toast('Salvataggio creato.');}
+    catch(e){toast(e.message,true);}finally{saving=false;}
+  },saving||!!pending,'btn primary');sb.append(newRow);
+  if(!model.saves.length)note(sb,'Nessun salvataggio disponibile.');
+  for(const save of model.saves){
+    const r=make('div','nhost-actions');r.style.cssText='border-top:1px solid var(--line,#46515a);padding:10px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
+    const label=make('span','',save.label);label.style.flex='1 1 220px';r.append(label);
+    const season=make('span','note',SEASONS[save.turn_index]||'Turno '+(save.turn_index+1));r.append(season);
+    appendAction(r,'Rinomina',async()=>{
+      const renamed=prompt('Nuovo nome del salvataggio:',save.label);
+      if(renamed===null)return;
+      saving=true;try{await renameCampaignSave(save.snapshot_id,renamed.trim());await refresh();toast('Nome aggiornato.');}
+      catch(e){toast(e.message,true);}finally{saving=false;}
+    },saving||!!pending);
+    appendAction(r,'Carica',async()=>{
+      if(!confirm('Richiedere il caricamento di «'+save.label+'»? Anche l’altra fazione dovrà approvare.'))return;
+      saving=true;try{await requestCampaignLoad(save.snapshot_id);await refresh();toast('Richiesta di caricamento inviata.');}
+      catch(e){toast(e.message,true);}finally{saving=false;}
+    },saving||!!pending,'btn sm');
+    sb.append(r);
+  }
+  sav.append(sb);p.append(sav);
+
+  const reset=card('Reset / nuova campagna');const rb=make('div','nhost-card-body');
+  note(rb,'Il reset azzera porto, perdite, storico, battaglie e punteggi, mantenendo i cataloghi delle unità e le configurazioni delle squadre. Selezioni la stagione iniziale.');
+  const controls=make('div','nhost-actions');const start=make('select','btn sm');
+  SEASONS.forEach((season,index)=>{const o=make('option','',season);o.value=String(index);start.append(o);});
+  start.value='0';controls.append(start);
+  appendAction(controls,'Richiedi reset della campagna',async()=>{
+    if(!confirm('Richiedere una NUOVA campagna da '+SEASONS[Number(start.value)]+'? Occorre anche la conferma avversaria.'))return;
+    saving=true;try{await requestCampaignReset(Number(start.value));await refresh();toast('Richiesta di reset inviata.');}
+    catch(e){toast(e.message,true);}finally{saving=false;}
+  },saving||!!pending,'btn sm danger');rb.append(controls);reset.append(rb);p.append(reset);
+}
+
 function renderRules(p){const row=make('div','row');
  for(const [title,entries]of [['Regole della campagna',['Un’unica campagna e un unico turno condivisi fra Axis e Allies.','I cataloghi, i porti e le formazioni in corso restano privati; dopo entrambe le conclusioni il rapporto mostra le unità impegnate da entrambe le fazioni.','Navi affondate: perdita definitiva. Navi danneggiate: riparazione secondo le regole originali.','Aerei distrutti: contano come danno nella battaglia ma non vengono radiati permanentemente.']],['Chiusura e sincronizzazione',['Ogni giocatore registra esclusivamente i danni subiti dalla propria flotta.','«Concludi battaglia» congela la formazione e i danni del giocatore.','Dopo entrambe le conclusioni il server calcola automaticamente i tre valori del nemico e i punteggi.','Il turno avanza soltanto quando entrambi premono «Pronto per il prossimo turno».']]]){
   const c=card(title);c.style.flex='1 1 420px';const content=make('div','nhost-card-body');const ol=make('ol');for(const entry of entries)text(ol,'li',entry);content.append(ol);c.append(content);row.append(c);
