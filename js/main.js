@@ -11,6 +11,7 @@ const TABS = [['porto','Porto'],['battaglia','Battaglia'],['storico','Storico'],
 const ORDER = ['BB1','BB2','BB3','AIR','CA1','CA2','CA3','CL1','CL2','CL3','CL4','CV1','SUB'];
 const COLORS = Object.freeze({BB:'#B33939',BC:'#E08283',CA:'#1B4F72',CL:'#7FB3D5',DD:'#2E8B57',CV:'#17A398',SUB:'#6C3483',B:'#6B4A32',DB:'#8B6F47',F:'#7E7E7E',FB:'#54585B',HB:'#4A3728',PB:'#6E6259',TB:'#5C6670'});
 let model = null, activeTab = 'porto', term = '', catalogFilter = '', theme = '', saving = false;
+const catalogSort = {navi:{key:'nome',direction:1},aerei:{key:'nome',direction:1}};
 
 function make(tag, className = '', content) { const x=document.createElement(tag); if(className)x.className=className; if(content!==undefined && content!==null)x.textContent=String(content); return x; }
 function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.append(e);return e;}
@@ -57,7 +58,7 @@ function showApp(){
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent='Nhost connesso · '+(model.side==='axis'?'Axis':'Allies')+' · Salvataggio protetto · Revisione '+model.stateRevision;
  root.append(status);
  const wrap=make('div','wrap');
- const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Le formazioni restano segrete fino alla doppia conclusione. Le due fazioni avanzano insieme.');wrap.append(warning);
+ const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Le formazioni avversarie diventano consultabili soltanto nei rapporti delle battaglie concluse. Le due fazioni avanzano insieme.');wrap.append(warning);
  for(const [id] of TABS){const p=make('section','panel');p.id='p-'+id;wrap.append(p);}
  root.append(wrap);
  $('btn-refresh').addEventListener('click',async()=>{try{await refresh();toast('Dati aggiornati da Nhost.');}catch(e){toast(e.message,true);}});
@@ -239,6 +240,14 @@ async function removeUnit(kind,item){
  for(const arr of Object.values(draft.porto||{}))for(let i=0;i<arr.length;i++)if(arr[i]===oldName)arr[i]='';
  try{await persistDraft(draft);}catch{}
 }
+// Ordinamento locale e stabile. Non modifica il catalogo salvato su Nhost.
+function compareCatalogUnits(a,b,key,direction){
+ const get=u=>key==='stato'?lossStatus(u.nome):u[key];
+ const av=get(a),bv=get(b),aEmpty=av===null||av===undefined||av==='',bEmpty=bv===null||bv===undefined||bv==='';
+ if(aEmpty||bEmpty){if(aEmpty&&bEmpty)return 0;return aEmpty?1:-1;}
+ if(['pt','anno','ritirato'].includes(key))return (Number(av)-Number(bv))*direction;
+ return String(av).localeCompare(String(bv),'it',{numeric:true,sensitivity:'base'})*direction;
+}
 function renderCatalog(p,tab){
  const ships=tab==='navi',source=(ships?model.state.navi:model.state.aerei)||[];
  const add=card(ships?'Aggiungi nave':'Aggiungi aereo');const body=make('div','nhost-card-body');const bt=make('button','btn primary',ships?'Aggiungi nave':'Aggiungi aereo');bt.disabled=!canEdit();bt.onclick=()=>dialogUnit(tab);body.append(bt);
@@ -247,14 +256,34 @@ function renderCatalog(p,tab){
  const opts=ships?[['','Tutte le classi'],['BB','Corazzate'],['C','Incrociatori'],['DD','Cacciatorpediniere'],['CV','Portaerei'],['SUB','Sommergibili']]:[['','Tutte le basi'],['LAND BASED','Terrestri'],['IDRO','Idrovolanti'],['IMBARCABILE','Imbarcati']];
  for(const [value,label] of opts){const o=make('option','',label);o.value=value;sel.append(o);}sel.value=catalogFilter;
  const search=make('input','btn sm nhost-search');search.type='search';search.placeholder='Cerca un nome';search.value=term;search.setAttribute('aria-label','Cerca unità');
- bar.append(sel,search);text(bar,'span',`Catalogo privato: ${source.length} voci`,'note');p.append(bar);
+ bar.append(sel,search);text(bar,'span',`Catalogo privato: ${source.length} voci · Clicchi sulle intestazioni per ordinare`,'note');p.append(bar);
  const wrap=make('div','card scroll-x');p.append(wrap);
+ const fields=ships?[['Nome','nome'],['Tipo','tipo'],['Punti','pt'],['Anno','anno'],['Ritiro','ritirato'],['Stato','stato'],['Azioni',null]]:
+  [['Nome','nome'],['Tipo','tipo'],['Punti','pt'],['Anno','anno'],['Base','base'],['Azioni',null]];
  const update=()=>{
   const filtered=source.filter(x=>{const c=!catalogFilter||(ships?x.cls===catalogFilter:x.base===catalogFilter);return c&&(String(x.nome||'')+' '+String(x.tipo||'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));});
-  wrap.replaceChildren();const tbl=make('table');const thead=make('thead');const header=make('tr');const fields=ships?['Nome','Tipo','Punti','Anno','Ritiro','Stato','Azioni']:['Nome','Tipo','Punti','Anno','Base','Azioni'];
-  for(const col of fields)text(header,'th',col);thead.append(header);tbl.append(thead);const tbody=make('tbody');
-  for(const u of filtered){const row=make('tr');const values=ships?[u.nome,u.tipo,u.pt,u.anno,u.ritirato||'—',lossStatus(u.nome)]:[u.nome,u.tipo,u.pt,u.anno,u.base||'—'];
-   values.forEach((v,i)=>{const td=make('td',i===2?'r num':'',v??'—');if(i===1&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];row.append(td);});
+  const order=catalogSort[tab];
+  const sorted=filtered.map((unit,index)=>({unit,index})).sort((a,b)=>
+   compareCatalogUnits(a.unit,b.unit,order.key,order.direction)||a.index-b.index).map(x=>x.unit);
+  wrap.replaceChildren();const tbl=make('table');const thead=make('thead');const header=make('tr');
+  for(const [label,key] of fields){
+   const th=make('th');if(key==='pt')th.style.textAlign='center';
+   if(!key)text(th,'span',label);
+   else {
+    const selected=order.key===key;
+    th.setAttribute('aria-sort',selected?(order.direction===1?'ascending':'descending'):'none');
+    const control=make('button','',label+(selected?(order.direction===1?' ▲':' ▼'):' ⇅'));
+    control.type='button';control.title='Ordina per '+label;
+    control.style.cssText='background:transparent;border:0;color:inherit;font:inherit;font-weight:inherit;cursor:pointer;padding:0;text-align:inherit;white-space:nowrap;';
+    control.onclick=()=>{if(order.key===key)order.direction*=-1;else{order.key=key;order.direction=1;}update();};
+    th.append(control);
+   }
+   header.append(th);
+  }
+  thead.append(header);tbl.append(thead);const tbody=make('tbody');
+  for(const u of sorted){
+   const row=make('tr');const values=ships?[u.nome,u.tipo,u.pt,u.anno,u.ritirato??'—',lossStatus(u.nome)]:[u.nome,u.tipo,u.pt,u.anno,u.base||'—'];
+   values.forEach((v,i)=>{const td=make('td',i===2?'num':'',v??'—');if(i===2)td.style.textAlign='center';if(i===1&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];row.append(td);});
    const action=make('td','nhost-catalog-actions');const edit=make('button','btn sm','Modifica');edit.disabled=!canEdit();edit.onclick=()=>dialogUnit(tab,u);
    const del=make('button','btn sm danger','Rimuovi');del.disabled=!canEdit();del.onclick=()=>removeUnit(tab,u);action.append(edit,del);row.append(action);tbody.append(row);
   }
@@ -329,6 +358,76 @@ function battleGroups(container,b,reinforcement){
  }
  container.append(wave);
 }
+// Rapporto post-battaglia: la formazione avversaria diventa visibile soltanto
+// quando il SERVER ha ricevuto entrambe le conclusioni e ha salvato un rapporto.
+function reportNumber(value,decimals=0){return Number(value||0).toLocaleString('it-IT',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});}
+function reportOutcome(unit){
+ if(unit.esito==='affondata')return unit.kind==='aereo'?'Distrutto':'Affondata';
+ if(unit.esito==='danneggiata')return 'Danneggiata';
+ return 'Illesa';
+}
+function reportSideTitle(side){return side==='axis'?'Axis · Regia Marina':'Allies · Royal Navy';}
+function reportCounts(groups){
+ const units=(groups||[]).flatMap(g=>g.unita||[]);
+ return {
+  illese:units.filter(u=>u.esito==='illesa').length,
+  danneggiate:units.filter(u=>u.esito==='danneggiata').length,
+  perse:units.filter(u=>u.esito==='affondata').length,
+  naviPerse:units.filter(u=>u.esito==='affondata'&&u.kind!=='aereo').length,
+  aereiDistrutti:units.filter(u=>u.esito==='affondata'&&u.kind==='aereo').length
+ };
+}
+function reportFleetPanel(fleet){
+ const panel=card(reportSideTitle(fleet.side)+(fleet.side===model.side?' · Propria flotta':' · Flotta avversaria'));panel.style.flex='1 1 450px';panel.style.minWidth='min(100%,330px)';
+ const body=make('div','nhost-card-body');
+ summary(body,[
+  ['Punti iniziali (prima ondata)',reportNumber(fleet.prima_ondata)],
+  ['Punti di supporto',reportNumber(fleet.supporto)],
+  ['Punti totali',reportNumber(fleet.punti_totali)],
+  ['Danni subiti',reportNumber(fleet.danni_subiti,1)],
+  ['Danni inflitti',reportNumber(fleet.danni_inflitti,1)],
+  ['Coefficiente',reportNumber(fleet.coefficiente,2)],
+  ['Punteggio battaglia',reportNumber(fleet.punteggio,2)]
+ ]);
+ const counts=reportCounts(fleet.gruppi);
+ const countline=make('div','note',`Unità: ${counts.illese} illese · ${counts.danneggiate} danneggiate · ${counts.perse} perse/distrutte (${counts.naviPerse} navi, ${counts.aereiDistrutti} aerei)`);
+ countline.style.margin='12px 0';body.append(countline);
+ for(const [reinforcement,title] of [[false,'Prima ondata'],[true,'Forze di supporto']]){
+  const groups=(fleet.gruppi||[]).filter(g=>!!g.rinforzo===reinforcement);
+  const wave=make('div','battle-wave '+(reinforcement?'support':'primary'));
+  const header=make('div','battle-wave-head');
+  text(header,'strong',title);
+  text(header,'span',groups.length+' squadre · '+reportNumber(groups.reduce((n,g)=>n+Number(g.pt||0),0))+' pt','tag');
+  wave.append(header);
+  if(!groups.length)text(wave,'div','Nessuna unità.','note');
+  for(const group of groups){
+   const sq=make('div','force-sq');const head=make('div','hd');
+   text(head,'span',group.squadra||'Gruppo','nm');
+   text(head,'span',reportNumber(group.pt)+' pt','tot num');sq.append(head);
+   for(const unit of group.unita||[]){
+    const line=make('div','unit'+(unit.esito==='affondata'?' is-sunk':unit.esito==='danneggiata'?' is-hurt':''));
+    const type=make('span','type-badge',unit.tipo||'');type.style.background=COLORS[unit.tipo]||'#555';line.append(type);
+    text(line,'span',unit.nome||'—','nm');text(line,'span',reportNumber(unit.pt)+' pt','pt num');
+    const outcome=text(line,'span',reportOutcome(unit),'st');outcome.style.marginLeft='auto';outcome.style.minWidth='90px';outcome.style.justifyContent='flex-end';
+    if(unit.esito==='affondata')outcome.style.color='var(--sunk)';
+    else if(unit.esito==='danneggiata')outcome.style.color='var(--hurt)';
+    sq.append(line);
+   }
+   wave.append(sq);
+  }
+  body.append(wave);
+ }
+ panel.append(body);return panel;
+}
+function renderBattleReport(parent,data){
+ if(!data?.own||!data?.opponent)return;
+ const outer=card('Rapporto completo post-battaglia',SEASONS[data.turn_index]||'Turno '+(Number(data.turn_index)+1));
+ const content=make('div','nhost-card-body');
+ note(content,'Rapporto definitivo: le formazioni sono state rese visibili soltanto dopo la conclusione di entrambe le fazioni.');
+ const totals=make('div','row');totals.style.cssText='display:flex;flex-wrap:wrap;gap:12px;align-items:stretch;';
+ totals.append(reportFleetPanel(data.own),reportFleetPanel(data.opponent));
+ content.append(totals);outer.append(content);parent.append(outer);
+}
 function renderBattle(p){
  const b=model.state.battaglia;
  const phase=model.campaign.phase;
@@ -372,6 +471,11 @@ function renderBattle(p){
  }else if(phase==='battle'&&!mineConcluded){
   const empty=make('div','empty','Nessuna formazione in mare per '+(SEASONS[model.campaign.turn_index]||'questo turno')+'.');p.append(empty);
  }
+ if(phase==='results'){
+  const detailed=(model.reports||[]).find(r=>Number(r.turn_index)===Number(model.campaign.turn_index));
+  if(detailed)renderBattleReport(p,detailed.report);
+  else note(p,'Rapporto in elaborazione: prema «Aggiorna dati» fra qualche istante.');
+ }
  const control=card('Conclusione della battaglia');const inner=make('div','nhost-card-body');
  summary(inner,[['Axis conclusa',model.campaign.axis_concluded?'Sì':'No'],
   ['Allies conclusa',model.campaign.allies_concluded?'Sì':'No'],
@@ -409,15 +513,39 @@ function renderBattle(p){
  control.append(inner);p.append(control);
 }
 
-function renderHistory(p){const rows=Array.isArray(model.state.storico)?model.state.storico:[];const results=model.results||[];
- if(!rows.length&&!results.length){const blank=make('div','empty','Nessuna battaglia registrata. Lo storico sarà compilato dopo le due conclusioni.');p.append(blank);return;}
- const c=card('Andamento della campagna');const table=make('table');const head=make('thead');const tr=make('tr');for(const x of ['Stagione','Punti propri','Punti nemici','Danni subiti','Navi perse'])text(tr,'th',x);head.append(tr);table.append(head);const tbody=make('tbody');
- if(!rows.length && results.length){for(const r of results){const line=make('tr');for(const x of [SEASONS[r.turn_index]||r.turn_index,Number(r.own_score).toFixed(1),Number(r.opponent_score).toFixed(1),Number(r.damage_suffered).toFixed(1),'—'])text(line,'td',x);tbody.append(line);}}
- else for(const r of rows){const line=make('tr');for(const x of [r.turno,Number(r.pAll||0).toFixed(1),Number(r.pAsse||0).toFixed(1),Number(r.danniSubiti||0).toFixed(1),r.navi?.perse?.length??'—'])text(line,'td',x);tbody.append(line);}
+function renderHistory(p){
+ const rows=Array.isArray(model.state.storico)?model.state.storico:[];
+ const results=model.results||[],reports=model.reports||[];
+ if(!rows.length&&!results.length){
+  p.append(make('div','empty','Nessuna battaglia registrata. Lo storico sarà compilato dopo le due conclusioni.'));return;
+ }
+ const c=card('Andamento della campagna');const table=make('table');const head=make('thead');const tr=make('tr');
+ for(const x of ['Stagione','Punti propri','Punti nemici','Danni subiti','Navi perse'])text(tr,'th',x);
+ head.append(tr);table.append(head);const tbody=make('tbody');
+ if(!rows.length&&results.length){
+  for(const r of results){const line=make('tr');
+   for(const x of [SEASONS[r.turn_index]||r.turn_index,reportNumber(r.own_score,1),reportNumber(r.opponent_score,1),reportNumber(r.damage_suffered,1),'—'])text(line,'td',x);
+   tbody.append(line);
+  }
+ }else for(const r of rows){const line=make('tr');
+  for(const x of [r.turno,reportNumber(r.pAll,1),reportNumber(r.pAsse,1),reportNumber(r.danniSubiti,1),r.navi?.perse?.length??'—'])text(line,'td',x);
+  tbody.append(line);
+ }
  table.append(tbody);const wrapper=make('div','scroll-x');wrapper.append(table);c.append(wrapper);p.append(c);
+ // Rapporto dettagliato persistente e recuperabile anche nei turni successivi.
+ for(const [index,entry] of reports.entries()){
+  const doc=entry.report;
+  const details=make('details','card battle-history');details.style.marginTop='14px';
+  details.open=index===0;
+  const header=make('summary','battle-history-summary');
+  text(header,'span','Rapporto completo · '+(SEASONS[entry.turn_index]||'Turno '+(entry.turn_index+1)),'summary-title');
+  text(header,'span','Proprio '+reportNumber(doc.own?.punteggio,1)+' · Avversario '+reportNumber(doc.opponent?.punteggio,1),'summary-stats');
+  details.append(header);renderBattleReport(details,doc);p.append(details);
+ }
+ if(!reports.length)note(p,'I rapporti con la composizione delle due flotte compariranno qui dopo entrambe le conclusioni.');
 }
 function renderRules(p){const row=make('div','row');
- for(const [title,entries]of [['Regole della campagna',['Un’unica campagna e un unico turno condivisi fra Axis e Allies.','Ogni fazione vede solo i propri cataloghi, porti e formazioni.','Navi affondate: perdita definitiva. Navi danneggiate: riparazione secondo le regole originali.','Aerei distrutti: contano come danno nella battaglia ma non vengono radiati permanentemente.']],['Chiusura e sincronizzazione',['Ogni giocatore registra esclusivamente i danni subiti dalla propria flotta.','«Concludi battaglia» congela la formazione e i danni del giocatore.','Dopo entrambe le conclusioni il server calcola automaticamente i tre valori del nemico e i punteggi.','Il turno avanza soltanto quando entrambi premono «Pronto per il prossimo turno».']]]){
+ for(const [title,entries]of [['Regole della campagna',['Un’unica campagna e un unico turno condivisi fra Axis e Allies.','I cataloghi, i porti e le formazioni in corso restano privati; dopo entrambe le conclusioni il rapporto mostra le unità impegnate da entrambe le fazioni.','Navi affondate: perdita definitiva. Navi danneggiate: riparazione secondo le regole originali.','Aerei distrutti: contano come danno nella battaglia ma non vengono radiati permanentemente.']],['Chiusura e sincronizzazione',['Ogni giocatore registra esclusivamente i danni subiti dalla propria flotta.','«Concludi battaglia» congela la formazione e i danni del giocatore.','Dopo entrambe le conclusioni il server calcola automaticamente i tre valori del nemico e i punteggi.','Il turno avanza soltanto quando entrambi premono «Pronto per il prossimo turno».']]]){
   const c=card(title);c.style.flex='1 1 420px';const content=make('div','nhost-card-body');const ol=make('ol');for(const entry of entries)text(ol,'li',entry);content.append(ol);c.append(content);row.append(c);
  }
  p.append(row);note(p,'L’ordine di estrazione, i criteri dei rinforzi e gli altri dettagli delle Regole originali saranno integrati nel motore di gioco condiviso, senza alterare il comportamento delle due versioni HTML.');
