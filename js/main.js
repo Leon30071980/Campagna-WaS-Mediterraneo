@@ -1,5 +1,5 @@
 import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady } from './api.js';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign } from './api.js';
 import { generateBattle } from './battle-engine.js';
 import { SEASONS } from './config.js';
 
@@ -12,12 +12,17 @@ const ORDER = ['BB1','BB2','BB3','AIR','CA1','CA2','CA3','CL1','CL2','CL3','CL4'
 const COLORS = Object.freeze({BB:'#B33939',BC:'#E08283',CA:'#1B4F72',CL:'#7FB3D5',DD:'#2E8B57',CV:'#17A398',SUB:'#6C3483',B:'#6B4A32',DB:'#8B6F47',F:'#7E7E7E',FB:'#54585B',HB:'#4A3728',PB:'#6E6259',TB:'#5C6670'});
 let model = null, activeTab = 'porto', term = '', catalogFilter = '', theme = '', saving = false;
 const catalogSort = {navi:{key:'nome',direction:1},aerei:{key:'nome',direction:1}};
+let stopWatching = null, syncPending = false, syncWorking = false, syncTimer = null;
+let syncRetryDelay = 500, sessionEpoch = 0;
+let syncMode = 'automatico';
+let lastTypingAt = 0;
+document.addEventListener('input', () => { lastTypingAt = Date.now(); }, true);
 
 function make(tag, className = '', content) { const x=document.createElement(tag); if(className)x.className=className; if(content!==undefined && content!==null)x.textContent=String(content); return x; }
 function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.append(e);return e;}
 function toast(message,isError=false){ const x=$('toast');x.textContent=message;x.style.color=isError?'var(--sunk)':'';x.classList.add('on');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('on'),3800); }
 function themeApply(){if(theme)document.documentElement.setAttribute('data-theme',theme);else document.documentElement.removeAttribute('data-theme');}
-function showLogin(){ model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso'; }
+function showLogin(){ sessionEpoch++;stopLiveSync();model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso'; }
 function campaignYear(){return Number((SEASONS[model.campaign.turn_index]||'1940').match(/20\d\d/)?.[0]||1940);}
 function shipBase(name){return String(name||'').replace(/\s*\((I|II|III)\)$/,'');}
 function lossStatus(name) {
@@ -55,17 +60,18 @@ function showApp(){
  $('side-css').href=model.side==='axis'?'./css/regia.css':'./css/royal.css';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
- const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent='Nhost connesso · '+(model.side==='axis'?'Axis':'Allies')+' · Salvataggio protetto · Revisione '+model.stateRevision;
+ const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent=statusText();
  root.append(status);
  const wrap=make('div','wrap');
  const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Le formazioni avversarie diventano consultabili soltanto nei rapporti delle battaglie concluse. Le due fazioni avanzano insieme.');wrap.append(warning);
  for(const [id] of TABS){const p=make('section','panel');p.id='p-'+id;wrap.append(p);}
  root.append(wrap);
  $('btn-refresh').addEventListener('click',async()=>{try{await refresh();toast('Dati aggiornati da Nhost.');}catch(e){toast(e.message,true);}});
- $('btn-logout').addEventListener('click',async()=>{await signOut();showLogin();toast('Disconnessione eseguita.');});
+ $('btn-logout').addEventListener('click',async()=>{sessionEpoch++;stopLiveSync();await signOut();showLogin();toast('Disconnessione eseguita.');});
  $('btn-tema').addEventListener('click',()=>{theme=theme==='dark'?'light':theme==='light'?'':'dark';themeApply();localStorage.setItem('campagna-v02-theme',theme);});
  document.title=(model.side==='axis'?'Regia Marina':'Royal Navy')+' — Mediterraneo 1940–43';
  render();
+ startLiveSync();
 }
 function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+activeTab);if(!p)return;p.replaceChildren();
  if(activeTab==='porto')renderPort(p);else if(activeTab==='battaglia')renderBattle(p);else if(activeTab==='storico')renderHistory(p);
@@ -550,10 +556,75 @@ function renderRules(p){const row=make('div','row');
  }
  p.append(row);note(p,'L’ordine di estrazione, i criteri dei rinforzi e gli altri dettagli delle Regole originali saranno integrati nel motore di gioco condiviso, senza alterare il comportamento delle due versioni HTML.');
 }
-async function refresh(){const m=await loadCampaign();if(!['axis','allies'].includes(m.side))throw new Error('Fazione non valida.');
+// Sincronizzazione v0.6. Aggiorna l'interfaccia solo quando Nhost segnala
+// una variazione effettiva; non sovrascrive campi che il giocatore sta scrivendo.
+function statusText() {
+ return `Nhost connesso · ${model?.side==='axis'?'Axis':'Allies'} · Salvataggio protetto · Revisione ${model?.stateRevision??'—'} · Sync ${syncMode}`;
+}
+function setSyncMode(live) {
+ syncMode=live?'in tempo reale':'automatico (5 s)';
+ const status=$('nhost-statusbar');if(status&&model)status.textContent=statusText();
+}
+function stopLiveSync() {
+ if(stopWatching){stopWatching();stopWatching=null;}
+ if(syncTimer!==null){clearTimeout(syncTimer);syncTimer=null;}
+ syncPending=false;
+}
+function startLiveSync() {
+ stopLiveSync();
+ if(!model)return;
+ stopWatching=watchCampaign({
+  campaign:model.campaign,
+  onChange:()=>queueLiveRefresh(),
+  onStatus:setSyncMode
+ });
+}
+function queueLiveRefresh() {
+ if(!model)return;
+ syncPending=true;
+ if(syncTimer===null)syncTimer=setTimeout(runLiveRefresh,200);
+}
+async function runLiveRefresh() {
+ syncTimer=null;
+ if(!model||!syncPending)return;
+ const target=document.activeElement;
+ const userIsTyping=target&&['INPUT','TEXTAREA','SELECT'].includes(target.tagName)
+  && Date.now()-lastTypingAt<2500;
+ if(syncWorking||saving||document.querySelector('dialog[open]')||userIsTyping){
+  syncTimer=setTimeout(runLiveRefresh,900);return;
+ }
+ syncPending=false;syncWorking=true;
+ const before={...model.campaign},side=model.side;
+ try{
+  await refresh();
+  syncRetryDelay=500;
+  if(!model||model.side!==side)return;
+  const after=model.campaign,enemy=side==='axis'?'allies':'axis';
+  if(Number(after.turn_index)>Number(before.turn_index))
+   toast('Nuovo turno disponibile: '+(SEASONS[after.turn_index]||'campagna conclusa')+'.');
+  else if(before.phase==='battle'&&after.phase==='results')
+   toast('Entrambe le fazioni hanno concluso: rapporto post-battaglia disponibile.');
+  else if(!before[enemy+'_concluded']&&after[enemy+'_concluded'])
+   toast('L’avversario ha concluso la battaglia.');
+  else if(!before[enemy+'_ready']&&after[enemy+'_ready'])
+   toast('L’avversario è pronto per il prossimo turno.');
+ }catch(e){
+  console.warn('Aggiornamento automatico:',e.message);
+  syncPending=true;
+  syncRetryDelay=Math.min(syncRetryDelay*2,15000);
+ }
+ finally{
+  syncWorking=false;
+  if(syncPending&&syncTimer===null)syncTimer=setTimeout(runLiveRefresh,syncRetryDelay);
+ }
+}
+
+async function refresh(){const epoch=sessionEpoch;const m=await loadCampaign();
+ if(epoch!==sessionEpoch)return; // Se e' avvenuto logout, ignora una vecchia richiesta.
+ if(!['axis','allies'].includes(m.side))throw new Error('Fazione non valida.');
  if(!Array.isArray(m.state.navi)||!Array.isArray(m.state.aerei)||!m.state.porto)throw new Error('Catalogo Nhost incompleto: verificare importazione 005.');
  const oldSide=model?.side;model=m;
- if(oldSide!==m.side || !$('p-porto'))showApp();else{const status=$('nhost-statusbar');if(status)status.textContent=`Nhost connesso · ${m.side} · Salvataggio protetto · Revisione ${m.stateRevision}`;render();}
+ if(oldSide!==m.side || !$('p-porto'))showApp();else{const status=$('nhost-statusbar');if(status)status.textContent=statusText();render();}
 }
 $('login-form').addEventListener('submit',async ev=>{ev.preventDefault();const b=$('login-submit');b.disabled=true;b.textContent='Accesso…';$('login-error').hidden=true;
  try{await signIn($('email').value.trim(),$('password').value,$('remember').checked);await refresh();toast('Accesso riuscito: Quadro Comando caricato.');}
