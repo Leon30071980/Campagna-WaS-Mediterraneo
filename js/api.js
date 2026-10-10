@@ -89,3 +89,52 @@ export async function saveLogistics(state, expectedRevision) {
   return {state:typeof result.state==='string'?JSON.parse(result.state):result.state,
     revision:Number(result.revision),updatedAt:result.updated_at};
 }
+
+// Campagna v0.4: mutation controllate (non permettono accesso ai dati avversari).
+async function campaignMutation(query, variables, name) {
+  const body = JSON.stringify({query, variables});
+  const request = async token => {
+    const res = await fetch(NHOST.graphUrl, {
+      method: 'POST',
+      headers: {'content-type':'application/json',authorization:'Bearer '+token},
+      body
+    });
+    if (res.status===401) return {expired:true};
+    const data=await res.json();
+    if (!res.ok || data.errors?.length) throw new Error(data.errors?.[0]?.message||'Errore Nhost '+res.status);
+    const out=data.data?.[name];
+    if (!Array.isArray(out)||out.length!==1) throw new Error('Risposta incompleta da '+name);
+    return out[0];
+  };
+  let token=await getAccessToken();
+  if(!token)throw new Error('Sessione scaduta.');
+  let result=await request(token);
+  if(result.expired)result=await request(await refreshAccessToken());
+  if(result.expired)throw new Error('Sessione scaduta. Accedere nuovamente.');
+  return result;
+}
+export async function saveBattle(battle,revision) {
+  const query=`mutation($battle:jsonb,$revision:bigint!){
+    campaign_save_battle(args:{p_battle:$battle,p_expected_revision:$revision}){
+      revision state updated_at
+    }
+  }`;
+  const r=await campaignMutation(query,{battle,revision},'campaign_save_battle');
+  return {state:typeof r.state==='string'?JSON.parse(r.state):r.state,revision:Number(r.revision)};
+}
+export async function concludeBattle(revision) {
+  const query=`mutation($revision:bigint!){
+    campaign_conclude_battle(args:{p_expected_revision:$revision}){
+      id turn_index phase axis_concluded allies_concluded axis_ready allies_ready revision
+    }
+  }`;
+  return campaignMutation(query,{revision},'campaign_conclude_battle');
+}
+export async function markReady(revision) {
+  const query=`mutation($revision:bigint!){
+    campaign_mark_ready(args:{p_expected_revision:$revision}){
+      id turn_index phase axis_concluded allies_concluded axis_ready allies_ready revision
+    }
+  }`;
+  return campaignMutation(query,{revision},'campaign_mark_ready');
+}
