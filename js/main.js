@@ -7,6 +7,18 @@ import { SEASONS } from './config.js';
 // Sicurezza: nessun dato di flotta o nome di squadra avversario è presente nei file pubblici.
 // I cataloghi e il porto restano privati e sono salvati con mutazioni protette Nhost.
 const $ = id => document.getElementById(id);
+// v0.7.3 — Favicon dinamico per la fazione autenticata.
+// Il favicon resta neutro nella pagina di login; non si basa sulla mail digitata.
+function setAppFavicon(side) {
+  const favicon = $('app-favicon');
+  if (!favicon) return;
+  const filenames = { axis: 'favicon-axis.png', allies: 'favicon-allies.png' };
+  const filename = filenames[side];
+  favicon.href = filename
+    ? './assets/favicons/' + filename + '?v=0.7.3'
+    : 'data:,';
+}
+
 const TABS = [['porto','Porto'],['battaglia','Battaglia'],['storico','Storico'],['navi','Naviglio'],['aerei','Aerei'],['gestione','Gestione campagna'],['regole','Regole']];
 const ORDER = ['BB1','BB2','BB3','AIR','CA1','CA2','CA3','CL1','CL2','CL3','CL4','CV1','SUB'];
 const COLORS = Object.freeze({BB:'#B33939',BC:'#E08283',CA:'#1B4F72',CL:'#7FB3D5',DD:'#2E8B57',CV:'#17A398',SUB:'#6C3483',B:'#6B4A32',DB:'#8B6F47',F:'#7E7E7E',FB:'#54585B',HB:'#4A3728',PB:'#6E6259',TB:'#5C6670'});
@@ -22,7 +34,7 @@ function make(tag, className = '', content) { const x=document.createElement(tag
 function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.append(e);return e;}
 function toast(message,isError=false){ const x=$('toast');x.textContent=message;x.style.color=isError?'var(--sunk)':'';x.classList.add('on');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('on'),3800); }
 function themeApply(){if(theme)document.documentElement.setAttribute('data-theme',theme);else document.documentElement.removeAttribute('data-theme');}
-function showLogin(){ sessionEpoch++;stopLiveSync();model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso'; }
+function showLogin(){ sessionEpoch++;stopLiveSync();model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso';setAppFavicon(null); }
 // Stessa tabella stagioni utilizzata dalla validazione SQL di Nhost.
 function campaignYear(){return [1940,1940,1941,1941,1941,1942,1942,1942,1943,1943][Number(model.campaign.turn_index)] ?? 1940;}
 function shipBase(name){return String(name||'').replace(/\s*\((I|II|III)\)$/,'');}
@@ -63,6 +75,7 @@ function scores(){
 function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
+ setAppFavicon(model.side);
  $('side-css').href=model.side==='axis'?'./css/regia.css':'./css/royal.css';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
@@ -809,19 +822,6 @@ async function runLiveRefresh() {
   syncWorking=false;
   if(syncPending&&syncTimer===null)syncTimer=setTimeout(runLiveRefresh,syncRetryDelay);
  }
-}
-
-function setAppFavicon(side) {
-  const favicon = document.getElementById('app-favicon');
-  if (!favicon) return;
-
-  if (side === 'axis') {
-    favicon.href = 'assets/favicons/favicon-axis.png';
-  } else if (side === 'allies') {
-    favicon.href = 'assets/favicons/favicon-allies.png';
-  } else {
-    favicon.href = 'assets/favicons/favicon-default.png';
-  }
 }
 
 async function refresh(){const epoch=sessionEpoch;const m=await loadCampaign();
