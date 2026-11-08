@@ -811,6 +811,19 @@ async function runLiveRefresh() {
  }
 }
 
+function setAppFavicon(side) {
+  const favicon = document.getElementById('app-favicon');
+  if (!favicon) return;
+
+  if (side === 'axis') {
+    favicon.href = 'assets/favicons/favicon-axis.png';
+  } else if (side === 'allies') {
+    favicon.href = 'assets/favicons/favicon-allies.png';
+  } else {
+    favicon.href = 'assets/favicons/favicon-default.png';
+  }
+}
+
 async function refresh(){const epoch=sessionEpoch;const m=await loadCampaign();
  if(epoch!==sessionEpoch)return; // Se e' avvenuto logout, ignora una vecchia richiesta.
  if(!['axis','allies'].includes(m.side))throw new Error('Fazione non valida.');
