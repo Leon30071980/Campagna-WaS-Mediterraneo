@@ -1,27 +1,32 @@
-# Campagna W@S Mediterraneo — Web v0.3
+# Campagna W@S Mediterraneo — v1.0 (Nhost)
 
-## Caratteristiche
-- Grafica, bandiere, font, temi e colori dei due Quadri Comando originali.
-- Login Nhost Axis / Allies, dati cataloghi sempre caricati dal database (nessun catalogo pubblico).
-- **Naviglio e Aerei:** aggiungi, modifica e rimuovi le voci (proprio catalogo).
-- **Porto:** assegnazione da menu per ogni slot, riempimento casuale delle caselle e svuotamento totale.
-- Salvataggio diretto su Nhost con numero di revisione e verifica lato PostgreSQL.
-- Nessuna modifica di `perdite`, `storico`, `battaglia`, punteggi, fazione o turni tramite questa funzione.
-- Modifiche bloccate dopo la generazione della battaglia, dopo la conclusione o durante la fase risultati.
+Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
+Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
+Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da questo rilascio.
 
-## Prerequisiti backend (obbligatori)
-1. Tabelle Nhost 001, utenti e campagna 002, cataloghi importati 005, squadre importate 007.
-2. In Nhost SQL Editor eseguire `009_salvataggio_logistica_nhost.sql` (fornito separatamente, **non da caricare su GitHub**).
-3. Sul proprio PC eseguire `010_abilita_funzione_hasura.ps1` per tracciare la funzione e assegnare il permesso Hasura `user` **solo alla funzione**.
-4. Verificare che permessi diretti `INSERT`, `UPDATE` e `DELETE` rimangano assenti sulle tabelle pubbliche.
-5. Soltanto dopo, pubblicare i file frontend v0.3 su GitHub Pages.
+## Funzioni
+- Login, logout, tema e favicon dinamico per fazione.
+- Porto e cataloghi privati: assegnazioni, compilazione casuale, modifica delle unità.
+- Estrazione riproducibile da seme, esiti, doppia conclusione e rapporti post-battaglia.
+- Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
+- Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
+- WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
 
-## Nota sulle identità delle unità
-L'interfaccia lavora ancora con il nome della nave/aereo come chiave, per compatibilità con i vecchi HTML. In caso di rinomina di una voce attualmente assegnata, la corrispondente casella viene aggiornata nella stessa transazione. Le voci presenti nello storico o nelle perdite non possono essere rimosse o rinominate.
+## Novità v1.0
+- Regola dei nomi di scafo condivisa tra Porto e motore; una perdita definitiva prevale su qualsiasi versione.
+- Controlli delle versioni duplicate anche nel database, snapshot completi v2 e indicazione degli archivi incompleti (richiedono migrazione SQL e metadati).
+- Rinnovo autenticazione coordinato nella singola scheda; messaggi di rete espliciti, timeout e protezione contro risposte obsolete.
+- Interfaccia stabile durante la modifica di un campo, nessun ridisegno per notifiche equivalenti, controllo periodico di salute anche con WebSocket attivo.
+- Icona neutra Apple Touch; versionamento degli import JavaScript.
 
-## Verifiche non ancora eseguite
-- Le funzioni SQL non sono state eseguite su Nhost: non sono disponibili le credenziali amministrative, e non devono essere condivise.
-- Il rendering in browser remoto e le autorizzazioni della mutation richiedono una prova effettiva con gli account Axis/Allies.
+## Installazione
+Sostituire soltanto i file frontend del pacchetto GitHub, mantenendo CSS e asset esistenti.
+Prima applicare gli script privati SQL/metadati v1.0 secondo la guida separata, dopo il backup.
+Non pubblicare sul repository password, Hasura Admin Secret, esportazioni reali o script SQL privati.
+Il piano gratuito può sospendere il progetto dopo inattività: controllare lo stato Nhost se il login non riesce.
 
-## Non ancora disponibili
-Estrazioni, registrazione esiti, pulsanti «Concludi battaglia», «Pronto per il prossimo turno», snapshot e ripristino. Le parti in sola lettura nelle sezioni Battaglia e Storico rimangono tali fino alla fase successiva.
+## Sicurezza e limiti
+Il backend, non il browser, deve far rispettare i filtri di fazione e i permessi delle funzioni.
+L'estrazione avviene nel client; le mutazioni convalidano unità, porto, disponibilità e punteggi, ma non riproducono a server ogni tiro del seme. Il gioco presuppone giocatori collaborativi.
+Usare profili browser distinti per le due fazioni: il token persistente è condiviso tra schede sullo stesso origin.
+I test locali non sostituiscono il collaudo sul progetto Nhost attivo. Conservare backup indipendenti dal database.

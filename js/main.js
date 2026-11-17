@@ -1,13 +1,14 @@
-import { signIn, signOut, resumeSession } from './auth.js';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js';
-import { generateBattle } from './battle-engine.js';
-import { SEASONS } from './config.js';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.0';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.0';
+import { generateBattle } from './battle-engine.js?v=1.0';
+import { SEASONS } from './config.js?v=1.0';
+import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.0';
 
 // Fedeltà visiva: fogli CSS e testate sono estratti senza modifiche dagli HTML originali.
 // Sicurezza: nessun dato di flotta o nome di squadra avversario è presente nei file pubblici.
 // I cataloghi e il porto restano privati e sono salvati con mutazioni protette Nhost.
 const $ = id => document.getElementById(id);
-// v0.7.4 — Favicon incorporati: nessuna dipendenza da percorsi di file PNG su GitHub.
+// v1.0 — Favicon incorporati: nessuna dipendenza da percorsi di file PNG su GitHub.
 // Immagini 64x64 ottimizzate; il lato e' preso solo dalla sessione Nhost autenticata.
 const APP_FAVICON_DATA = Object.freeze({
   axis: 'data:image/png;base64,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',
@@ -36,29 +37,16 @@ const catalogSort = {navi:{key:'nome',direction:1},aerei:{key:'nome',direction:1
 let stopWatching = null, syncPending = false, syncWorking = false, syncTimer = null;
 let syncRetryDelay = 500, sessionEpoch = 0;
 let syncMode = 'automatico';
-let lastTypingAt = 0;
-document.addEventListener('input', () => { lastTypingAt = Date.now(); }, true);
+let refreshSerial = 0;
 
 function make(tag, className = '', content) { const x=document.createElement(tag); if(className)x.className=className; if(content!==undefined && content!==null)x.textContent=String(content); return x; }
 function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.append(e);return e;}
 function toast(message,isError=false){ const x=$('toast');x.textContent=message;x.style.color=isError?'var(--sunk)':'';x.classList.add('on');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('on'),3800); }
 function themeApply(){if(theme)document.documentElement.setAttribute('data-theme',theme);else document.documentElement.removeAttribute('data-theme');}
-function showLogin(){ sessionEpoch++;stopLiveSync();model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso';setAppFavicon(null); }
+function showLogin(){ sessionEpoch++;refreshSerial++;stopLiveSync();saving=false;model=null;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso';setAppFavicon(null); }
 // Stessa tabella stagioni utilizzata dalla validazione SQL di Nhost.
-function campaignYear(){return [1940,1940,1941,1941,1941,1942,1942,1942,1943,1943][Number(model.campaign.turn_index)] ?? 1940;}
-function shipBase(name){return String(name||'').replace(/\s*\((I|II|III)\)$/,'');}
-// Valutare TUTTE le versioni dello stesso scafo, esattamente come Nhost.
-// Una vecchia versione con danni o affondamento blocca anche l'omonima.
-function lossStatus(name, state = model.state) {
- const losses=state.perdite||{};
- let repairing=false;
- for(const [key,loss] of Object.entries(losses)) {
-  if(shipBase(key)!==shipBase(name))continue;
-  if(loss?.stato==='affondata')return 'affondata';
-  if(model.campaign.turn_index<=Number(loss?.turno)+1)repairing=true;
- }
- return repairing?'riparazione':'attiva';
-}
+function campaignYear(){return CAMPAIGN_YEARS[Number(model.campaign.turn_index)] ?? 1940;}
+function lossStatus(name, state = model.state) {return shipStatus(name,state.perdite,model.campaign.turn_index);}
 function fleetTotals(){
  const year=campaignYear(), seen=new Set();const lists={attiva:[],riparazione:[],affondata:[]};
  const sorted=[...(model.state.navi||[])].sort((a,b)=>{
@@ -94,8 +82,8 @@ function showApp(){
  const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Le formazioni avversarie diventano consultabili soltanto nei rapporti delle battaglie concluse. Le due fazioni avanzano insieme.');wrap.append(warning);
  for(const [id] of TABS){const p=make('section','panel');p.id='p-'+id;wrap.append(p);}
  root.append(wrap);
- $('btn-refresh').addEventListener('click',async()=>{try{await refresh();toast('Dati aggiornati da Nhost.');}catch(e){toast(e.message,true);}});
- $('btn-logout').addEventListener('click',async()=>{sessionEpoch++;stopLiveSync();await signOut();showLogin();toast('Disconnessione eseguita.');});
+ $('btn-refresh').addEventListener('click',async()=>{if(saving)return;try{if(await refresh())toast('Dati aggiornati da Nhost.');}catch(e){toast(e.message,true);}});
+ $('btn-logout').addEventListener('click',async()=>{if(saving){toast('Attendere la fine del salvataggio.',true);return;}const done=signOut();showLogin();await done;toast('Disconnessione eseguita.');});
  $('btn-tema').addEventListener('click',()=>{theme=theme==='dark'?'light':theme==='light'?'':'dark';themeApply();localStorage.setItem('campagna-v02-theme',theme);});
  document.title=(model.side==='axis'?'Regia Marina':'Royal Navy')+' — Mediterraneo 1940–43';
  render();
@@ -127,10 +115,8 @@ function canEdit(){return model && !saving && model.campaign.phase==='battle' &&
 function cloneState(){return structuredClone(model.state);}
 function catalogMap(state=model.state){return new Map([...(state.navi||[]),...(state.aerei||[])].map(u=>[u.nome,u]));}
 function isShip(unit){return unit && Object.hasOwn(unit,'cls');}
-function available(unit, state=model.state){if(!unit)return false;const yr=campaignYear();return Number(unit.anno)<=yr && (!unit.ritirato || yr<Number(unit.ritirato)) && (!isShip(unit)||lossStatus(unit.nome,state)==='attiva');}
+function available(unit, state=model.state){return isAvailable(unit,state,model.campaign.turn_index);}
 function matchClass(unit,cls){return unit && (cls||[]).some(x=>x===unit.cls||x===unit.tipo);}
-function baseName(name){return String(name).replace(/\s*\((I|II|III)\)$/,'');}
-function assignedShips(state){const all=new Set();for(const entries of Object.values(state.porto||{}))for(const name of entries||[])if(name&&state.navi.some(x=>x.nome===name))all.add(name);return all;}
 function hasCarrier(state=model.state){return(state.navi||[]).some(x=>x.cls==='CV'&&available(x,state));}
 function optionPool(squad,index,current,state=model.state){
   const cat=[...(state.navi||[]),...(state.aerei||[])];
@@ -156,10 +142,10 @@ function optionPool(squad,index,current,state=model.state){
     accepted=cat.filter(isShip);
     allowed=index<nN?(slotClass!==undefined?[slotClass]:nucleus.cls||[]):escort.cls||[];
   }
-  const used=assignedShips(state);
+  const used=assignedHullBases(state,squad.id,index);
   const list=accepted.filter(u=>{
     if(!available(u,state))return false;
-    if(isShip(u)&&used.has(u.nome)&&u.nome!==current)return false;
+    if(isShip(u)&&used.has(shipBase(u.nome)))return false;
     if(squad.id==='AIR')return !allowed.length||allowed.includes(u.tipo);
     if(squad.id==='CV1'&&allowed.includes('AEREO_IMB'))return u.base==='IMBARCABILE';
     return matchClass(u,allowed);
@@ -174,11 +160,11 @@ async function persistDraft(draft){
   try{
     const saved=await saveLogistics(draft,model.stateRevision);
     model.state=saved.state;model.stateRevision=saved.revision;model.updatedAt=saved.updatedAt;
-    saving=false;render();renderPennant();toast('Modifica salvata su Nhost.');
+    saving=false;render();toast('Modifica salvata su Nhost.');
   }catch(error){
     toast(error.message,true);
     if(/revisione|concorren|scadut/i.test(error.message)){
-      try{await refresh();}catch{}
+      saving=false;try{await refresh();}catch{}
     }
     throw error;
   }finally{saving=false;}
@@ -220,6 +206,7 @@ function slotCard(container,s,names){
 }
 function renderPort(p){
   const info=make('div','row');info.style.marginBottom='14px';
+  const duplicate=duplicateHull(model.state);if(duplicate)note(p,'Attenzione: scafo duplicato nel porto ('+duplicate+'). Liberare le caselle duplicate prima di generare una battaglia.');
   const intro=make('div','note',canEdit()?'Assegna le unità alle squadre. Sono selezionabili solo quelle disponibili; ogni modifica viene salvata su Nhost.':'Porto in sola lettura: modifiche bloccate durante o dopo una battaglia.');intro.style.flex='1';info.append(intro);
   const rand=make('button','btn sm','Compila a caso le caselle vuote');rand.disabled=!canEdit();
   rand.onclick=async()=>{
@@ -232,7 +219,6 @@ function renderPort(p){
       for(let i=0;i<squadSlots(s,arr,draft).len;i++){
         if(arr[i])continue;
         const pool=optionPool(s,i,'',draft).filter(u=>
-          (!isShip(u)||!assignedShips(draft).has(u.nome))&&
           (s.id!=='CV1'||i!==0||u.cls!=='CV'||
            !arr.slice(1+Number(u.hangar??3)).some(Boolean))
         );
@@ -405,7 +391,7 @@ function damageFromBattle(b){return (b?.gruppi||[]).flatMap(g=>g.unita||[]).redu
  s+(u.esito==='affondata'?Number(u.pt):u.esito==='danneggiata'?Number(u.pt)/2:0),0);}
 function appendAction(parent,label,handler,disabled=false,klass='btn sm'){
  const b=make('button',klass,label);b.type='button';b.disabled=disabled;
- b.onclick=handler;parent.append(b);return b;
+ b.onclick=()=>{if(!saving)return handler();};parent.append(b);return b;
 }
 async function storeBattle(battle){
  if(!canEditBattle())return;
@@ -415,7 +401,7 @@ async function storeBattle(battle){
   model.state=result.state;model.stateRevision=result.revision;
   toast('Battaglia salvata su Nhost.');
  }catch(e){toast(e.message,true);throw e;}
- finally{saving=false;await refresh();}
+ finally{saving=false;try{await refresh();}catch(e){toast(e.message,true);}}
 }
 function battleRolls(container,b){
  const c=card('Log estrazione','Seme '+String(b.seed));
@@ -564,7 +550,7 @@ function renderBattle(p){
    try{await storeBattle(null);}catch{}
   },saving,'btn sm danger');
  }
- appendAction(toolbar,'Aggiorna dati',async()=>{try{await refresh();toast('Dati aggiornati.');}catch(e){toast(e.message,true);}},saving);
+ appendAction(toolbar,'Aggiorna dati',async()=>{try{if(await refresh())toast('Dati aggiornati.');}catch(e){toast(e.message,true);}},saving);
  p.append(toolbar);
  if(b){
   const force=card('Forza in mare',b.totale+' pt · seme '+b.seed+' · '+b.tentativi+' estrazioni');
@@ -598,7 +584,7 @@ function renderBattle(p){
     saving=true;
     try{await concludeBattle(model.stateRevision);toast('Battaglia conclusa.');}
     catch(e){toast(e.message,true);}
-    finally{saving=false;await refresh();}
+    finally{saving=false;try{await refresh();}catch(e){toast(e.message,true);}}
    },!b||saving,'btn primary');
   }
  }else if(phase==='results'){
@@ -615,7 +601,7 @@ function renderBattle(p){
     saving=true;
     try{await markReady(model.campaign.revision);toast('Conferma registrata.');}
     catch(e){toast(e.message,true);}
-    finally{saving=false;await refresh();}
+    finally{saving=false;try{await refresh();}catch(e){toast(e.message,true);}}
   },saving,'btn primary');
  }else note(inner,'Campagna conclusa. Tutti i risultati sono disponibili nello Storico.');
  control.append(inner);p.append(control);
@@ -673,13 +659,13 @@ function renderManagement(p) {
       appendAction(buttons,'Approva ripristino / reset',async()=>{
         if(!confirm('Confermare il caricamento? Tutti i dati della campagna corrente saranno sostituiti. Verrà prima creato un backup automatico.'))return;
         saving=true;try{await resolveCampaignRequest(pending.id,true);toast('Conferma registrata.');await refresh();}
-        catch(e){toast(e.message,true);await refresh();}finally{saving=false;}
+        catch(e){toast(e.message,true);try{await refresh();}catch(err){toast(err.message,true);}}finally{saving=false;if(model)render();}
       },saving,'btn primary');
     }else note(body,'Ha già confermato. Attendere l’altra fazione.');
     appendAction(buttons,'Rifiuta richiesta',async()=>{
       if(!confirm('Rifiutare la richiesta senza modificare la campagna?'))return;
       saving=true;try{await resolveCampaignRequest(pending.id,false);await refresh();toast('Richiesta rifiutata.');}
-      catch(e){toast(e.message,true);}finally{saving=false;}
+      catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
     },saving,'btn sm danger');
     body.append(buttons);box.append(body);p.append(box);
   }
@@ -691,30 +677,33 @@ function renderManagement(p) {
   appendAction(newRow,'Salva campagna',async()=>{
     const label=name.value.trim();if(!label){toast('Inserire un nome per il salvataggio.',true);return;}
     saving=true;try{await createCampaignSave(label);await refresh();toast('Salvataggio creato.');}
-    catch(e){toast(e.message,true);}finally{saving=false;}
+    catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
   },saving||!!pending,'btn primary');sb.append(newRow);
+  if(!model.snapshotStatusSupported)note(sb,'Stato di compatibilità degli archivi non disponibile: completare la migrazione Nhost v1.0.');
   if(!model.saves.length)note(sb,'Nessun salvataggio disponibile.');
+  if(model.saves.some(s=>s.restorable===false))note(sb,'I vecchi archivi incompleti sono conservati ma non possono essere caricati in sicurezza.');
   for(const save of model.saves){
     const r=make('div','nhost-actions');r.style.cssText='border-top:1px solid var(--line,#46515a);padding:10px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
-    const label=make('span','',save.label);label.style.flex='1 1 220px';r.append(label);
+    const unavailable=save.restorable===false;
+    const label=make('span','',save.label+(unavailable?' · Archivio storico non ripristinabile':''));label.style.flex='1 1 220px';r.append(label);
     const season=make('span','note',SEASONS[save.turn_index]||'Turno '+(save.turn_index+1));r.append(season);
     appendAction(r,'Rinomina',async()=>{
       const renamed=prompt('Nuovo nome del salvataggio:',save.label);
       if(renamed===null)return;
       saving=true;try{await renameCampaignSave(save.snapshot_id,renamed.trim());await refresh();toast('Nome aggiornato.');}
-      catch(e){toast(e.message,true);}finally{saving=false;}
+      catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
     },saving||!!pending);
     appendAction(r,'Carica',async()=>{
       if(!confirm('Richiedere il caricamento di «'+save.label+'»? Anche l’altra fazione dovrà approvare.'))return;
       saving=true;try{await requestCampaignLoad(save.snapshot_id);await refresh();toast('Richiesta di caricamento inviata.');}
-      catch(e){toast(e.message,true);}finally{saving=false;}
-    },saving||!!pending,'btn sm');
+      catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
+    },saving||!!pending||unavailable,'btn sm');
     appendAction(r,'Elimina',async()=>{
       if(!confirm('Eliminare definitivamente il salvataggio «'+save.label+'»?\nLa campagna attiva non verrà modificata. Questa operazione non è reversibile.'))return;
       saving=true;
       try{await deleteCampaignSave(save.snapshot_id);await refresh();toast('Salvataggio eliminato.');}
       catch(e){toast(e.message,true);alert('Impossibile eliminare: '+e.message);}
-      finally{saving=false;}
+      finally{saving=false;if(model)render();}
     },saving||!!pending,'btn sm danger');
     sb.append(r);
   }
@@ -741,13 +730,13 @@ function renderManagement(p) {
     line.append(label,points);
     appendAction(line,'Salva punteggio iniziale',async()=>{
       const value=Number(points.value);
-      if(points.value.trim()===''||!Number.isFinite(value)||value<0||value>1000000||Math.round(value*100)!==value*100){
+      if(points.value.trim()===''||!Number.isFinite(value)||value<0||value>1000000||Math.abs(Math.round(value*100)-value*100)>1e-7){
         toast('Inserire un punteggio valido, massimo due decimali.',true);return;
       }
       saving=true;
       try{await setScenarioScore(value);await refresh();toast('Punteggio iniziale salvato.');}
-      catch(e){toast(e.message,true);await refresh();}
-      finally{saving=false;}
+      catch(e){toast(e.message,true);try{await refresh();}catch(err){toast(err.message,true);}}
+      finally{saving=false;if(model)render();}
     },saving||!!pending,'btn primary');
     setupBody.append(line);setup.append(setupBody);p.append(setup);
   }
@@ -760,7 +749,7 @@ function renderManagement(p) {
   appendAction(controls,'Richiedi reset della campagna',async()=>{
     if(!confirm('Richiedere una NUOVA campagna da '+SEASONS[Number(start.value)]+'? Occorre anche la conferma avversaria.'))return;
     saving=true;try{await requestCampaignReset(Number(start.value));await refresh();toast('Richiesta di reset inviata.');}
-    catch(e){toast(e.message,true);}finally{saving=false;}
+    catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
   },saving||!!pending,'btn sm danger');rb.append(controls);reset.append(rb);p.append(reset);
 }
 
@@ -768,7 +757,7 @@ function renderRules(p){const row=make('div','row');
  for(const [title,entries]of [['Regole della campagna',['Un’unica campagna e un unico turno condivisi fra Axis e Allies.','I cataloghi, i porti e le formazioni in corso restano privati; dopo entrambe le conclusioni il rapporto mostra le unità impegnate da entrambe le fazioni.','Navi affondate: perdita definitiva. Navi danneggiate: riparazione secondo le regole originali.','Aerei distrutti: contano come danno nella battaglia ma non vengono radiati permanentemente.']],['Chiusura e sincronizzazione',['Ogni giocatore registra esclusivamente i danni subiti dalla propria flotta.','«Concludi battaglia» congela la formazione e i danni del giocatore.','Dopo entrambe le conclusioni il server calcola automaticamente i tre valori del nemico e i punteggi.','Il turno avanza soltanto quando entrambi premono «Pronto per il prossimo turno».']]]){
   const c=card(title);c.style.flex='1 1 420px';const content=make('div','nhost-card-body');const ol=make('ol');for(const entry of entries)text(ol,'li',entry);content.append(ol);c.append(content);row.append(c);
  }
- p.append(row);note(p,'L’ordine di estrazione, i criteri dei rinforzi e gli altri dettagli delle Regole originali saranno integrati nel motore di gioco condiviso, senza alterare il comportamento delle due versioni HTML.');
+ p.append(row);note(p,'Il motore condiviso applica le regole di estrazione e rinforzo delle versioni HTML originali. La v1.0 uniforma i controlli di disponibilità degli scafi.');
 }
 // Sincronizzazione v0.6. Aggiorna l'interfaccia solo quando Nhost segnala
 // una variazione effettiva; non sovrascrive campi che il giocatore sta scrivendo.
@@ -788,7 +777,7 @@ function startLiveSync() {
  stopLiveSync();
  if(!model)return;
  stopWatching=watchCampaign({
-  campaign:model.campaign,
+  campaign:model.campaign,ownRevision:model.stateRevision,
   onChange:()=>queueLiveRefresh(),
   onStatus:setSyncMode
  });
@@ -801,16 +790,14 @@ function queueLiveRefresh() {
 async function runLiveRefresh() {
  syncTimer=null;
  if(!model||!syncPending)return;
- const target=document.activeElement;
- const userIsTyping=target&&['INPUT','TEXTAREA','SELECT'].includes(target.tagName)
-  && Date.now()-lastTypingAt<2500;
- if(syncWorking||saving||document.querySelector('dialog[open]')||userIsTyping){
+ if(syncWorking||saving||editingPanel()){
   syncTimer=setTimeout(runLiveRefresh,900);return;
  }
  syncPending=false;syncWorking=true;
  const before={...model.campaign},side=model.side;
  try{
-  await refresh();
+  const applied=await refresh({live:true});
+  if(!applied){if(model)syncPending=true;return;}
   syncRetryDelay=500;
   if(!model||model.side!==side)return;
   const after=model.campaign,enemy=side==='axis'?'allies':'axis';
@@ -833,12 +820,32 @@ async function runLiveRefresh() {
  }
 }
 
-async function refresh(){const epoch=sessionEpoch;const m=await loadCampaign();
- if(epoch!==sessionEpoch)return; // Se e' avvenuto logout, ignora una vecchia richiesta.
+function editingPanel(){
+ const target=document.activeElement;
+ return !!document.querySelector('dialog[open]') || !!(target && ['INPUT','TEXTAREA','SELECT'].includes(target.tagName) && $('command-root').contains(target));
+}
+async function refresh({live=false}={}){
+ const epoch=sessionEpoch,serial=++refreshSerial;
+ const m=await loadCampaign();
+ if(epoch!==sessionEpoch||serial!==refreshSerial)return false;
+ if(live&&(saving||editingPanel()))return false;
  if(!['axis','allies'].includes(m.side))throw new Error('Fazione non valida.');
  if(!Array.isArray(m.state.navi)||!Array.isArray(m.state.aerei)||!m.state.porto)throw new Error('Catalogo Nhost incompleto: verificare importazione 005.');
- const oldSide=model?.side;model=m;setAppFavicon(m.side);
- if(oldSide!==m.side || !$('p-porto'))showApp();else{const status=$('nhost-statusbar');if(status)status.textContent=statusText();render();}
+ const old=model;
+ if(old&&old.side===m.side&&old.campaign.id===m.campaign.id&&(
+    Number(m.stateRevision)<Number(old.stateRevision)||Number(m.campaign.revision)<Number(old.campaign.revision))) {
+   queueLiveRefresh();return false;
+ }
+ const newSession=!old||old.side!==m.side||!$('p-porto');
+ const changed=newSession||String(old.campaign.id)!==String(m.campaign.id)||String(old.campaign.revision)!==String(m.campaign.revision)||String(old.stateRevision)!==String(m.stateRevision);
+ model=m;
+ if(newSession){showApp();}
+ else {
+  const status=$('nhost-statusbar');if(status)status.textContent=statusText();
+  // Nessun ridisegno su notifiche equivalenti; i campi attivi sono protetti prima e dopo la richiesta.
+  if(!live||changed)render();
+ }
+ return true;
 }
 $('login-form').addEventListener('submit',async ev=>{ev.preventDefault();const b=$('login-submit');b.disabled=true;b.textContent='Accesso…';$('login-error').hidden=true;
  try{await signIn($('email').value.trim(),$('password').value,$('remember').checked);await refresh();toast('Accesso riuscito: Quadro Comando caricato.');}
@@ -848,4 +855,4 @@ $('login-form').addEventListener('submit',async ev=>{ev.preventDefault();const b
 $('show-password').addEventListener('click',()=>{const x=$('password');x.type=x.type==='password'?'text':'password';$('show-password').textContent=x.type==='password'?'Mostra password':'Nascondi password';});
 try{theme=localStorage.getItem('campagna-v02-theme')||'';themeApply();}catch{}
 $('dlg-ok').addEventListener('click',()=>$('dlg').close());
-(async()=>{try{if(await resumeSession())await refresh();else showLogin();}catch(e){await signOut();showLogin();toast('Sessione non valida: acceda nuovamente.',true);}})();
+(async()=>{const b=$('login-submit');b.disabled=true;try{if(await resumeSession())await refresh();else showLogin();}catch(e){showLogin();$('login-error').hidden=false;$('login-error').textContent=e.message;}finally{b.disabled=false;}})();

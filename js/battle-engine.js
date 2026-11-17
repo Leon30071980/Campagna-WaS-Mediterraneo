@@ -1,9 +1,12 @@
+import { isAvailable, duplicateHull } from './fleet-rules.js?v=1.0';
 // Motore di estrazione della campagna, derivato dal codice originale Regia Marina 27 / Royal Navy 28.
 // Il catalogo e i nomi delle squadre arrivano dallo stato privato Nhost: non sono inclusi qui.
 export function generateBattle(state, turnIndex, seed) {
   if(!Number.isInteger(turnIndex)||turnIndex<0||turnIndex>9)throw Error('Turno non valido.');
   if(!Number.isInteger(seed)||seed<0||seed>4294967295)throw Error('Seme non valido.');
   const S=state;
+  const duplicate=duplicateHull(S);
+  if(duplicate)throw Error('Scafo assegnato piu volte: '+duplicate+'. Correggere il porto prima della battaglia.');
   const CATALOGO=new Map();
   for(const n of S.navi||[])CATALOGO.set(n.nome,{...n,kind:'nave'});
   for(const a of S.aerei||[])if(!CATALOGO.has(a.nome))CATALOGO.set(a.nome,{...a,kind:'aereo',cls:a.base==='IMBARCABILE'?'AEREO_IMB':'AEREO_TERRA'});
@@ -12,28 +15,10 @@ export function generateBattle(state, turnIndex, seed) {
   if(!required.every(id=>SQ[id]))throw Error('Configurazione squadre Nhost incompleta.');
   const TETTO=280,MIN_FLOTTA=150,MAX_FLOTTA=280;
 
-const YEAR = [1940,1940,1941,1941,1941,1942,1942,1942,1943,1943];
-function nomeBase(nome) { return nome.replace(/\s*\((I|II|III)\)$/, ''); }
 function info(nome) { return CATALOGO.get(nome) || null; }
-function punti(nome) { const c=info(nome); return c?c.pt:0; }
-function statoNave(nome) {
-  const c=info(nome);
-  if (c && c.kind==='aereo') return 'attiva';
-  let p=S.perdite?.[nome];
-  if(!p)for(const [k,v] of Object.entries(S.perdite||{})){
-    if(nomeBase(k)===nomeBase(nome)){p=v;if(v.stato==='affondata')break;}
-  }
-  if(!p)return 'attiva';
-  if(p.stato==='affondata')return 'affondata';
-  return turnIndex<=Number(p.turno)+1?'riparazione':'attiva';
-}
-function disponibile(nome) {
-  const c=info(nome); if(!c)return false;
-  if(Number(c.anno)>YEAR[turnIndex])return false;
-  if(c.ritirato && YEAR[turnIndex]>=Number(c.ritirato))return false;
-  return c.kind==='aereo' || statoNave(nome)==='attiva';
-}
-function getHangar(nome) {const c=info(nome);return c?.hangar!==undefined ? parseInt(c.hangar,10):3;}
+function punti(nome) { const c=info(nome); return c?Number(c.pt):0; }
+function disponibile(nome) { return isAvailable(info(nome), S, turnIndex); }
+function getHangar(nome) {return Number(info(nome)?.hangar ?? 3);}
 
 const ORDINE = [
   { id:"BB1",   su:"BB1", tiro:()        => rb(3,8) },
@@ -70,16 +55,6 @@ const ORDINE = [
 
 function portaereiDisponibili() {for(const c of CATALOGO.values())if(c.cls==='CV'&&disponibile(c.nome))return true;return false;}
 function nomeSquadra(sid) {return sid==='CV1'&&!portaereiDisponibili()?'Supporto Extra No CV':(SQ[sid]?.nome||sid);}
-function caselle(sid) {
-  const s=SQ[sid], arr=S.porto[sid]||[], nN=s.nucleo.n;
-  let nS=s.scorta?s.scorta.n:0;
-  if(sid==='CV1'){
-    if(!portaereiDisponibili())return {nucleo:[],scorta:arr.slice(0,2).filter(Boolean)};
-    const cv=arr[0];nS=cv&&info(cv)?.cls==='CV'?getHangar(cv):3;
-  }
-  return {nucleo:arr.slice(0,nN).filter(Boolean),scorta:arr.slice(nN,nN+nS).filter(Boolean)};
-}
-
 function leggiTiro(forma, v) {
   if (v < 0) return { modo:"regola", et:"esclusa da regola" };
   switch (forma) {
@@ -136,10 +111,6 @@ function caselle(sid) {
   return { nucleo: arr.slice(0, nN).filter(Boolean), scorta: arr.slice(nN, nN + nS).filter(Boolean) };
 }
 
-function estrai() {
-  const seed = (Math.random() * 4294967296) >>> 0;
-  return estraiConSeed(seed);
-}
 function estraiConSeed(seed) {
   for (let tentativo = 1; tentativo <= 500; tentativo++) {
     rng = mulberry32((seed + tentativo * 7919) >>> 0);

@@ -1,10 +1,11 @@
-import { NHOST } from './config.js';
-import { getAccessToken, refreshAccessToken } from './auth.js';
+// Campagna W@S Mediterraneo v1.0
+import { NHOST } from './config.js?v=1.0';
+import { getAccessToken, refreshAccessToken } from './auth.js?v=1.0';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }
   campaign_snapshot_catalog(order_by: {created_at: desc}) {
-    snapshot_id campaign_id turn_index label created_at
+    snapshot_id campaign_id turn_index label created_at restorable
   }
   campaign_restore_requests(where: {status: {_eq: "pending"}}, limit: 1) {
     id campaign_id snapshot_id requested_by axis_approved allies_approved status created_at
@@ -23,26 +24,47 @@ const STATE_QUERY = `query MyCampaignData {
   }
 }`;
 
-async function requestWithToken(token, query) {
-  const response = await fetch(NHOST.graphUrl, {
-    method: 'POST',
-    headers: { 'content-type':'application/json', 'authorization':'Bearer ' + token },
-    body: JSON.stringify({query})
-  });
-  if (response.status === 401) return { expired: true };
-  const body = await response.json();
-  if (!response.ok || body.errors?.length) {
-    const msg = body.errors?.[0]?.message || 'Errore GraphQL (' + response.status + ')';
-    throw new Error(msg);
-  }
-  return { data: body.data };
+// Timeout esplicito; non ripetere mutazioni dopo errori di rete dall'esito incerto.
+async function graphPost(token, body, mutation=false) {
+  if(!token)throw new Error('Sessione non valida. Accedere nuovamente.');
+  const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),25000);
+  try {
+    const response=await fetch(NHOST.graphUrl,{method:'POST',signal:controller.signal,
+      headers:{'content-type':'application/json',authorization:'Bearer '+token},body});
+    if(response.status===401)return {expired:true};
+    const raw=await response.text();
+    let data;try{data=JSON.parse(raw);}catch{throw new Error('Risposta Nhost non valida (HTTP '+response.status+'). Verificare il progetto e aggiornare i dati.');}
+    const err=data.errors?.[0];
+    // Hasura restituisce anche invalid-jwt in una risposta HTTP 200, prima dell'esecuzione.
+    if(!data.data&&err?.extensions?.code==='invalid-jwt')return {expired:true};
+    if(!response.ok||err)throw new Error(err?.message||'Errore GraphQL ('+response.status+')');
+    return {data:data.data};
+  }catch(e){
+    if(e.name==='AbortError'||e instanceof TypeError)throw new Error(mutation
+      ?'Risposta Nhost non ricevuta: esito del salvataggio non confermato. Aggiornare i dati prima di riprovare.'
+      :'Nhost non raggiungibile. Verificare connessione e stato del progetto, poi riprovare.');
+    throw e;
+  }finally{clearTimeout(timer);}
 }
+async function requestWithToken(token,query){return graphPost(token,JSON.stringify({query}));}
+let snapshotStatusSupported=true;
 
 export async function loadCampaign() {
   let token = await getAccessToken();
   if (!token) throw new Error('Accedere con un account di fazione.');
-  let response = await requestWithToken(token, STATE_QUERY);
-  if (response.expired) response = await requestWithToken(await refreshAccessToken(), STATE_QUERY);
+  const load=async()=>{
+    const query=snapshotStatusSupported?STATE_QUERY:STATE_QUERY.replace('created_at restorable','created_at');
+    let response=await requestWithToken(token,query);
+    if(response.expired){token=await refreshAccessToken(token);response=await requestWithToken(token,query);}
+    return response;
+  };
+  let response;
+  try{response=await load();}catch(e){
+    // Frontend resta accessibile se la migrazione dei soli metadati non è ancora attiva.
+    if(snapshotStatusSupported&&/restorable/i.test(e.message)&&/field|campo|not found/i.test(e.message)){
+      snapshotStatusSupported=false;response=await load();
+    }else throw e;
+  }
   if (response.expired) throw new Error('Sessione scaduta. Effettuare di nuovo l’accesso.');
   const data = response.data;
   if (data.campaign_profiles.length !== 1) throw new Error('Il profilo non è associato a una fazione.');
@@ -61,6 +83,7 @@ export async function loadCampaign() {
     updatedAt: own.updated_at,
     results: data.campaign_turn_results || [],
     saves: data.campaign_snapshot_catalog || [],
+    snapshotStatusSupported,
     pendingRequest: data.campaign_restore_requests?.[0] || null,
     reports: (data.campaign_battle_reports || []).map(row=>({
       ...row, report: typeof row.report === 'string' ? JSON.parse(row.report) : row.report
@@ -83,22 +106,14 @@ export async function saveLogistics(state, expectedRevision) {
     navi: state.navi, aerei: state.aerei, porto: state.porto, revision: expectedRevision
   }};
   async function exec(accessToken) {
-    const r = await fetch(NHOST.graphUrl, {
-      method:'POST',
-      headers:{'content-type':'application/json',authorization:'Bearer '+accessToken},
-      body:JSON.stringify(body)
-    });
-    if (r.status===401) return {expired:true};
-    const json = await r.json();
-    if (!r.ok || json.errors?.length) {
-      throw new Error(json.errors?.[0]?.message || 'Salvataggio non riuscito ('+r.status+').');
-    }
-    const saved=json.data?.campaign_save_logistics;
-    if (!Array.isArray(saved) || saved.length!==1) throw new Error('Risposta di salvataggio incompleta.');
+    const response=await graphPost(accessToken,JSON.stringify(body),true);
+    if(response.expired)return response;
+    const saved=response.data?.campaign_save_logistics;
+    if(!Array.isArray(saved)||saved.length!==1)throw new Error('Risposta di salvataggio incompleta.');
     return saved[0];
   }
   let result=await exec(token);
-  if (result.expired) result=await exec(await refreshAccessToken());
+  if(result.expired)result=await exec(await refreshAccessToken(token));
   if (result.expired) throw new Error('Sessione scaduta.');
   return {state:typeof result.state==='string'?JSON.parse(result.state):result.state,
     revision:Number(result.revision),updatedAt:result.updated_at};
@@ -107,23 +122,17 @@ export async function saveLogistics(state, expectedRevision) {
 // Campagna v0.4: mutation controllate (non permettono accesso ai dati avversari).
 async function campaignMutation(query, variables, name) {
   const body = JSON.stringify({query, variables});
-  const request = async token => {
-    const res = await fetch(NHOST.graphUrl, {
-      method: 'POST',
-      headers: {'content-type':'application/json',authorization:'Bearer '+token},
-      body
-    });
-    if (res.status===401) return {expired:true};
-    const data=await res.json();
-    if (!res.ok || data.errors?.length) throw new Error(data.errors?.[0]?.message||'Errore Nhost '+res.status);
-    const out=data.data?.[name];
-    if (!Array.isArray(out)||out.length!==1) throw new Error('Risposta incompleta da '+name);
+  const request=async token=>{
+    const response=await graphPost(token,body,true);
+    if(response.expired)return response;
+    const out=response.data?.[name];
+    if(!Array.isArray(out)||out.length!==1)throw new Error('Risposta incompleta da '+name);
     return out[0];
   };
   let token=await getAccessToken();
   if(!token)throw new Error('Sessione scaduta.');
   let result=await request(token);
-  if(result.expired)result=await request(await refreshAccessToken());
+  if(result.expired)result=await request(await refreshAccessToken(token));
   if(result.expired)throw new Error('Sessione scaduta. Accedere nuovamente.');
   return result;
 }
@@ -201,24 +210,29 @@ function campaignWatchKey(data) {
  * se il collegamento in tempo reale non e' disponibile.
  * Restituisce una funzione per interrompere tutto al logout.
  */
-export function watchCampaign({ campaign, onChange, onStatus }) {
+export function watchCampaign({ campaign, ownRevision, onChange, onStatus }) {
   let stopped = false;
   let socket = null;
   let live = false;
   let retryTimer = null;
   let polling = false;
-  let retryDelay = 1500;
-  const watchQuery = `query WatchCampaign { ${CAMPAIGN_WATCH_FIELDS} }`;
+  let retryDelay = 1500, handshakeTimer = null, lastPoll = 0;
+  let previousOwn=String(ownRevision??'');
+  const watchQuery = `query WatchCampaign { ${CAMPAIGN_WATCH_FIELDS} campaign_side_states { campaign_id side revision } }`;
   const watchSubscription = `subscription WatchCampaign { ${CAMPAIGN_WATCH_FIELDS} }`;
   let previous = campaignWatchKey({ campaigns: [campaign] });
 
   function accept(data) {
     if (stopped) return;
     const current = campaignWatchKey(data);
-    if (current !== null && current !== previous) {
-      previous = current;
-      onChange?.();
+    let changed=false;
+    if(current!==null&&current!==previous){previous=current;changed=true;}
+    // Solo la revisione privata consentita dal filtro Hasura, senza formazioni.
+    if(data?.campaign_side_states?.length===1){
+      const own=data.campaign_side_states[0];
+      if(String(own.revision)!==previousOwn){previousOwn=String(own.revision);changed=true;}
     }
+    if(changed)onChange?.();
   }
 
   function connectionStatus(isLive) {
@@ -227,14 +241,14 @@ export function watchCampaign({ campaign, onChange, onStatus }) {
     onStatus?.(isLive);
   }
 
-  async function poll() {
-    if (stopped || live || polling || document.hidden) return;
-    polling = true;
+  async function poll(force=false) {
+    if (stopped || polling || document.hidden || (!force&&live&&Date.now()-lastPoll<30000)) return;
+    polling = true;lastPoll=Date.now();
     try {
       let token = await getAccessToken();
       if (!token || stopped) return;
       let result = await requestWithToken(token, watchQuery);
-      if (result.expired) result = await requestWithToken(await refreshAccessToken(), watchQuery);
+      if (result.expired) result = await requestWithToken(await refreshAccessToken(token), watchQuery);
       if (!result.expired) accept(result.data);
     } catch (e) {
       // Una temporanea assenza di rete non interferisce con i dati gia' visibili.
@@ -262,6 +276,7 @@ export function watchCampaign({ campaign, onChange, onStatus }) {
       return;
     }
     socket = ws;
+    handshakeTimer=setTimeout(()=>{if(socket===ws&&!live)ws.close();},15000);
     const send = message => {
       if (!stopped && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(message));
     };
@@ -278,10 +293,11 @@ export function watchCampaign({ campaign, onChange, onStatus }) {
       try { msg = JSON.parse(event.data); } catch { return; }
       if (msg.type === 'connection_ack') {
         retryDelay = 1500;
-        connectionStatus(true);
         send({ id: 'campagna-condivisa', type: 'subscribe', payload: { query: watchSubscription } });
       } else if (msg.type === 'next') {
         if (msg.payload?.errors?.length) { ws.close(); return; }
+        clearTimeout(handshakeTimer);handshakeTimer=null;
+        connectionStatus(true);
         accept(msg.payload?.data);
       } else if (msg.type === 'ping') {
         send({ type: 'pong', payload: msg.payload ?? null });
@@ -293,6 +309,7 @@ export function watchCampaign({ campaign, onChange, onStatus }) {
     ws.onclose = () => {
       if (socket !== ws) return;
       socket = null;
+      clearTimeout(handshakeTimer);handshakeTimer=null;
       connectionStatus(false);
       scheduleReconnect();
     };
@@ -300,7 +317,7 @@ export function watchCampaign({ campaign, onChange, onStatus }) {
 
   const pollInterval = setInterval(poll, 5000);
   const visibilityChanged = () => {
-    if (!document.hidden) poll();
+    if (!document.hidden) poll(true);
   };
   document.addEventListener('visibilitychange', visibilityChanged);
   onStatus?.(false);
@@ -309,6 +326,7 @@ export function watchCampaign({ campaign, onChange, onStatus }) {
   return () => {
     stopped = true;
     clearInterval(pollInterval);
+    clearTimeout(handshakeTimer);
     if (retryTimer !== null) clearTimeout(retryTimer);
     document.removeEventListener('visibilitychange', visibilityChanged);
     if (socket) { const ws = socket; socket = null; ws.onclose = null; ws.close(); }
