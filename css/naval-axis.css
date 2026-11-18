@@ -1,4 +1,4 @@
-/* W@S v1.5 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.6 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
@@ -151,3 +151,11 @@ body[data-side="axis"] .admiralty-filmstrip .admiralty-photo img{display:block;w
 body[data-side="axis"] .admiralty-filmstrip a:focus-visible{outline:2px solid #fff;z-index:1;}
 @media(max-width:900px){body[data-side="axis"] .admiralty-filmstrip{grid-template-columns:repeat(4,minmax(0,1fr));}body[data-side="axis"] .admiralty-filmstrip .admiralty-photo{height:clamp(75px,18vw,155px);}}
 @media(max-width:520px){body[data-side="axis"] .admiralty-archive{width:calc(100% - 16px);}body[data-side="axis"] .admiralty-archive .admiralty-title{padding:10px 7px;}body[data-side="axis"] .admiralty-filmstrip{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .admiralty-filmstrip .admiralty-photo{height:clamp(90px,30vw,146px);}}
+
+/* v1.6 — porzione decorativa dell'anteprima approvata; foto storiche separate. */
+body[data-side="axis"] .admiralty-archive .admiralty-title{background:radial-gradient(ellipse at 50% 20%,#253d50,#0a192a 75%);padding:0 12px 10px;}
+body[data-side="axis"] .admiralty-archive .admiralty-heraldry{width:calc(100% + 24px);max-width:none;aspect-ratio:720 / 133;min-height:110px;gap:0;box-sizing:border-box;grid-template-columns:1fr auto 1fr;background:#0c1d30 url('../assets/naval/admiralty-flags-v16.webp') center / 100% 100% no-repeat;border-bottom:1px solid #9a814c;}
+body[data-side="axis"] .admiralty-archive .admiralty-emblem img{width:clamp(90px,12vw,192px);height:auto;max-height:clamp(94px,16vw,236px);object-fit:contain;}
+body[data-side="axis"] .admiralty-archive .admiralty-subtitle{margin-top:4px;}
+body[data-side="axis"] .admiralty-banner-space{width:100%;height:100%;pointer-events:none;}
+@media(max-width:520px){body[data-side="axis"] .admiralty-archive .admiralty-title{padding:0 7px 8px;}body[data-side="axis"] .admiralty-archive .admiralty-heraldry{width:calc(100% + 14px);min-height:96px;}body[data-side="axis"] .admiralty-archive .admiralty-emblem img{width:90px;max-height:90px;}}

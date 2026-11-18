@@ -1,10 +1,10 @@
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.5';
-import { historicalClass } from './historical-classes.js?v=1.5';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.5';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.5';
-import { generateBattle } from './battle-engine.js?v=1.5';
-import { SEASONS } from './config.js?v=1.5';
-import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.5';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.6';
+import { historicalClass } from './historical-classes.js?v=1.6';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.6';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.6';
+import { generateBattle } from './battle-engine.js?v=1.6';
+import { SEASONS } from './config.js?v=1.6';
+import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.6';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -75,7 +75,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.5':'./css/royal.css?v=1.5';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.6':'./css/royal.css?v=1.6';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent=statusText();
@@ -97,12 +97,12 @@ function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+a
 }
 const AXIS_NAV_ICONS=Object.freeze({porto:'⚓',battaglia:'⚔',storico:'▤',aerei:'✈',gestione:'⚙',regole:'▧'});
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk']});
-function navalIcon(file){const img=make('img','naval-icon');img.src='./assets/naval/'+file+'.png?v=1.5';img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');img.src='./assets/naval/'+file+'.png?v=1.6';img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const name=String(u.nome||'').trim().toUpperCase();
  if(u.tipo!=='BB'||!['VITTORIO VENETO','LITTORIO'].includes(name))return;
- const wrap=make('span','historical-profile');const img=make('img');img.src='./assets/naval/vittorio-veneto.png?v=1.5';img.alt=name==='LITTORIO'?'Profilo di classe Littorio (Vittorio Veneto)':'Profilo storico Vittorio Veneto';img.loading='lazy';wrap.title=img.alt+' · disegno fornito dal giocatore';wrap.append(img);if(name==='LITTORIO')text(wrap,'small','Profilo di classe');td.append(wrap);
+ const wrap=make('span','historical-profile');const img=make('img');img.src='./assets/naval/vittorio-veneto.png?v=1.6';img.alt=name==='LITTORIO'?'Profilo di classe Littorio (Vittorio Veneto)':'Profilo storico Vittorio Veneto';img.loading='lazy';wrap.title=img.alt+' · disegno fornito dal giocatore';wrap.append(img);if(name==='LITTORIO')text(wrap,'small','Profilo di classe');td.append(wrap);
 }
 function renderTabs(){const nav=$('tabs');nav.replaceChildren();for(const [id,label]of TABS){
  const b=make('button','');if(model.side==='axis'){if(id==='navi')b.append(navalIcon('operational'));else {const ico=make('span','axis-tab-icon',AXIS_NAV_ICONS[id]||'');ico.setAttribute('aria-hidden','true');b.append(ico);}}text(b,'span',label);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',String(id===activeTab));b.onclick=()=>{if(activeTab!==id){activeTab=id;term='';catalogFilter='';if(id==='navi')Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});}render();};nav.append(b);
