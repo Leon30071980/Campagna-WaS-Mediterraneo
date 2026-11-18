@@ -1,4 +1,4 @@
-// Campagna W@S Mediterraneo v1.1 — regole comuni per porto e motore.
+// Campagna W@S Mediterraneo v1.2 — regole comuni per porto e motore.
 export const CAMPAIGN_YEARS = Object.freeze([1940,1940,1941,1941,1941,1942,1942,1942,1943,1943]);
 export function shipBase(name) {
   return String(name || '').replace(/\s*\((I|II|III)\)$/,'');

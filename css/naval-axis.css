@@ -1,11 +1,11 @@
-/* W@S v1.1 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.2 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
 :root[data-theme="light"] body[data-side="axis"]{--axis-ship-brightness:.31;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--axis-edge:#96b4c2;}
 body[data-side="axis"] header.top{border:0;background:transparent;}
 body[data-side="axis"] .mast{max-width:none;min-height:128px;padding:19px 22px;position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(100deg,#071a28,#113b4e 72%,#071a28);border-bottom:1px solid #739cb1;color:#edf5fa;grid-template-columns:minmax(170px,1fr) minmax(0,2.5fr) minmax(190px,1fr);}
-body[data-side="axis"] .mast::before{content:"";position:absolute;inset:0 auto 0 13%;width:clamp(220px,30vw,450px);background:linear-gradient(90deg,#092838 0%,transparent 30%,transparent 65%,#113144 100%),url('../assets/naval/header.jpg?v=1.1') center/cover no-repeat;opacity:.66;z-index:-1;}
+body[data-side="axis"] .mast::before{content:"";position:absolute;inset:0 auto 0 13%;width:clamp(220px,30vw,450px);background:linear-gradient(90deg,#092838 0%,transparent 30%,transparent 65%,#113144 100%),url('../assets/naval/header.jpg?v=1.2') center/cover no-repeat;opacity:.66;z-index:-1;}
 body[data-side="axis"] .axis-brand{display:flex;align-items:center;gap:10px;text-transform:uppercase;line-height:1.1;letter-spacing:.04em;}
 body[data-side="axis"] .axis-brand>span{font-size:40px;color:#e0bc70;}
 body[data-side="axis"] .axis-brand strong,body[data-side="axis"] .axis-brand small{display:block;font-weight:700;}
@@ -39,14 +39,14 @@ body[data-side="axis"] .card{border-radius:10px;}
 body[data-side="axis"] .axis-catalog-add .nhost-card-body{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 body[data-side="axis"] .axis-catalog-add .nhost-notification{margin:0;}
 body[data-side="axis"] #p-navi .btn.primary{background:linear-gradient(#2086b0,#125077);border-color:#70c8e7;color:white;}
-body[data-side="axis"] .axis-catalog-table table{min-width:940px;}
+body[data-side="axis"] .axis-catalog-table table{min-width:1080px;}
 body[data-side="axis"] .axis-catalog-table th{background:var(--surface2);font-size:15px;color:var(--ink);padding:10px;}
 body[data-side="axis"] .axis-catalog-table td{padding:7px 10px;height:57px;border-right:1px solid var(--line-soft);}
 body[data-side="axis"] .axis-catalog-table tr:nth-child(even){background:color-mix(in srgb,var(--surface2) 34%,var(--surface));}
 body[data-side="axis"] .axis-catalog-table td:last-child{border-right:0;}
 body[data-side="axis"] .axis-catalog-table .nhost-catalog-actions{display:table-cell;white-space:nowrap;}
 body[data-side="axis"] .axis-catalog-table .nhost-catalog-actions .btn+.btn{margin-left:5px;}
-body[data-side="axis"] .axis-ship-name{min-width:345px;width:38%;}
+body[data-side="axis"] .axis-ship-name{min-width:320px;width:30%;}
 body[data-side="axis"] .axis-name{display:inline-block;font-weight:700;letter-spacing:.015em;vertical-align:middle;}
 body[data-side="axis"] .historical-profile{float:right;width:180px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;margin-left:8px;}
 body[data-side="axis"] .historical-profile img{width:100%;height:35px;object-fit:contain;filter:brightness(var(--axis-ship-brightness));}
@@ -60,5 +60,8 @@ body[data-side="axis"] .axis-profile-note{margin:9px 0;color:var(--ink-dim);}
 /* A little more room for the distinct silhouettes in the three-state summary. */
 @media(min-width:1151px){body[data-side="axis"] .naval-total-top .naval-icon{width:clamp(75px,7.2vw,118px);height:40px;}}
 body[data-side="axis"] .naval-state .naval-icon{width:70px;height:29px;}
-body[data-side="axis"] .axis-catalog-table td:nth-child(2),body[data-side="axis"] .axis-catalog-table th:nth-child(2),body[data-side="axis"] .axis-catalog-table td:nth-child(6),body[data-side="axis"] .axis-catalog-table th:nth-child(6){text-align:center;}
-body[data-side="axis"] .axis-catalog-table td:nth-child(3){font-weight:700;}
+body[data-side="axis"] .axis-catalog-table td:nth-child(3),body[data-side="axis"] .axis-catalog-table th:nth-child(3),body[data-side="axis"] .axis-catalog-table td:nth-child(7),body[data-side="axis"] .axis-catalog-table th:nth-child(7){text-align:center;}
+body[data-side="axis"] .axis-catalog-table td:nth-child(4){font-weight:700;}
+
+/* Classe costruttiva: separata dal Tipo; stile discreto su entrambe le fazioni. */
+#p-navi td.ship-historical-class{font-size:.85em;font-style:italic;font-weight:400;color:var(--ink-dim);min-width:105px;max-width:170px;line-height:1.2;}

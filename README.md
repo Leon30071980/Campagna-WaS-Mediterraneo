@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.1 (Nhost)
+# Campagna W@S Mediterraneo — v1.2 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,13 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.2
+- Colonna Classe subito dopo Nome, in corsivo e con dimensione ridotta; ordinabile e ricercabile. Repertorio storico pubblico indipendente dalla fazione, separato da cls (motore); i cataloghi di gioco restano privati. Nuove unità sconosciute: «—», senza supposizioni.
+- Filtro Tipo Nave per sigla (BB, BC, CA, CL, DD, CV, SUB e altri tipi eventualmente presenti).
+- Nuova icona Axis Persa/Perse: profilo storico del Vittorio Veneto quasi sommerso con fumo stilizzato. Grafica Royal Navy invariata salvo colonna e filtro.
+- Fonti anagrafiche: https://www.navypedia.org/ships_index.htm e https://uboat.net/italian_submarines/boats/; https://uboat.net/allies/warships/; https://uboat.net/types/.
+- Nessun intervento Nhost o sui dati della campagna.
 
 ## Novità v1.1
 - Restyling Axis: testata, riepilogo flotte, navigazione, catalogo e badge originali BB/BC/CA/CL/DD/CV/SUB.
