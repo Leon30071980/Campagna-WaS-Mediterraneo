@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.6 (Nhost)
+# Campagna W@S Mediterraneo — v1.7 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.7
+- Testata Axis: bandiere sabaude ondeggianti, ombre, aste e cordoni in SVG locale; carta del Mediterraneo vettoriale da dati geografici Natural Earth (pubblico dominio, https://www.naturalearthdata.com/about/terms-of-use/), senza confini politici.
+- Carosello con le dieci foto originali a colori della rivista navale di Napoli del 5 maggio 1938: avanza di una foto ogni 5 secondi, con transizione breve, pausa manuale, al passaggio del mouse e durante la messa a fuoco da tastiera; 7, 4 o 2 foto visibili secondo la larghezza. Rispetta la riduzione delle animazioni. Gli URL alternativi servono solo da fallback; se entrambe le richieste falliscono la foto viene esclusa.
+- Fonte: https://inchhighguy.wordpress.com/2023/04/12/italian-fleet-review-color-photographs-hugo-jaeger-collection-part-vii/; Hugo Jaeger / LIFE Photo Collection ©. Le immagini sono richiamate da URL esterni senza ritagli, filtri o ritocchi. Non vengono copiate nel repository pubblico in assenza di una licenza di redistribuzione verificata.
+- Nessuna modifica alle regole, ai cataloghi, a Nhost o alla grafica Royal Navy salvo numero di versione.
 
 ## Novità v1.6
 - Testata Axis: bandiere ondeggianti, aste e cordoni dorati e carta decorativa del Mediterraneo prelevati dalla parte superiore dell'anteprima approvata, ottimizzata in WebP. Lo stemma centrale rimane un elemento indipendente.
