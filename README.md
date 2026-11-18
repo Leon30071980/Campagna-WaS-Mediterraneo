@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.8 (Nhost)
+# Campagna W@S Mediterraneo — v1.9 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.9
+- Bandiere sabaude ai due lati del titolo Axis: disegno originale fornito dall'utente (216 × 166 px), sfondo esterno bianco rimosso con trasparenza, copia speculare a destra, asset locale WebP lossless. Nessuna rigenerazione IA.
+- Testata v1.8 mantenuta identica come risorsa separata; le bandiere si adattano proporzionalmente alla larghezza senza coprire la scritta.
+- Nessuna modifica a Nhost, regole o grafica Royal Navy salvo versione.
 
 ## Novità v1.8
 - Testata Axis sostituita dalla composizione grafica approvata: dipinto della flotta, stemma centrale, cornice e targa dorate, come nell'anteprima fornita.
