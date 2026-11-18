@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.4 (Nhost)
+# Campagna W@S Mediterraneo — v1.5 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,20 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.5
+- Nuova testata Regia Marina: emblema araldico originale, doppia insegna sabauda, titolo centrale in ottone, sette fotografie storiche senza didascalie visibili e con collegamenti alle fonti.
+- Le fotografie sono mostrate nelle loro proporzioni originali senza filtri, ritagli, ricostruzioni IA o alterazione dei profili. Tre fotografie a colori e quattro in bianco e nero (per le quali non è stata individuata una versione a colori attendibile). Le foto del 1938 documentano la flotta dello stesso periodo storico prima della guerra.
+- Emblema: [F l a n k e r / Wikimedia Commons, CC BY-SA 2.5](https://commons.wikimedia.org/wiki/File:Emblem_of_the_Regia_Marina.svg) ([licenza](https://creativecommons.org/licenses/by-sa/2.5/)); immagine invariata.
+- Fonti delle immagini:
+  - [Macchi C.202 Folgore, 1942–43](https://commons.wikimedia.org/wiki/File:C.202_fighter_taking_off.jpg): Fotografia a colori; Wikimedia Commons.
+  - [Sommergibile Enrico Tazzoli](https://commons.wikimedia.org/wiki/File:Italian-submarine-Tazzoli.jpg): Fotografia storica in bianco e nero; Wikimedia Commons.
+  - [Corazzate Vittorio Veneto e Littorio, 1940–43](https://commons.wikimedia.org/wiki/File:Vittorio_Veneto_and_Littorio_during_WW2.jpg): Regia Marina; fotografia in bianco e nero.
+  - [Incrociatore classe Zara, Napoli, 5 maggio 1938](https://inchhighguy.wordpress.com/2023/04/12/italian-fleet-review-color-photographs-hugo-jaeger-collection-part-vii/): Hugo Jaeger / LIFE Photo Collection ©; fotografia originale a colori.
+  - [Cacciatorpediniere alla rivista navale, Napoli, 5 maggio 1938](https://inchhighguy.wordpress.com/2023/04/12/italian-fleet-review-color-photographs-hugo-jaeger-collection-part-vii/): Hugo Jaeger / LIFE Photo Collection ©; fotografia originale a colori.
+  - [Cacciatorpediniere Antonio Pigafetta, 1941–42](https://commons.wikimedia.org/wiki/File:RCT_Pigafetta_1942_Fraccaroli_Allan_2.jpg): Fotografia in bianco e nero; Aldo Fraccaroli, Italian Warships of World War II (1968), Wikimedia Commons.
+  - [Savoia-Marchetti S.M.79 Sparviero, primi anni 1940](https://commons.wikimedia.org/wiki/File:Savoia-Marchetti_S.M.79.jpg): Fotografia in bianco e nero; Wikimedia Commons.
+- Le foto sono richiamate da URL esterni, non ridistribuite. Disponibilità subordinata ai siti sorgente; per le foto LIFE il diritto di riutilizzo non è accertato. Nessuna modifica a Royal Navy (salvo numero di versione), Nhost o alle regole della campagna.
 
 ## Novità v1.4
 - Proposta A (Ammiragliato italiano) per Axis: fotografie laterali, titolo centrale in ottone, insegne sabaude, sfondo blu notte senza carta geografica; navigazione e pannelli coordinati.

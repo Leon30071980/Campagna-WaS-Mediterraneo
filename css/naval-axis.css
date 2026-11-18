@@ -1,4 +1,4 @@
-/* W@S v1.4 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.5 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
@@ -134,3 +134,20 @@ body[data-side="axis"] .card>h3,body[data-side="axis"] .axis-catalog-table th,bo
 body[data-side="axis"] #p-navi .btn.primary,body[data-side="axis"] #p-aerei .btn.primary{background:linear-gradient(#f0dba9,#c5a665);border-color:#e4c783;color:#11242e;}
 @media(max-width:1150px){body[data-side="axis"] .pennant{grid-template-columns:repeat(4,minmax(0,1fr));}body[data-side="axis"] .pennant>.axis-fleet-cell{grid-row:2;grid-column:1/-1;border-right:1px solid var(--axis-edge)!important;}}
 @media(max-width:720px){body[data-side="axis"] .admiralty-hero{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .admiralty-title{grid-column:1/-1;grid-row:1;border-inline:0;border-bottom:1px solid #8a744d;}body[data-side="axis"] .admiralty-photo img{height:clamp(100px,29vw,190px);}body[data-side="axis"] .admiralty-mast .axis-brand small{display:block;margin-left:0;}body[data-side="axis"] .pennant{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .pennant>.axis-fleet-cell{grid-row:2;}}
+
+/* v1.5 — testata araldica, fotografie originali senza deformazioni. */
+body[data-side="axis"] .admiralty-archive{display:block;min-height:0;border:1px solid #a78a51;border-radius:5px;margin:10px auto 0;width:calc(100% - 28px);max-width:1600px;box-shadow:0 4px 18px #0006;background:#0a1d2e;overflow:hidden;}
+body[data-side="axis"] .admiralty-archive .admiralty-title{display:flex;gap:4px;position:relative;isolation:isolate;padding:10px 15px 12px;background:radial-gradient(ellipse at 50% 20%,#253d50,#0a192a 75%);border:0;border-bottom:2px solid #b69b63;color:#eddaa6;}
+body[data-side="axis"] .admiralty-heraldry{width:min(100%,720px);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;justify-items:center;gap:clamp(10px,5vw,75px);}
+body[data-side="axis"] .admiralty-flag{width:clamp(48px,8vw,112px);height:auto;border:1px solid #b69b63;border-radius:3px;box-shadow:0 4px 10px #0007;}
+body[data-side="axis"] .admiralty-emblem{display:block;line-height:0;}
+body[data-side="axis"] .admiralty-emblem img{width:clamp(90px,12vw,156px);height:auto;display:block;object-fit:contain;filter:drop-shadow(0 1px 2px #c9b37a80);}
+body[data-side="axis"] .admiralty-subtitle{font:italic 500 clamp(15px,1.7vw,24px)/1.2 Georgia,"Times New Roman",serif;color:#e8d2a0;letter-spacing:.035em;text-align:center;}
+body[data-side="axis"] .admiralty-archive h1{width:min(100%,1180px);box-sizing:border-box;margin:4px 0 0;padding:8px 14px;border:3px double #c9aa70;border-radius:9px;background:linear-gradient(180deg,#142a3b,#091a29);box-shadow:inset 0 0 10px #0007,0 3px 9px #0008;font:600 clamp(21px,3vw,46px)/1.12 Georgia,"Times New Roman",serif;letter-spacing:.035em;text-transform:uppercase;color:#f0d9a0;text-shadow:0 2px 3px #000;}
+body[data-side="axis"] .admiralty-archive .nhost-app-version{margin:2px 0 0;color:#e4c783;}
+body[data-side="axis"] .admiralty-filmstrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;padding:2px;background:#a78a51;}
+body[data-side="axis"] .admiralty-filmstrip .admiralty-photo{display:flex;align-items:center;justify-content:center;width:100%;height:clamp(75px,11vw,166px);min-width:0;background:#0b1b29;overflow:hidden;outline-offset:-2px;}
+body[data-side="axis"] .admiralty-filmstrip .admiralty-photo img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;filter:none;opacity:1;mix-blend-mode:normal;transform:none;color:#f0d9a0;font:12px/1.2 system-ui,sans-serif;}
+body[data-side="axis"] .admiralty-filmstrip a:focus-visible{outline:2px solid #fff;z-index:1;}
+@media(max-width:900px){body[data-side="axis"] .admiralty-filmstrip{grid-template-columns:repeat(4,minmax(0,1fr));}body[data-side="axis"] .admiralty-filmstrip .admiralty-photo{height:clamp(75px,18vw,155px);}}
+@media(max-width:520px){body[data-side="axis"] .admiralty-archive{width:calc(100% - 16px);}body[data-side="axis"] .admiralty-archive .admiralty-title{padding:10px 7px;}body[data-side="axis"] .admiralty-filmstrip{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .admiralty-filmstrip .admiralty-photo{height:clamp(90px,30vw,146px);}}
