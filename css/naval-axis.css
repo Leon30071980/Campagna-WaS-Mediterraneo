@@ -1,11 +1,11 @@
-/* W@S v1.2 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.3 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
 :root[data-theme="light"] body[data-side="axis"]{--axis-ship-brightness:.31;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--axis-edge:#96b4c2;}
 body[data-side="axis"] header.top{border:0;background:transparent;}
 body[data-side="axis"] .mast{max-width:none;min-height:128px;padding:19px 22px;position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(100deg,#071a28,#113b4e 72%,#071a28);border-bottom:1px solid #739cb1;color:#edf5fa;grid-template-columns:minmax(170px,1fr) minmax(0,2.5fr) minmax(190px,1fr);}
-body[data-side="axis"] .mast::before{content:"";position:absolute;inset:0 auto 0 13%;width:clamp(220px,30vw,450px);background:linear-gradient(90deg,#092838 0%,transparent 30%,transparent 65%,#113144 100%),url('../assets/naval/header.jpg?v=1.2') center/cover no-repeat;opacity:.66;z-index:-1;}
+body[data-side="axis"] .mast::before{content:"";position:absolute;inset:0 auto 0 13%;width:clamp(220px,30vw,450px);background:linear-gradient(90deg,#092838 0%,transparent 30%,transparent 65%,#113144 100%),url('../assets/naval/header.jpg?v=1.3') center/cover no-repeat;opacity:.66;z-index:-1;}
 body[data-side="axis"] .axis-brand{display:flex;align-items:center;gap:10px;text-transform:uppercase;line-height:1.1;letter-spacing:.04em;}
 body[data-side="axis"] .axis-brand>span{font-size:40px;color:#e0bc70;}
 body[data-side="axis"] .axis-brand strong,body[data-side="axis"] .axis-brand small{display:block;font-weight:700;}
@@ -65,3 +65,36 @@ body[data-side="axis"] .axis-catalog-table td:nth-child(4){font-weight:700;}
 
 /* Classe costruttiva: separata dal Tipo; stile discreto su entrambe le fazioni. */
 #p-navi td.ship-historical-class{font-size:.85em;font-style:italic;font-weight:400;color:var(--ink-dim);min-width:105px;max-width:170px;line-height:1.2;}
+
+/* v1.3 — insegne e badge condivisi; il restyling scenografico resta Axis. */
+.unit-flag{display:inline-block;vertical-align:middle;width:26px;height:17px;margin-right:8px;border:1px solid #a8b7bd;border-radius:2px;box-shadow:0 1px 3px #0005;background-size:100% 100%;background-repeat:no-repeat;position:relative;flex:none;box-sizing:border-box;}
+.unit-flag[data-nation="it"]{background:linear-gradient(90deg,#16834a 0 33.33%,#fafafa 33.33% 66.66%,#c72235 66.66%);}
+.unit-flag[data-nation="it"]::after{content:"";position:absolute;left:39%;top:19%;width:24%;height:62%;background:linear-gradient(90deg,transparent 40%,white 40% 60%,transparent 60%),linear-gradient(0deg,transparent 40%,white 40% 60%,transparent 60%),#c72235;border:1px solid #174a91;border-radius:1px;}
+.unit-flag[data-nation^="de-"]{background:#d6dce0;}
+.unit-flag[data-nation^="de-"]::after{content:"✚";position:absolute;inset:0;text-align:center;color:#20272c;font:bold 16px/15px Arial;text-shadow:1px 0 white,-1px 0 white;}
+.unit-flag[data-nation="gb-air"],.unit-flag[data-nation="gb-navy"]{background:linear-gradient(0deg,transparent 40%,#c8102e 40% 60%,transparent 60%),linear-gradient(90deg,transparent 43%,#c8102e 43% 57%,transparent 57%),linear-gradient(0deg,transparent 32%,white 32% 68%,transparent 68%),linear-gradient(90deg,transparent 35%,white 35% 65%,transparent 65%),linear-gradient(32deg,transparent 43%,white 43% 57%,transparent 57%),linear-gradient(-32deg,transparent 43%,white 43% 57%,transparent 57%),#012169;}
+.unit-flag[data-nation="fr"]{background:linear-gradient(90deg,#173c8b 33.33%,#fff 33.33% 66.66%,#d3233c 66.66%);}
+.unit-flag[data-nation="us"]{background:repeating-linear-gradient(to bottom,#b22234 0 1.15px,#fff 1.15px 2.3px);}
+.unit-flag[data-nation="us"]::after{content:"";position:absolute;top:0;left:0;width:45%;height:55%;background:#3c3b6e;}
+.unit-flag[data-nation="gr"]{background:repeating-linear-gradient(to bottom,#2965ae 0 1.7px,#fff 1.7px 3.4px);}
+.unit-flag[data-nation="au"],.unit-flag[data-nation="nz"]{background:#17366f;color:#fff;}
+.unit-flag[data-nation="au"]::after,.unit-flag[data-nation="nz"]::after{content:"✦";position:absolute;right:3px;top:0;font-size:13px;line-height:15px;}
+.unit-flag[data-nation="nz"]::after{color:#f13c50;}
+.unit-name-cell .unit-name{vertical-align:middle;}
+.catalog-type{display:inline-block;min-width:38px;box-sizing:border-box;text-align:center;font:700 13px/1.3 "IBM Plex Mono",monospace;padding:4px 7px;border-radius:5px;color:white;background:#405564;border:1px solid #ffffff38;box-shadow:0 1px 3px #0003;}
+.catalog-type[data-type="BB"]{background:#853b40}.catalog-type[data-type="BC"]{background:#a6505f}.catalog-type[data-type="CV"]{background:#197c76}.catalog-type[data-type="CA"]{background:#1b4f72}.catalog-type[data-type="CL"]{background:#92c7e5;color:#102b39}.catalog-type[data-type="DD"]{background:#2e6950}.catalog-type[data-type="SUB"]{background:#6c4385}
+.catalog-type[data-type="F"]{background:#34668b}.catalog-type[data-type="FB"]{background:#477b83}.catalog-type[data-type="B"]{background:#805331}.catalog-type[data-type="DB"]{background:#986240}.catalog-type[data-type="HB"]{background:#624339}.catalog-type[data-type="PB"]{background:#426d72}.catalog-type[data-type="TB"]{background:#5c547e}
+.air-catalog-table td:nth-child(2),.air-catalog-table th:nth-child(2){text-align:center;}
+body[data-side="axis"] .mast::before{inset:0;width:100%;background:linear-gradient(90deg,#071a28d9 0%,#071a2855 32%,#071a2899 70%,#071a28e6 100%),url('../assets/naval/header.jpg?v=1.3') center 48%/cover no-repeat;opacity:.92;}
+:root:not([data-theme="light"]) body[data-side="axis"]{background:radial-gradient(ellipse at 15% 0,#16475e60 0,transparent 45%),linear-gradient(145deg,#061923d9,#061521d9 75%,#092b3dcc),url('../assets/naval/mediterraneo-map.svg?v=1.3') center center/cover fixed;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{background:var(--bg);}}
+body[data-side="axis"] .mast,body[data-side="axis"] .pennant{box-shadow:0 5px 20px #0004;}
+body[data-side="axis"] .header-center h1 svg{width:34px;height:23px;filter:drop-shadow(0 2px 3px #0009);}
+body[data-side="axis"] .btn,body[data-side="axis"] nav.tabs button{box-shadow:0 2px 5px #0004,inset 0 1px 0 #ffffff24;}
+body[data-side="axis"] .btn:not(:disabled):hover,body[data-side="axis"] nav.tabs button:hover{border-color:var(--axis-accent);filter:brightness(1.1);}
+body[data-side="axis"] .air-catalog-table th{background:var(--surface2);font-size:15px;color:var(--ink);padding:10px;}
+body[data-side="axis"] .air-catalog-table td{padding:9px 10px;border-right:1px solid var(--line-soft);}
+body[data-side="axis"] .air-catalog-table tr:nth-child(even){background:color-mix(in srgb,var(--surface2) 34%,var(--surface));}
+body[data-side="axis"] .air-catalog-table .unit-name{font-weight:700;letter-spacing:.015em;}
+body[data-side="axis"] .axis-catalog-table .axis-ship-name{min-width:320px;}
+@media(max-width:620px){body[data-side="axis"] .header-center h1 svg{width:22px;height:15px;}}

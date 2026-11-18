@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.2 (Nhost)
+# Campagna W@S Mediterraneo — v1.3 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,13 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.3
+- Naviglio: BB → BC → CV → CA → CL → DD → SUB; classi storiche consecutive ordinate per massimo valore della classe, poi punti decrescenti e nome. Ripristino dell’ordine predefinito; ordinamenti manuali ancora disponibili.
+- Bandiere e distintivi di servizio nei cataloghi; per gli aerei Axis si distingue la Regia Aeronautica dalla Luftwaffe, in base alle forniture del periodo. Per gli aerei Allies il distintivo indica il servizio della fazione, non il paese costruttore. I simboli tedeschi sono distintivi grafici stilizzati, non vessilli storici completi.
+- I Ju 87 R-2, Bf 109 G (eccetto G-14) e Ju 88 A-4 hanno insegna italiana in riferimento alle forniture storiche (Ju 88 in quantità limitata, soprattutto addestramento). Bf 109 G-14/AS: variante del 1944, mantenuta senza cambiare l’anno di gioco. Per nuove denominazioni Axis non riconosciute non si inventa un’insegna aerea.
+- Badge Tipo per gli aerei e le navi; Turno n/10 senza ripetizione della stagione. Testata scenografica, mappa decorativa schematica e pulsanti Axis con contorno e ombra.
+- Nessuna migrazione Nhost, nessuna modifica ai punti, alle disponibilità o alla logica di battaglia.
 
 ## Novità v1.2
 - Colonna Classe subito dopo Nome, in corsivo e con dimensione ridotta; ordinabile e ricercabile. Repertorio storico pubblico indipendente dalla fazione, separato da cls (motore); i cataloghi di gioco restano privati. Nuove unità sconosciute: «—», senza supposizioni.
