@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.3 (Nhost)
+# Campagna W@S Mediterraneo — v1.4 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.4
+- Proposta A (Ammiragliato italiano) per Axis: fotografie laterali, titolo centrale in ottone, insegne sabaude, sfondo blu notte senza carta geografica; navigazione e pannelli coordinati.
+- Le due foto a colori della rivista navale di Napoli del 5 maggio 1938, attribuite a Hugo Jaeger / LIFE Photo Collection, sono richiamate tramite URL esterni al sito che le pubblica, senza redistribuzione dei file in questo repository, filtri, ritagli o ricostruzioni. Fonte: https://inchhighguy.wordpress.com/2023/04/12/italian-fleet-review-color-photographs-hugo-jaeger-collection-part-vii/ . Copyright LIFE/Time Inc.; la licenza di riutilizzo non è accertata, la visualizzazione dipende dal sito esterno. Per una distribuzione con fotografie proprie occorre verificare l'autorizzazione.
+- Tema chiaro e mobile conservati; titolo sopra le immagini su schermi stretti. Royal Navy non ridisegnata.
+- Nessuna modifica al database Nhost, alle regole o ai dati della campagna.
 
 ## Novità v1.3
 - Naviglio: BB → BC → CV → CA → CL → DD → SUB; classi storiche consecutive ordinate per massimo valore della classe, poi punti decrescenti e nome. Ripristino dell’ordine predefinito; ordinamenti manuali ancora disponibili.

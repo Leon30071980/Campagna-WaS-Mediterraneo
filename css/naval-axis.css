@@ -1,11 +1,10 @@
-/* W@S v1.3 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.4 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
 :root[data-theme="light"] body[data-side="axis"]{--axis-ship-brightness:.31;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--axis-edge:#96b4c2;}
 body[data-side="axis"] header.top{border:0;background:transparent;}
 body[data-side="axis"] .mast{max-width:none;min-height:128px;padding:19px 22px;position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(100deg,#071a28,#113b4e 72%,#071a28);border-bottom:1px solid #739cb1;color:#edf5fa;grid-template-columns:minmax(170px,1fr) minmax(0,2.5fr) minmax(190px,1fr);}
-body[data-side="axis"] .mast::before{content:"";position:absolute;inset:0 auto 0 13%;width:clamp(220px,30vw,450px);background:linear-gradient(90deg,#092838 0%,transparent 30%,transparent 65%,#113144 100%),url('../assets/naval/header.jpg?v=1.3') center/cover no-repeat;opacity:.66;z-index:-1;}
 body[data-side="axis"] .axis-brand{display:flex;align-items:center;gap:10px;text-transform:uppercase;line-height:1.1;letter-spacing:.04em;}
 body[data-side="axis"] .axis-brand>span{font-size:40px;color:#e0bc70;}
 body[data-side="axis"] .axis-brand strong,body[data-side="axis"] .axis-brand small{display:block;font-weight:700;}
@@ -85,8 +84,6 @@ body[data-side="axis"] .axis-catalog-table td:nth-child(4){font-weight:700;}
 .catalog-type[data-type="BB"]{background:#853b40}.catalog-type[data-type="BC"]{background:#a6505f}.catalog-type[data-type="CV"]{background:#197c76}.catalog-type[data-type="CA"]{background:#1b4f72}.catalog-type[data-type="CL"]{background:#92c7e5;color:#102b39}.catalog-type[data-type="DD"]{background:#2e6950}.catalog-type[data-type="SUB"]{background:#6c4385}
 .catalog-type[data-type="F"]{background:#34668b}.catalog-type[data-type="FB"]{background:#477b83}.catalog-type[data-type="B"]{background:#805331}.catalog-type[data-type="DB"]{background:#986240}.catalog-type[data-type="HB"]{background:#624339}.catalog-type[data-type="PB"]{background:#426d72}.catalog-type[data-type="TB"]{background:#5c547e}
 .air-catalog-table td:nth-child(2),.air-catalog-table th:nth-child(2){text-align:center;}
-body[data-side="axis"] .mast::before{inset:0;width:100%;background:linear-gradient(90deg,#071a28d9 0%,#071a2855 32%,#071a2899 70%,#071a28e6 100%),url('../assets/naval/header.jpg?v=1.3') center 48%/cover no-repeat;opacity:.92;}
-:root:not([data-theme="light"]) body[data-side="axis"]{background:radial-gradient(ellipse at 15% 0,#16475e60 0,transparent 45%),linear-gradient(145deg,#061923d9,#061521d9 75%,#092b3dcc),url('../assets/naval/mediterraneo-map.svg?v=1.3') center center/cover fixed;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{background:var(--bg);}}
 body[data-side="axis"] .mast,body[data-side="axis"] .pennant{box-shadow:0 5px 20px #0004;}
 body[data-side="axis"] .header-center h1 svg{width:34px;height:23px;filter:drop-shadow(0 2px 3px #0009);}
@@ -98,3 +95,42 @@ body[data-side="axis"] .air-catalog-table tr:nth-child(even){background:color-mi
 body[data-side="axis"] .air-catalog-table .unit-name{font-weight:700;letter-spacing:.015em;}
 body[data-side="axis"] .axis-catalog-table .axis-ship-name{min-width:320px;}
 @media(max-width:620px){body[data-side="axis"] .header-center h1 svg{width:22px;height:15px;}}
+
+/* v1.4 — proposta A: Ammiragliato italiano. Fotografìe d'archivio senza ritocchi. */
+body[data-side="axis"]{--axis-accent:#e4c783;--axis-edge:#8a744d;--axis-panel:#102633;}
+:root:not([data-theme="light"]) body[data-side="axis"]{--bg:#081923;--surface:#102633;--surface2:#182f3d;--raised:#203d4b;--line:#8a744d;--line-soft:#344b56;--ink:#e9eff4;--ink-dim:#b5c5ce;--ink-faint:#a4b6c1;--brass:#e4c783;--brass-ink:#11242e;background:linear-gradient(160deg,#0a202d,#081923 62%,#0b202b);min-height:100vh;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#b8a987;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--brass:#987336;--brass-ink:#fff;background:var(--bg);}}
+:root[data-theme="light"] body[data-side="axis"]{--axis-edge:#aa9671;background:var(--bg);}
+body[data-side="axis"] .admiralty-mast{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;min-height:0;padding:9px 18px;background:#081923;border-bottom:1px solid #8a744d;box-shadow:none;}
+body[data-side="axis"] .admiralty-mast::before{content:none;}
+body[data-side="axis"] .admiralty-mast .header-left{flex:1 1 auto;}
+body[data-side="axis"] .admiralty-mast .header-right{display:flex;justify-content:flex-end;flex:0 1 auto;padding-bottom:0;}
+body[data-side="axis"] .admiralty-mast .axis-brand{color:#e4c783;gap:8px;}
+body[data-side="axis"] .admiralty-mast .axis-brand>span{font-size:24px;}
+body[data-side="axis"] .admiralty-mast .axis-brand strong,body[data-side="axis"] .admiralty-mast .axis-brand small{display:inline;font-size:12px;letter-spacing:.06em;}
+body[data-side="axis"] .admiralty-mast .axis-brand small{margin-left:8px;}
+body[data-side="axis"] .admiralty-mast .btn{background:linear-gradient(#182f3d,#102633);border-color:#8a744d;color:#e9eff4;}
+body[data-side="axis"] .admiralty-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,1fr);align-items:stretch;min-height:210px;background:#081923;border-bottom:1px solid #8a744d;}
+body[data-side="axis"] .admiralty-photo{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:0;margin:0;background:#19323d;color:#dce5e9;}
+body[data-side="axis"] .admiralty-photo>a{display:block;width:100%;}
+body[data-side="axis"] .admiralty-photo img{display:block;width:100%;height:190px;object-fit:contain;object-position:center;filter:none;opacity:1;mix-blend-mode:normal;transform:none;}
+body[data-side="axis"] .admiralty-photo figcaption{font:10px/1.4 system-ui,sans-serif;padding:5px 4px;text-align:center;}
+body[data-side="axis"] .admiralty-photo figcaption a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+body[data-side="axis"] .admiralty-title{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 8px;text-align:center;background:radial-gradient(ellipse,#1d3741,#081923);border-inline:1px solid #8a744d;color:#e4c783;}
+body[data-side="axis"] .admiralty-title h1{font:700 clamp(22px,3vw,43px)/1.1 Georgia,serif;letter-spacing:0;text-transform:none;margin:8px 0;text-shadow:0 3px 5px #0008;color:#e4c783;}
+body[data-side="axis"] .admiralty-title .nhost-app-version{font:600 12px/1.3 "IBM Plex Mono",monospace;letter-spacing:.15em;color:#e4c783;margin-top:4px;}
+body[data-side="axis"] .admiralty-ensigns{display:flex;align-items:center;justify-content:center;gap:24px;}
+body[data-side="axis"] .admiralty-ensigns svg{width:35px;height:23px;flex:none;}
+body[data-side="axis"] .admiralty-ensigns span{font-size:25px;color:#e4c783;}
+body[data-side="axis"] .pennant{background:transparent;border:none;box-shadow:none;padding:0;gap:7px;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,2.8fr) minmax(0,1.15fr) minmax(0,1.15fr);}
+body[data-side="axis"] .pennant>.cell,body[data-side="axis"] .pennant>.cell:last-child{background:linear-gradient(var(--surface2),var(--surface));border:1px solid var(--axis-edge);border-radius:6px;box-shadow:0 3px 6px #0004;padding:10px 6px;}
+body[data-side="axis"] .pennant>.cell>.k{font-size:13px;color:var(--brass);}
+body[data-side="axis"] .pennant>.cell>.v{border:none;background:none;padding:3px;}
+body[data-side="axis"] nav.tabs button{border:1px solid var(--axis-edge);background:linear-gradient(var(--surface2),var(--surface));border-radius:5px;box-shadow:0 3px 4px #0005,inset 0 1px #fff2;}
+body[data-side="axis"] nav.tabs button[aria-selected="true"]{color:#11242e;background:linear-gradient(#f0dba9,#c5a665);border-color:#e4c783;box-shadow:0 2px 5px #0004,inset 0 1px #fff8;}
+body[data-side="axis"] nav.tabs button[aria-selected="true"] .naval-icon{filter:grayscale(1) brightness(.35);}
+body[data-side="axis"] .card{border-color:var(--axis-edge);border-radius:7px;box-shadow:0 2px 6px #0003;}
+body[data-side="axis"] .card>h3,body[data-side="axis"] .axis-catalog-table th,body[data-side="axis"] .air-catalog-table th{color:var(--brass);background:var(--surface2);}
+body[data-side="axis"] #p-navi .btn.primary,body[data-side="axis"] #p-aerei .btn.primary{background:linear-gradient(#f0dba9,#c5a665);border-color:#e4c783;color:#11242e;}
+@media(max-width:1150px){body[data-side="axis"] .pennant{grid-template-columns:repeat(4,minmax(0,1fr));}body[data-side="axis"] .pennant>.axis-fleet-cell{grid-row:2;grid-column:1/-1;border-right:1px solid var(--axis-edge)!important;}}
+@media(max-width:720px){body[data-side="axis"] .admiralty-hero{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .admiralty-title{grid-column:1/-1;grid-row:1;border-inline:0;border-bottom:1px solid #8a744d;}body[data-side="axis"] .admiralty-photo img{height:clamp(100px,29vw,190px);}body[data-side="axis"] .admiralty-mast .axis-brand small{display:block;margin-left:0;}body[data-side="axis"] .pennant{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .pennant>.axis-fleet-cell{grid-row:2;}}
