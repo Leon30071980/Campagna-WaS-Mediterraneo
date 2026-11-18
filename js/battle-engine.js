@@ -1,4 +1,4 @@
-import { isAvailable, duplicateHull } from './fleet-rules.js?v=1.0';
+import { isAvailable, duplicateHull } from './fleet-rules.js?v=1.1';
 // Motore di estrazione della campagna, derivato dal codice originale Regia Marina 27 / Royal Navy 28.
 // Il catalogo e i nomi delle squadre arrivano dallo stato privato Nhost: non sono inclusi qui.
 export function generateBattle(state, turnIndex, seed) {

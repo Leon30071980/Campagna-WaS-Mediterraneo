@@ -1,5 +1,5 @@
-// Campagna W@S Mediterraneo v1.0 — rinnovo serializzato, nessun segreto nel client.
-import { NHOST } from './config.js?v=1.0';
+// Campagna W@S Mediterraneo v1.1 — rinnovo serializzato, nessun segreto nel client.
+import { NHOST } from './config.js?v=1.1';
 const STORE_KEY = 'campagna-mediterraneo-refresh-token';
 let session = null, persistent = false, epoch = 0, renewing = null;
 const readStored = () => { try { return localStorage.getItem(STORE_KEY); } catch { return null; } };
