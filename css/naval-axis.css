@@ -1,4 +1,4 @@
-/* W@S v1.7 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.8 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
@@ -180,3 +180,10 @@ body[data-side="axis"] .admiralty-rotate-toggle{font:600 12px/1 system-ui,sans-s
 body[data-side="axis"] .admiralty-rotate-toggle:disabled{opacity:.45;cursor:default;}
 @media(max-width:900px){body[data-side="axis"] .admiralty-carousel .admiralty-filmstrip{--gallery-slots:4;}body[data-side="axis"] .admiralty-filmtrack .admiralty-photo{height:clamp(95px,19vw,160px);}}
 @media(max-width:520px){body[data-side="axis"] .admiralty-archive .admiralty-heraldry{height:128px;background-size:auto,100% auto,auto;}body[data-side="axis"] .admiralty-archive .admiralty-emblem img{width:100px;max-height:116px;}body[data-side="axis"] .admiralty-banner-space{padding:0 2px;}body[data-side="axis"] .admiralty-carousel .admiralty-filmstrip{--gallery-slots:2;}body[data-side="axis"] .admiralty-filmtrack .admiralty-photo{height:clamp(95px,32vw,155px);}body[data-side="axis"] .admiralty-gallery-tools{font-size:9px;}}
+
+/* v1.8 — composizione approvata, asset locale a risoluzione originale. */
+body[data-side="axis"] .admiralty-approved{display:block;position:relative;width:calc(100% - 28px);max-width:1600px;min-height:0;margin:10px auto 0;padding:0;background:#0b1b2a;border:0;border-radius:7px;overflow:hidden;box-shadow:0 4px 18px #0005;}
+body[data-side="axis"] .admiralty-approved-image{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;aspect-ratio:1916/821;}
+body[data-side="axis"] .admiralty-approved .nhost-app-version{padding:4px 8px 6px;text-align:center;font:500 11px/1.3 "IBM Plex Mono",monospace;letter-spacing:.08em;color:#e7cb87;background:#0a1929;}
+body[data-side="axis"] .admiralty-accessible-title{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0;}
+@media(max-width:620px){body[data-side="axis"] .admiralty-approved{width:calc(100% - 16px);margin-top:8px;}}
