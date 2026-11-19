@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.26 (Nhost)
+# Campagna W@S Mediterraneo — v1.27 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.27
+- 27 profili locali Royal Navy / Commonwealth per BB, BC, CV, CA, CL e DD, derivati dai GIF dello ZIP «royal navy.zip» consegnato dal giocatore. WebP lossless trasparenti, colore #D8EAF2, contorni e proporzioni originali preservati; nessuna ricostruzione. Refuso artehusa corretto in arethusa. J e K hanno lo stesso disegno nel lotto originale.
+- Mappatura sulle classi storiche già presenti nel catalogo, incluse Town (Southampton, Gloucester, Edinburgh), C (Carlisle, Ceres), County (Kent), Crown Colony (Fiji) e Leander (Perth), con indicazione della lunghezza nominale di classe e scala orizzontale indicativa comune. Il profilo non rappresenta necessariamente il refit preciso di ciascuna nave.
+- Nessuna sostituzione artificiale per Queen Elizabeth, Crown Colony (Ceylon), Wasp, sommergibili e altre classi non incluse: resta il comportamento precedente (fonte Navypedia dove disponibile). Le 27 immagini non comprendono nuove tavole per queste classi.
+- Testata, bandiere, sagome Axis, punteggi, motore di battaglia, dati e Nhost invariati.
 
 ## Novità v1.26
 - Testata Royal Navy speculare al formato originale Axis (1916 × 821, anche su mobile): riusi della cornice, targa, ornamenti e scritta Campagna W@S originali Axis; titolo Royal Navy riprodotto in serif metallico equivalente, poiché il font Axis è incorporato nel raster. Ricomposizione dello sfondo fornito per mostrare la corazzata in primo piano sopra il titolo; aerei originali ritagliati dal dipinto, senza ridisegnarli.

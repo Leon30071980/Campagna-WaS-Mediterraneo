@@ -1,4 +1,4 @@
-// v1.26 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
+// v1.27 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
 const LOCAL_CLASSES=Object.freeze({
   "BB|Littorio": "bb_littorio",
   "BB|Conte di Cavour": "bb_cavour",
@@ -79,11 +79,126 @@ const LENGTHS=Object.freeze({
   "sub_viib": 66.5,
   "sub_viic": 67.1
 });
+// Profili britannici/Commonwealth dalle 27 tavole GIF del giocatore.
+// Canvas originale normalizzato: 528 × 152, 2 pixel per metro; stessa scala relativa degli SVG Axis,
+// con correzione della larghezza di visualizzazione descritta nel CSS.
+const ALLIED_PROFILES=Object.freeze({
+  "BB|King George V": {
+    "file": "bb_king_george",
+    "length": 227.1
+  },
+  "BB|Nelson": {
+    "file": "bb_nelson",
+    "length": 216.4
+  },
+  "BB|Revenge": {
+    "file": "bb_revenge",
+    "length": 189.2
+  },
+  "BC|Admiral": {
+    "file": "bc_admiral",
+    "length": 262.3
+  },
+  "BC|Renown": {
+    "file": "bc_renown",
+    "length": 242.2
+  },
+  "CA|County (Kent)": {
+    "file": "ca_county",
+    "length": 192
+  },
+  "CA|York": {
+    "file": "ca_york",
+    "length": 175.3
+  },
+  "CL|Arethusa": {
+    "file": "cl_arethusa",
+    "length": 154.2
+  },
+  "CL|C (Carlisle)": {
+    "file": "cl_carlisle",
+    "length": 137.6
+  },
+  "CL|C (Ceres)": {
+    "file": "cl_ceres",
+    "length": 137.2
+  },
+  "CL|Crown Colony (Fiji)": {
+    "file": "cl_crown_colony",
+    "length": 169.3
+  },
+  "CL|Dido": {
+    "file": "cl_dido",
+    "length": 156.1
+  },
+  "CL|Town (Edinburgh)": {
+    "file": "cl_edinburgh",
+    "length": 187
+  },
+  "CL|Town (Gloucester)": {
+    "file": "cl_gloucester",
+    "length": 180.3
+  },
+  "CL|Leander": {
+    "file": "cl_leander",
+    "length": 169.1
+  },
+  "CL|Town (Southampton)": {
+    "file": "cl_southampton",
+    "length": 180.3
+  },
+  "CL|Leander (Perth)": {
+    "file": "cl_sydney",
+    "length": 171.4
+  },
+  "CV|Ark Royal": {
+    "file": "cv_ark_royal",
+    "length": 240
+  },
+  "CV|Eagle": {
+    "file": "cv_eagle",
+    "length": 203.5
+  },
+  "CV|Illustrious": {
+    "file": "cv_illustrious",
+    "length": 225.6
+  },
+  "DD|I": {
+    "file": "dd_i",
+    "length": 98.5
+  },
+  "DD|J": {
+    "file": "dd_j",
+    "length": 108.7
+  },
+  "DD|K": {
+    "file": "dd_k",
+    "length": 108.7
+  },
+  "DD|L": {
+    "file": "dd_l",
+    "length": 110.5
+  },
+  "DD|N": {
+    "file": "dd_n",
+    "length": 108.7
+  },
+  "DD|P": {
+    "file": "dd_p",
+    "length": 105.2
+  },
+  "DD|Tribal": {
+    "file": "dd_tribal",
+    "length": 115
+  }
+});
 export function localShipProfile(unit,className){
  const type=String(unit?.tipo||'').trim().toUpperCase();
  const key=type+'|'+className;
+ const allied=ALLIED_PROFILES[key];
+ if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.27',caption:className+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,royal:true,page:null,length:allied.length};
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
  const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/'+file+'.svg?v=1.26',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
+ return {image:'./assets/naval/profiles/'+file+'.svg?v=1.27',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
 }
