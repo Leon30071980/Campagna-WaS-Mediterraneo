@@ -190,15 +190,116 @@ const ALLIED_PROFILES=Object.freeze({
   "DD|Tribal": {
     "file": "dd_tribal",
     "length": 115
+  },
+  "DD|D": {
+    "file": "dd_d",
+    "length": 100.3
+  },
+  "DD|E": {
+    "file": "dd_e",
+    "length": 100.3
+  },
+  "DD|F": {
+    "file": "dd_f",
+    "length": 100.3
+  },
+  "DD|G": {
+    "file": "dd_g",
+    "length": 98.5
+  },
+  "DD|H": {
+    "file": "dd_h",
+    "length": 98.5
+  },
+  "DD|V e W": {
+    "file": "dd_vw",
+    "length": 95.1
+  },
+  "DD|V": {
+    "file": "dd_vw",
+    "length": 95.1
+  },
+  "DD|W": {
+    "file": "dd_w",
+    "length": 95.1
+  },
+  "DD|Le Fantasque": {
+    "file": "dd_le_fantasque",
+    "length": 132.4
+  },
+  "DD|Vasilefs Georgios": {
+    "file": "dd_vasilefs_georgios",
+    "length": 98.5
+  },
+  "SUB|Glafkos": {
+    "file": "sub_glafkos",
+    "length": 68.6
+  },
+  "SUB|U": {
+    "file": "sub_u",
+    "length": 58.2
+  },
+  "SUB|T": {
+    "file": "sub_t",
+    "length": 83.8
   }
 });
+// v1.35 — la variante per singolo scafo ha precedenza sul profilo di classe.
+const ALLIED_NAMED=Object.freeze({
+  "BB|QUEEN ELIZABETH": {
+    "file": "bb_queen_elizabeth",
+    "length": 196.8,
+    "variant": "Queen Elizabeth"
+  },
+  "BB|VALIANT": {
+    "file": "bb_queen_elizabeth",
+    "length": 196.8,
+    "variant": "Queen Elizabeth"
+  },
+  "BB|WARSPITE": {
+    "file": "bb_warspite",
+    "length": 196.8,
+    "variant": "Warspite"
+  },
+  "BB|MALAYA": {
+    "file": "bb_malaya",
+    "length": 196.8,
+    "variant": "Malaya"
+  },
+  "BB|BARHAM": {
+    "file": "bb_barham",
+    "length": 196.8,
+    "variant": "Barham"
+  },
+  "DD|WATERHEN": {
+    "file": "dd_w",
+    "length": 95.1,
+    "variant": "W"
+  },
+  "DD|WRESTLER": {
+    "file": "dd_w",
+    "length": 95.1,
+    "variant": "W"
+  },
+  "DD|WRYNECK": {
+    "file": "dd_w",
+    "length": 95.1,
+    "variant": "W"
+  },
+  "DD|WOLVERINE": {
+    "file": "dd_w",
+    "length": 95.1,
+    "variant": "W"
+  }
+});
+function alliedHullName(unit){return String(unit?.nome||'').trim().toUpperCase().replace(/^HMS\s+/, '').replace(/(?:\s*\((?:I|II|III|AA)\))+$/, '').trim();}
 export function localShipProfile(unit,className){
  const type=String(unit?.tipo||'').trim().toUpperCase();
  const key=type+'|'+className;
- const allied=ALLIED_PROFILES[key];
- if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.34',caption:className+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
+ const allied=ALLIED_NAMED[type+'|'+alliedHullName(unit)]||ALLIED_PROFILES[key];
+ if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.35',caption:className+(allied.variant?' · profilo '+allied.variant:'')+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
  const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.34',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
+ return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.35',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
 }

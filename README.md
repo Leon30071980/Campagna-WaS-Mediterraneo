@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.34 (Nhost)
+# Campagna W@S Mediterraneo — v1.35 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.35
+- Importate le 16 tavole di `royal navy 2.zip`, normalizzate in WebP trasparente 528 × 152, tinta #D8EAF2 e scala nominale 2 px/m. Lunghezze indicative per classe (Navypedia e repertori navali).
+- Classe Queen Elizabeth: quattro profili distinti, selezione per nome dello scafo; Valiant usa Queen Elizabeth come richiesto, Warspite, Malaya e Barham i rispettivi profili. Classe storica invariata.
+- Nuovi profili D/E/F/G/H, V/W (W selezionata per gli scafi W), Le Fantasque, Vasilefs Georgios e sommergibili Glafkos, U, T. Profili Axis, testate e dati Nhost invariati.
 
 ## Novità v1.34
 - Sostituite esclusivamente le due bandiere laterali Allies con la terza variante pittorica scelta dal giocatore, ottimizzata in WebP trasparente. Posizione, simmetria, resto della testata e logica invariati.
