@@ -85,13 +85,13 @@ body[data-side] .naval-state .naval-construction-icon{width:70px;height:29px;}
 body[data-side] nav.tabs{gap:8px;}
 body[data-side] nav.tabs button{gap:10px;min-height:58px;padding:9px 8px;border-radius:7px;color:var(--ink);font-weight:700;}
 body[data-side] nav.tabs button .command-tab-icon{display:block;flex:none;background-color:currentColor;width:calc(var(--icon-w)*var(--icon-scale));height:calc(var(--icon-h)*var(--icon-scale));--icon-scale:.72px;mask-image:var(--icon-mask);mask-repeat:no-repeat;mask-position:center;mask-size:contain;-webkit-mask-image:var(--icon-mask);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:contain;}
-body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.30');}
-body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.30');}
-body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.30');}
-body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.30');}
-body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.30');}
-body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.30');}
-body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.31');}
+body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.31');}
+body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.31');}
+body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.31');}
+body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.31');}
+body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.31');}
+body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.31');}
 body[data-side] nav.tabs button[aria-selected="true"]{color:#11242e;}
 
 /* Palette esplicita per i due temi, anche con la preferenza di sistema. */
@@ -239,3 +239,8 @@ dialog,.nhost-edit-dialog{width:min(520px,calc(100% - 24px));max-width:calc(100%
 @media(pointer:coarse),(max-width:720px){input:not([type="checkbox"]):not([type="radio"]),select,textarea{font-size:16px!important;min-height:44px;}button.btn,nav.tabs button{min-height:44px;}body[data-side] .slot select{font-size:16px!important;}body[data-side] .catalog-table th button{min-height:44px;}}
 /* Safari/Chrome meno recenti: i bordi restano visibili anche senza color-mix. */
 @supports not (background:color-mix(in srgb,red 10%,white)){.naval-state,.naval-total-label,.air-status{background:var(--surface2);}.battle-wave.support{background:var(--surface2);}}
+
+/* v1.31 — White Ensign al vento, simmetria con le bandiere Axis. */
+body[data-side="allies"] .royal-banner-mirror .royal-side-flag{top:83.3%;width:8.5%;height:auto;z-index:3;object-fit:contain;filter:drop-shadow(0 1px 2px #0007);transform:translateY(-50%);}
+body[data-side="allies"] .royal-banner-mirror .royal-side-flag.left{left:2.8%;}
+body[data-side="allies"] .royal-banner-mirror .royal-side-flag.right{right:2.8%;transform:translateY(-50%) scaleX(-1);}
