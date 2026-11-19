@@ -1,4 +1,4 @@
-// v1.16 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
+// v1.17 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
 const LOCAL_CLASSES=Object.freeze({
   "BB|Littorio": "bb_littorio",
   "BB|Conte di Cavour": "bb_cavour",
@@ -24,7 +24,8 @@ const LOCAL_CLASSES=Object.freeze({
   "DD|Dubrovnik": "dd_dubrovnik",
   "DD|Folgore": "dd_folgore",
   "DD|Dardo": "dd_dardo",
-  "DD|Soldati": "dd_soldati_1",
+  "DD|Soldati I": "dd_soldati_1",
+  "DD|Soldati II": "dd_soldati_2",
   "DD|Oriani": "dd_oriani",
   "DD|Navigatori": "dd_navigatori",
   "DD|Maestrale": "dd_maestrale",
@@ -78,14 +79,11 @@ const LENGTHS=Object.freeze({
   "sub_viib": 66.5,
   "sub_viic": 67.1
 });
-const SOLDATI_2=new Set(['BOMBARDIERE','CARRISTA','CORSARO','LEGIONARIO','MITRAGLIERE','SQUADRISTA','VELITE']);
 export function localShipProfile(unit,className){
  const type=String(unit?.tipo||'').trim().toUpperCase();
- const name=String(unit?.nome||'').trim().toUpperCase().replace(/\s*\((?:I|II|III|AA)\)$/,'');
  const key=type+'|'+className;
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
- const series=key==='DD|Soldati'?(SOLDATI_2.has(name)?2:1):null;
- const file=series===2?'dd_soldati_2':LOCAL_CLASSES[key];
+ const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/'+file+'.svg?v=1.16',caption:className+(series?' · '+series+'ª serie':'')+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
+ return {image:'./assets/naval/profiles/'+file+'.svg?v=1.17',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
 }

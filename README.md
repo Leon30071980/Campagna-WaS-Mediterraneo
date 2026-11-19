@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.16 (Nhost)
+# Campagna W@S Mediterraneo — v1.17 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,13 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.17
+- Naviglio: classe Soldati I (12 unità) e Soldati II (7 unità), secondo la distinzione già presente nei profili locali. Ordinamento, ricerca e profili coerenti; gruppo di gioco invariato.
+- Bandiere storiche nelle righe di Naviglio e Aerei Axis: tricolore sabaudo coronato e insegna di guerra tedesca 1938–1945, utilizzate come indicatori storici di nazionalità in un gioco ambientato nel 1940–1943. La classificazione della nazionalità già adottata rimane invariata.
+- I file WebP caricati sono stati individuati ma non erano estraibili dalla libreria: si utilizzano i corrispondenti SVG originali pubblici di Wikimedia Commons, con fallback grafico precedente in caso di rete non disponibile. Fonti: [Regno d’Italia, F l a n k e r](https://commons.wikimedia.org/wiki/File:Flag_of_Italy_(1861-1946)_crowned.svg), [insegna di guerra tedesca](https://commons.wikimedia.org/wiki/File:War_ensign_of_Germany_(1938%E2%80%931945).svg); licenze e attribuzioni nelle pagine dei file.
+- Quadro comando di entrambe le fazioni: etichetta Turno, valore n di 10, stagione in un riquadro separato.
+- Nessuna modifica alle sagome approvate v1.16, alle regole, ai punti o a Nhost.
 
 ## Novità v1.16
 - Test A approvato: torri e canne principali ripristinate su 14 profili locali BB, CA e CL, per 54 postazioni di torre tracciate dalle tavole fornite; stile semplice, senza contorno decorativo.

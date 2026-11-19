@@ -739,10 +739,11 @@ function nameOf(unit){return String(unit?.nome||'').trim().toUpperCase().replace
 function pageOf(r){return BASE+'/ships/'+r[0]+'/'+r[3]+'.htm';}
 export function shipProfile(unit,className){
  const name=nameOf(unit),type=String(unit?.tipo||'').trim().toUpperCase();
- const list=ROWS.filter(r=>r[1]===type&&r[2]===className);
+ const lookupClass=type==='DD'&&/^Soldati (?:I|II)$/.test(className)?'Soldati':className;
+ const list=ROWS.filter(r=>r[1]===type&&r[2]===lookupClass);
  const row=list.find(r=>r[6]?.includes(name))||list.find(r=>!r[6]);
  if(row)return {image:BASE+'/storage/images/ships/'+row[0]+'/'+row[4],caption:row[5],page:pageOf(row),className};
- const record=PENDING.find(r=>r[1]===type&&r[2]===className)||list[0];
+ const record=PENDING.find(r=>r[1]===type&&r[2]===lookupClass)||list[0];
  if(record)return {image:null,caption:className,page:pageOf(record),className};
  return null;
 }

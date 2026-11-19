@@ -1,12 +1,12 @@
-import { localShipProfile } from './local-ship-profiles.js?v=1.16';
-import { shipProfile } from './ship-profiles.js?v=1.16';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.16';
-import { historicalClass } from './historical-classes.js?v=1.16';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.16';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.16';
-import { generateBattle } from './battle-engine.js?v=1.16';
-import { SEASONS } from './config.js?v=1.16';
-import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.16';
+import { localShipProfile } from './local-ship-profiles.js?v=1.17';
+import { shipProfile } from './ship-profiles.js?v=1.17';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.17';
+import { historicalClass } from './historical-classes.js?v=1.17';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.17';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.17';
+import { generateBattle } from './battle-engine.js?v=1.17';
+import { SEASONS } from './config.js?v=1.17';
+import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.17';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -77,7 +77,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.16':'./css/royal.css?v=1.16';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.17':'./css/royal.css?v=1.17';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent=statusText();
@@ -99,7 +99,7 @@ function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+a
 }
 const AXIS_NAV_ICONS=Object.freeze({porto:'⚓',battaglia:'⚔',storico:'▤',gestione:'⚙',regole:'▧'});
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk']});
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.16';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.17';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -119,7 +119,7 @@ function renderTabs(){const nav=$('tabs');nav.replaceChildren();for(const [id,la
  $('p-'+id).classList.toggle('on',id===activeTab);
 }}
 function renderPennant(){const p=$('pennant');p.replaceChildren();const fleets=fleetTotals();const pts=scores();
- const cells=[['Seleziona Turno','Turno '+String(Number(model.campaign.turn_index)+1)+'/10'],['Stagione',SEASONS[model.campaign.turn_index]||'—']];
+ const cells=[['Turno',String(Number(model.campaign.turn_index)+1)+' di '+SEASONS.length],['Stagione',SEASONS[model.campaign.turn_index]||'—']];
  for(const [key,value] of cells){const c=make('div','cell');text(c,'div',key,'k');text(c,'div',value,'v');p.append(c);}
  const cell=make('div','cell');if(model.side==='axis')cell.classList.add('axis-fleet-cell');text(cell,'div','Stato del naviglio','k');const state=make('div','nhost-summary');
  for(const [key,label,cls]of [['attiva','Operative','ok'],['riparazione','In riparazione','ripara'],['affondata','Perse','sunk']]){
@@ -364,11 +364,20 @@ function compareCatalogUnits(a,b,key,direction){
  return String(av).localeCompare(String(bv),'it',{numeric:true,sensitivity:'base'})*direction;
 }
 const NATION_LABELS=Object.freeze({it:'Italia (Regno d’Italia)', 'de-air':'Luftwaffe (Germania)', 'de-navy':'Kriegsmarine (Germania)', 'gb-navy':'Royal Navy (Regno Unito)', 'gb-air':'Aviazione britannica (RAF / Fleet Air Arm)', fr:'Francia', au:'Australia', nz:'Nuova Zelanda', us:'Stati Uniti', gr:'Grecia'});
+// Immagini storiche corrispondenti ai nomi dei file forniti. Il badge CSS sottostante è il fallback.
+const HISTORICAL_FLAG_URLS=Object.freeze({it:'https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Italy_%281861-1946%29_crowned.svg','de-air':'https://upload.wikimedia.org/wikipedia/commons/1/11/War_ensign_of_Germany_%281938%E2%80%931945%29.svg','de-navy':'https://upload.wikimedia.org/wikipedia/commons/1/11/War_ensign_of_Germany_%281938%E2%80%931945%29.svg'});
 function appendUnitFlag(parent,unit,ships){
  const nation=unitNation(unit,model.side,ships);
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
+ const url=HISTORICAL_FLAG_URLS[nation];
+ if(url){
+  const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
+  img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
+  img.addEventListener('error',()=>img.remove(),{once:true});
+  img.src=url;flag.append(img);
+ }
  parent.append(flag);
 }
 function renderCatalog(p,tab){
