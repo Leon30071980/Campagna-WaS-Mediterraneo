@@ -71,3 +71,11 @@ export function fleetStatusTotals(units,losses,turnIndex){
  }
  return lists;
 }
+
+// v1.21 — stato aereo, stessa finestra temporale di isAvailable.
+export function catalogAircraftStatus(unit,turnIndex){
+ const year=CAMPAIGN_YEARS[Number(turnIndex)];
+ if(Number(unit.anno)>year)return 'costruzione';
+ if(unit.ritirato&&year>=Number(unit.ritirato))return 'obsoleto';
+ return 'attiva';
+}

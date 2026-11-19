@@ -255,3 +255,10 @@ body[data-side="allies"] .naval-state .naval-icon{width:48px;height:22px;object-
 @media(min-width:860px){body[data-side="allies"] .pennant{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,2.4fr) minmax(0,1.1fr) minmax(0,1.1fr);}}
 @media(max-width:859px){body[data-side="allies"] .pennant .fleet-summary-cell{grid-column:1/-1;}body[data-side="allies"] .naval-four-states{grid-template-columns:repeat(4,minmax(0,1fr));}}
 @media(max-width:620px){body[data-side="axis"] .axis-fleet-cell .naval-four-states,body[data-side="allies"] .naval-four-states{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .naval-four-states .naval-total-label{font-size:12px;}}
+
+/* v1.21 — stati aerei, colori accessibili in entrambi i temi. */
+body[data-side] .air-status{display:inline-flex;min-width:100px;box-sizing:border-box;justify-content:center;align-items:center;border:1px solid currentColor;background:color-mix(in srgb,currentColor 13%,var(--surface));border-radius:20px;padding:3px 10px;font-size:13px;font-weight:600;white-space:nowrap;}
+body[data-side] .air-status.ok{color:var(--ok);}
+body[data-side] .air-status.obsolete{color:var(--sunk);}
+body[data-side] .air-status.building{color:var(--building);}
+.air-catalog-table td:nth-child(7),.air-catalog-table th:nth-child(7){text-align:center;}

@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.20 (Nhost)
+# Campagna W@S Mediterraneo — v1.21 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.21
+- Icona blu In costruzione rielaborata in stile simile al cantiere dell'icona In riparazione: scafo di corazzata sullo scalo, gru, sovrastruttura parziale e intelaiature ancora aperte. Le altre icone navali sono intatte.
+- Catalogo Aerei di entrambe le fazioni: colonne Ritiro e Stato, ordinabili, con indicatore verde Operativo, rosso Obsoleto e blu In costruzione. Filtro Stato combinabile con Base e ricerca.
+- Il criterio temporale è quello già utilizzato nelle regole del gioco: anno d'ingresso futuro = In costruzione; raggiunto l'anno di ritiro = Obsoleto; altrimenti Operativo. Nessuna obsolescenza inventata per le unità prive di anno ritiro.
+- Nessuna modifica ai cataloghi privati, a Nhost, alla disponibilità effettiva o alle battaglie.
 
 ## Novità v1.20
 - Nuovo stato automatico **In costruzione** (anno di entrata in servizio maggiore dell'anno del turno corrente); icona A blu, scafo su scalo di varo, identica alla proposta approvata. Le icone Operativa, In riparazione e Persa restano quelle originali.
