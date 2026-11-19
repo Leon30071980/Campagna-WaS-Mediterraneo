@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.25 (Nhost)
+# Campagna W@S Mediterraneo — v1.26 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.26
+- Testata Royal Navy speculare al formato originale Axis (1916 × 821, anche su mobile): riusi della cornice, targa, ornamenti e scritta Campagna W@S originali Axis; titolo Royal Navy riprodotto in serif metallico equivalente, poiché il font Axis è incorporato nel raster. Ricomposizione dello sfondo fornito per mostrare la corazzata in primo piano sopra il titolo; aerei originali ritagliati dal dipinto, senza ridisegnarli.
+- Riepilogo Allies usa lo stesso markup Axis: cinque riquadri, quattro icone del naviglio, identiche proporzioni e colori, stessi breakpoint. Titoli e punteggi restano relativi alla propria fazione.
+- Bandiera USA fornita dal giocatore, salvata localmente: Wasp e unità USA riconosciute tramite nazionalità, prefissi o denominazioni americane; B-25J, B-24 e PBY-5 nel catalogo originale. Le denominazioni britanniche o attribuzioni esplicite a servizi alleati diversi conservano l'insegna appropriata. La bandiera allegata è a 50 stelle, utilizzata come richiesto.
+- Axis, salvataggi, Nhost, motore e regole di gioco invariati.
 
 ## Novità v1.25
 - Testata Allies ripresa dalla struttura Axis: cornice dorata, stemma della Royal Navy al centro, scena navale e targa inferiore blu/oro, titolo Quadro Comando Royal Navy, White Ensign ai due lati. Asset locali forniti dal giocatore, convertiti in WebP; lo sfondo è adattato al formato della testata senza deformazione. Nessuna ricostruzione generativa dell'immagine.

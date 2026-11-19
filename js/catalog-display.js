@@ -19,10 +19,13 @@ export function unitNation(u,side,ships){
  if(side==='allies'){
   // Il paese indica il servizio militare, non il costruttore del velivolo.
   const country=String(u?.nazione||u?.nazionalita||u?.nation||u?.country||'').trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(/^(US|USA|U\.S\.A\.|UNITED STATES|UNITED STATES OF AMERICA|STATI UNITI|STATI UNITI D'AMERICA|AMERICA|USAAC|USAAF|USAF|USN|USMC)$/.test(country)||/^(USS|USAAF|USAAC|USN|USMC)\b/.test(n)||/\((?:US|USA|USAAF|USN)\)$/.test(n))return 'us';
+  if(/^(GB|UK|GBR|UNITED KINGDOM|GREAT BRITAIN|REGNO UNITO|INGHILTERRA|ROYAL NAVY|RAF|RN|FAA|FLEET AIR ARM)$/.test(country)||/^(?:HMS|RAF|FAA)\b/.test(n))return ships?'gb-navy':'gb-air';
   if(/^(FR|FRA|FRANCE|FRANCIA|FREE FRANCE|FRANCE LIBRE|FRANCIA LIBERA|FAFL|FNFL)$/.test(country)||/^(FAFL|FNFL|FREE FRANCE|FRANCE LIBRE|FRANCIA LIBERA)\b/.test(n)||/\((?:FR|FRA|FAFL|FNFL)\)$/.test(n))return 'fr';
   if(/^(CA|CAN|CANADA|RCN|RCAF)$/.test(country)||/^HMCS\b/.test(n))return 'ca';
   if(/^(AU|AUS|AUSTRALIA|RAN|RAAF)$/.test(country)||/^HMAS\b/.test(n))return 'au';
   if(/^(NZ|NZL|NEW ZEALAND|NUOVA ZELANDA|RNZN|RNZAF)$/.test(country)||/^HMNZS\b/.test(n))return 'nz';
+  if(!ships&&/^(?:B[ .-]?(?:17|24|25|26)|PBY[ .-]?5|P[ .-]?(?:38|39|40|47|51)|F[ .-]?(?:4F|4U|6F)|SBD|TBF|TBM|A[ .-]?(?:20|26))(?:[A-Z0-9]*)(?:\b|$)/.test(n))return 'us';
   if(!ships&&/^(?:MARTIN\s*167\s*F|D[.\s-]*520|MS[.\s-]*406|MB[.\s-]*15[12]|POTEZ\s*63\d|LEO\s*45[1-9]|BREGUET\s*69[1-5])(?:\b|$)/.test(n))return 'fr';
  }
  if(ships){
