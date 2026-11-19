@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.10 (Nhost)
+# Campagna W@S Mediterraneo — v1.11 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.11
+- Sostituite le icone Axis con le proposte selezionate NP5 (esplosione, fumo e nave affondata) e AE1 (caccia WWII con elica visto dall'alto).
+- Icone ricavate direttamente dalla tavola approvata, senza riquadri o sfondo: WebP lossless locali con trasparenza; colori originali e dimensioni adeguate per la leggibilità.
+- Testata, ordine del menu, Royal Navy (salvo numero di versione), database Nhost e logica di gioco invariati.
 
 ## Novità v1.10
 - Quadro Comando Axis e catalogo Naviglio: nuova icona SVG rossa di una nave da guerra inclinata, parzialmente sommersa, con onde e bolle, per lo stato Persa.
