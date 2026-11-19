@@ -1,4 +1,4 @@
-// v1.21 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
+// v1.22 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
 const LOCAL_CLASSES=Object.freeze({
   "BB|Littorio": "bb_littorio",
   "BB|Conte di Cavour": "bb_cavour",
@@ -85,5 +85,5 @@ export function localShipProfile(unit,className){
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
  const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/'+file+'.svg?v=1.21',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
+ return {image:'./assets/naval/profiles/'+file+'.svg?v=1.22',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
 }
