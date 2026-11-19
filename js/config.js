@@ -1,4 +1,4 @@
-// Campagna W@S Mediterraneo v1.29
+// Campagna W@S Mediterraneo v1.30
 // Indirizzi pubblici di Nhost. NON inserire Hasura Admin Secret o password qui.
 export const NHOST = Object.freeze({
   subdomain: 'cgvqfhgnajimlwpeqvjy',

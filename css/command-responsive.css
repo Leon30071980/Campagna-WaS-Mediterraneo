@@ -1,0 +1,241 @@
+/* v1.30 — Quadro Comando condiviso. Le testate e le insegne restano specifiche. */
+body[data-side] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
+:root:not([data-theme="light"]) body[data-side]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
+:root[data-theme="light"] body[data-side]{--axis-ship-brightness:.31;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--axis-edge:#96b4c2;}
+body[data-side] header.top{border:0;background:transparent;}
+body[data-side] .pennant{max-width:1600px;width:calc(100% - 28px);margin:12px auto 10px;padding:8px;grid-template-columns:minmax(130px,1fr) minmax(130px,1fr) minmax(365px,2.85fr) minmax(125px,.95fr) minmax(125px,.95fr);gap:6px;background:var(--surface);border:1px solid var(--axis-edge);border-radius:12px;box-shadow:var(--shadow);}
+body[data-side] .pennant>.cell{padding:8px;text-align:center;border-right:1px solid var(--line);background:transparent;min-width:0;}
+body[data-side] .pennant>.cell:last-child{border-right:0;}
+body[data-side] .pennant>.cell>.k{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:8px;}
+body[data-side] .pennant>.cell>.v{padding:9px 5px;border:1px solid var(--axis-edge);border-radius:6px;background:var(--surface2);font-size:clamp(15px,1.45vw,23px);}
+body[data-side] .axis-fleet-cell .nhost-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}
+body[data-side] .axis-fleet-cell .nhost-summary>div{border:0;background:transparent;padding:0;min-width:0;}
+body[data-side] .naval-total-top{display:flex;align-items:center;justify-content:center;gap:6px;}
+body[data-side] .naval-icon{width:64px;height:25px;object-fit:contain;flex:none;}
+body[data-side] .naval-total-top .naval-icon{width:clamp(55px,6vw,104px);height:34px;}
+body[data-side] .naval-total-top .v{font-size:23px;color:var(--ink);}
+body[data-side] .naval-total-label,body[data-side] .naval-state{border:1px solid currentColor;background:color-mix(in srgb,currentColor 14%,var(--surface));border-radius:20px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:2px 9px;font-weight:600;white-space:nowrap;}
+body[data-side] .naval-total-label{margin-top:4px;font-size:13px;}
+body[data-side] .naval-total.ok,body[data-side] .naval-state.ok{color:var(--ok);}body[data-side] .naval-total.ripara,body[data-side] .naval-state.ripara{color:var(--ripara);}body[data-side] .naval-total.sunk,body[data-side] .naval-state.sunk{color:var(--sunk);}
+body[data-side] nav.tabs{max-width:1600px;width:calc(100% - 28px);padding:0;gap:8px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.5fr) minmax(0,1fr);}
+body[data-side] nav.tabs button{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 5px;margin:0;border:1px solid var(--axis-edge);border-radius:8px;background:var(--surface2);color:var(--ink);font-weight:600;white-space:nowrap;}
+body[data-side] nav.tabs button[aria-selected="true"]{border-color:var(--axis-accent);box-shadow:0 0 0 1px var(--axis-accent),inset 0 0 14px #3caad238;background:color-mix(in srgb,var(--sea) 15%,var(--surface2));}
+body[data-side] nav.tabs .naval-icon{width:37px;height:18px;filter:grayscale(1) brightness(1.35);}
+body[data-side] .wrap,body[data-side] .nhost-statusbar{max-width:1600px;width:calc(100% - 28px);padding-inline:0;}
+body[data-side] .wrap{margin:auto;}
+body[data-side] .nhost-statusbar{margin:8px auto 0;}
+body[data-side] section.panel{padding-top:12px;}
+body[data-side] .card{border-radius:10px;}
+body[data-side] .axis-catalog-add .nhost-card-body{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+body[data-side] .axis-catalog-add .nhost-notification{margin:0;}
+body[data-side] #p-navi .btn.primary{background:linear-gradient(#2086b0,#125077);border-color:#70c8e7;color:white;}
+body[data-side] .axis-catalog-table table{min-width:1080px;}
+body[data-side] .axis-catalog-table th{background:var(--surface2);font-size:15px;color:var(--ink);padding:10px;}
+body[data-side] .axis-catalog-table td{padding:7px 10px;height:57px;border-right:1px solid var(--line-soft);}
+body[data-side] .axis-catalog-table tr:nth-child(even){background:color-mix(in srgb,var(--surface2) 34%,var(--surface));}
+body[data-side] .axis-catalog-table td:last-child{border-right:0;}
+body[data-side] .axis-catalog-table .nhost-catalog-actions{display:table-cell;white-space:nowrap;}
+body[data-side] .axis-catalog-table .nhost-catalog-actions .btn+.btn{margin-left:5px;}
+body[data-side] .axis-ship-name{min-width:320px;width:30%;}
+body[data-side] .axis-name{display:inline-block;font-weight:700;letter-spacing:.015em;vertical-align:middle;}
+body[data-side] .historical-profile{float:right;width:180px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;margin-left:8px;}
+body[data-side] .historical-profile img{width:100%;height:35px;object-fit:contain;filter:brightness(var(--axis-ship-brightness));}
+body[data-side] .historical-profile small{font-size:10px;color:var(--ink-dim);line-height:1;}
+body[data-side] .axis-type{display:inline-block;min-width:42px;text-align:center;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:13px;padding:3px 7px;border-radius:5px;color:white;background:#405564;border:1px solid #ffffff38;}
+body[data-side] .axis-type[data-type="BB"]{background:#853b40;}body[data-side] .axis-type[data-type="BC"]{background:#a6505f;}body[data-side] .axis-type[data-type="CA"]{background:#1b4f72;}body[data-side] .axis-type[data-type="CL"]{background:#92c7e5;color:#102b39;}body[data-side] .axis-type[data-type="DD"]{background:#2e6950;}body[data-side] .axis-type[data-type="CV"]{background:#197c76;}body[data-side] .axis-type[data-type="SUB"]{background:#6c4385;}
+body[data-side] .naval-state{min-width:145px;font-size:13px;}
+body[data-side] .axis-profile-note{margin:9px 0;color:var(--ink-dim);}
+/* A little more room for the distinct silhouettes in the three-state summary. */
+@media(min-width:1151px){body[data-side] .naval-total-top .naval-icon{width:clamp(75px,7.2vw,118px);height:40px;}}
+body[data-side] .naval-state .naval-icon{width:70px;height:29px;}
+body[data-side] .axis-catalog-table td:nth-child(3),body[data-side] .axis-catalog-table th:nth-child(3),body[data-side] .axis-catalog-table td:nth-child(7),body[data-side] .axis-catalog-table th:nth-child(7){text-align:center;}
+body[data-side] .axis-catalog-table td:nth-child(4){font-weight:700;}
+body[data-side] .mast,body[data-side] .pennant{box-shadow:0 5px 20px #0004;}
+body[data-side] .btn,body[data-side] nav.tabs button{box-shadow:0 2px 5px #0004,inset 0 1px 0 #ffffff24;}
+body[data-side] .btn:not(:disabled):hover,body[data-side] nav.tabs button:hover{border-color:var(--axis-accent);filter:brightness(1.1);}
+body[data-side] .air-catalog-table th{background:var(--surface2);font-size:15px;color:var(--ink);padding:10px;}
+body[data-side] .air-catalog-table td{padding:9px 10px;border-right:1px solid var(--line-soft);}
+body[data-side] .air-catalog-table tr:nth-child(even){background:color-mix(in srgb,var(--surface2) 34%,var(--surface));}
+body[data-side] .air-catalog-table .unit-name{font-weight:700;letter-spacing:.015em;}
+body[data-side] .axis-catalog-table .axis-ship-name{min-width:320px;}
+body[data-side]{--axis-accent:#e4c783;--axis-edge:#8a744d;--axis-panel:#102633;}
+:root:not([data-theme="light"]) body[data-side]{--bg:#081923;--surface:#102633;--surface2:#182f3d;--raised:#203d4b;--line:#8a744d;--line-soft:#344b56;--ink:#e9eff4;--ink-dim:#b5c5ce;--ink-faint:#a4b6c1;--brass:#e4c783;--brass-ink:#11242e;background:linear-gradient(160deg,#0a202d,#081923 62%,#0b202b);min-height:100vh;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#b8a987;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--brass:#987336;--brass-ink:#fff;background:var(--bg);}}
+:root[data-theme="light"] body[data-side]{--axis-edge:#aa9671;background:var(--bg);}
+body[data-side] .pennant{background:transparent;border:none;box-shadow:none;padding:0;gap:7px;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,2.8fr) minmax(0,1.15fr) minmax(0,1.15fr);}
+body[data-side] .pennant>.cell,body[data-side] .pennant>.cell:last-child{background:linear-gradient(var(--surface2),var(--surface));border:1px solid var(--axis-edge);border-radius:6px;box-shadow:0 3px 6px #0004;padding:10px 6px;}
+body[data-side] .pennant>.cell>.k{font-size:13px;color:var(--brass);}
+body[data-side] .pennant>.cell>.v{border:none;background:none;padding:3px;}
+body[data-side] nav.tabs button{border:1px solid var(--axis-edge);background:linear-gradient(var(--surface2),var(--surface));border-radius:5px;box-shadow:0 3px 4px #0005,inset 0 1px #fff2;}
+body[data-side] nav.tabs button[aria-selected="true"]{color:#11242e;background:linear-gradient(#f0dba9,#c5a665);border-color:#e4c783;box-shadow:0 2px 5px #0004,inset 0 1px #fff8;}
+body[data-side] nav.tabs button[aria-selected="true"] .naval-icon{filter:grayscale(1) brightness(.35);}
+body[data-side] .card{border-color:var(--axis-edge);border-radius:7px;box-shadow:0 2px 6px #0003;}
+body[data-side] .card>h3,body[data-side] .axis-catalog-table th,body[data-side] .air-catalog-table th{color:var(--brass);background:var(--surface2);}
+body[data-side] #p-navi .btn.primary,body[data-side] #p-aerei .btn.primary{background:linear-gradient(#f0dba9,#c5a665);border-color:#e4c783;color:#11242e;}
+body[data-side] .naval-total-top .naval-sunk-icon{height:48px;width:clamp(52px,6vw,76px);}
+body[data-side] .naval-state .naval-sunk-icon{width:52px;height:38px;}
+body[data-side] .axis-fleet-cell .naval-four-states{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;}
+body[data-side] .naval-four-states .naval-total-top{min-height:48px;gap:3px;}
+body[data-side] .naval-four-states .naval-total-top .naval-icon{max-width:calc(100% - 37px);min-width:0;flex-shrink:1;}
+body[data-side] .naval-four-states .naval-total-label{font-size:clamp(10px,.84vw,13px);padding-inline:4px;box-sizing:border-box;max-width:100%;}
+body[data-side] .naval-four-states .naval-construction-icon{width:clamp(52px,6vw,104px);height:42px;}
+body[data-side] .naval-state .naval-construction-icon{width:70px;height:29px;}
+@media(min-width:1151px){body[data-side] .pennant{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,4.1fr) minmax(0,1.15fr) minmax(0,1.15fr);}}
+body[data-side] nav.tabs{gap:8px;}
+body[data-side] nav.tabs button{gap:10px;min-height:58px;padding:9px 8px;border-radius:7px;color:var(--ink);font-weight:700;}
+body[data-side] nav.tabs button .command-tab-icon{display:block;flex:none;background-color:currentColor;width:calc(var(--icon-w)*var(--icon-scale));height:calc(var(--icon-h)*var(--icon-scale));--icon-scale:.72px;mask-image:var(--icon-mask);mask-repeat:no-repeat;mask-position:center;mask-size:contain;-webkit-mask-image:var(--icon-mask);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:contain;}
+body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.30');}
+body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.30');}
+body[data-side] nav.tabs button[aria-selected="true"]{color:#11242e;}
+
+/* Palette esplicita per i due temi, anche con la preferenza di sistema. */
+:root[data-theme="light"] body[data-side]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#b8a987;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--brass:#987336;--brass-ink:#fff;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--axis-edge:#aa9671;--axis-ship-brightness:.31;background:var(--bg);}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side]{--axis-edge:#aa9671;}}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);padding-top:env(safe-area-inset-top,0px);}
+#app-page,#command-root,.wrap,section.panel,.card,.nhost-card-body,.port-container,.row,.stack,.nhost-actions,.nhost-summary,.force-sq,.battle-wave{min-width:0;max-width:100%;}
+body[data-side] .wrap,body[data-side] .pennant,body[data-side] nav.tabs{width:calc(100% - 28px);max-width:1600px;margin-inline:auto;}
+body[data-side] .wrap{padding:0 0 60px;padding-bottom:calc(60px + env(safe-area-inset-bottom,0px));}
+body[data-side] section.panel{padding-top:14px;}
+body[data-side] .card>h3{flex-wrap:wrap;overflow-wrap:anywhere;}
+body[data-side] .card>h3>span{min-width:0;}
+body[data-side] .card>h3 .tag{max-width:100%;white-space:normal;overflow-wrap:anywhere;}
+body[data-side] .panel>.card+.card,body[data-side] .panel>.card+details,body[data-side] .panel>.card+.nhost-info{margin-top:12px;}
+body[data-side] .nhost-summary{grid-template-columns:repeat(auto-fit,minmax(min(100%,125px),1fr));}
+body[data-side] .nhost-summary>div{min-width:0;overflow-wrap:anywhere;}
+body[data-side] .nhost-summary .v{font-size:clamp(16px,1.4vw,20px);}
+body[data-side] .note,body[data-side] .nhost-info,body[data-side] .log,body[data-side] .nhost-actions>span{overflow-wrap:anywhere;}
+body[data-side] .nhost-actions>*{min-width:0;max-width:100%;}
+body[data-side] .nhost-search{flex:1 1 220px;min-width:0;max-width:370px;}
+body[data-side] .btn{max-width:100%;white-space:normal;}
+body[data-side] .btn.primary{background:linear-gradient(#f0dba9,#c5a665);border-color:#e4c783;color:#11242e;}
+body[data-side] .naval-state{min-width:145px;max-width:100%;padding:3px 9px;}
+body[data-side] .naval-state .naval-icon{width:70px;height:29px;}
+body[data-side] .naval-state .naval-sunk-icon{width:52px;height:38px;}
+body[data-side] .naval-state.retired{color:var(--ink-dim);}
+body[data-side] .pennant>.cell{border:1px solid var(--axis-edge);min-width:0;}
+body[data-side] .pennant>.cell>.v{overflow-wrap:anywhere;}
+body[data-side] .pennant .axis-fleet-cell .naval-four-states{grid-template-columns:repeat(4,minmax(0,1fr));}
+body[data-side] .naval-four-states .naval-total-top .v{font-size:clamp(18px,1.65vw,23px);}
+body[data-side] .naval-four-states .naval-total-label{white-space:normal;line-height:1.25;}
+body[data-side] .pennant .fleet-summary-cell{grid-column:auto;grid-row:auto;}
+body[data-side] header.top{border:0;background:transparent;}
+body[data-side] .admiralty-mast{display:flex!important;flex-direction:row;justify-content:space-between;max-width:1600px;width:100%;margin-inline:auto;align-items:center;gap:8px;}
+body[data-side] .admiralty-mast .header-left{min-width:0;flex:1 1 180px;}
+body[data-side] .admiralty-mast .header-right{display:flex;flex-wrap:wrap;flex:0 1 auto;width:auto;gap:6px;justify-content:flex-end;}
+body[data-side] nav.tabs{grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.5fr) minmax(0,1fr);margin-block:10px;}
+body[data-side] nav.tabs button{min-width:0;white-space:normal;line-height:1.2;text-align:center;}
+body[data-side] nav.tabs button>span:last-child{min-width:0;overflow-wrap:anywhere;}
+body[data-side] .port-container{grid-template-columns:repeat(4,minmax(0,1fr));}
+body[data-side] .nhost-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,225px),1fr));}
+body[data-side] .grid-sq{grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr));}
+body[data-side] .slot select{min-width:0;max-width:100%;}
+body[data-side] .row>*{min-width:0;max-width:100%;}
+body[data-side] .battle-wave-head,body[data-side] .force-sq>.hd{flex-wrap:wrap;overflow-wrap:anywhere;}
+body[data-side] .unit .nm{white-space:normal;overflow:visible;overflow-wrap:anywhere;line-height:1.25;}
+body[data-side] .unit .pt{width:auto;min-width:32px;white-space:nowrap;}
+body[data-side] .battle-report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start;}
+body[data-side] .battle-report-grid .card{min-width:0;}
+body[data-side] .battle-report-grid .unit .st{min-width:0;margin-left:auto;justify-content:flex-end;text-align:right;white-space:normal;overflow-wrap:anywhere;}
+body[data-side] .battle-history>summary{background:var(--surface2);border-radius:var(--r);overflow-wrap:anywhere;flex-wrap:wrap;}
+body[data-side] .battle-history[open]>summary{border-bottom:1px solid var(--axis-edge);}
+body[data-side] .battle-history .summary-title{min-width:0;}
+body[data-side] .battle-history>.card{border:0;box-shadow:none;}
+body[data-side] .scroll-x{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-inline:contain;}
+body[data-side] .scroll-x:focus-visible{outline:2px solid var(--sea);outline-offset:2px;}
+body[data-side] .catalog-table table{width:100%;min-width:1080px;}
+body[data-side] .air-catalog-table table{min-width:850px;}
+body[data-side] .catalog-table th button{min-height:30px;}
+body[data-side] .catalog-table .unit-name{font-weight:700;}
+body[data-side] .catalog-table .nhost-catalog-actions{display:table-cell;white-space:nowrap;}
+body[data-side] .catalog-table .nhost-catalog-actions .btn+.btn{margin-left:5px;}
+body[data-side] .catalog-table .nhost-catalog-actions .btn{white-space:nowrap;}
+body[data-side] .catalog-table .catalog-sort-hint{display:none;}
+body[data-side] .catalog-table td[data-label]{overflow-wrap:anywhere;}
+body[data-side] #p-storico .scroll-x table{min-width:520px;}
+dialog,.nhost-edit-dialog{width:min(520px,calc(100% - 24px));max-width:calc(100% - 24px);max-height:90vh;max-height:90dvh;overflow-y:auto;margin:auto;}
+.nhost-edit-form{min-width:0;}
+.nhost-form-buttons,dialog .dfoot{flex-wrap:wrap;}
+.toast{width:max-content;max-width:calc(100% - 24px);overflow-wrap:anywhere;bottom:calc(16px + env(safe-area-inset-bottom,0px));}
+.login-shell{min-height:100vh;min-height:100svh;}
+@media(max-width:1380px){body[data-side] nav.tabs button{gap:6px;padding-inline:5px;font-size:14px;}body[data-side] nav.tabs button .command-tab-icon{--icon-scale:.54px;}}
+/* Disattiva tutti i posizionamenti fissi delle squadre prima di ridurre le colonne. */
+@media(max-width:1200px){body[data-side] .port-container{grid-template-columns:repeat(3,minmax(0,1fr));}body[data-side] .port-container>.card[data-id]{grid-column:auto;grid-row:auto;}}
+@media(max-width:1150px){
+ body[data-side] .pennant{grid-template-columns:repeat(4,minmax(0,1fr));}
+ body[data-side] .pennant>.fleet-summary-cell{grid-column:1/-1;grid-row:2;}
+ body[data-side] nav.tabs{grid-template-columns:repeat(4,minmax(0,1fr));}
+ body[data-side] .naval-total-top .naval-icon{width:90px;}
+}
+@media(max-width:1000px){body[data-side] .battle-report-grid{grid-template-columns:minmax(0,1fr);}}
+@media(max-width:960px){
+ /* Tabelle dei cataloghi: stessa DOM e stesse azioni, presentazione a schede. */
+ body[data-side] .catalog-table{overflow:visible;border:0;background:transparent;box-shadow:none;}
+ body[data-side] .catalog-table .catalog-sort-hint{display:block;margin:0 0 6px;}
+ body[data-side] .catalog-table table,body[data-side] .catalog-table thead,body[data-side] .catalog-table tbody{display:block;min-width:0!important;width:100%;}
+ body[data-side] .catalog-table thead tr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+ body[data-side] .catalog-table thead th{display:block;border:1px solid var(--axis-edge);border-radius:5px;padding:0;background:var(--surface2);}
+ body[data-side] .catalog-table thead th:last-child{display:none;}
+ body[data-side] .catalog-table thead th button{display:block;padding:6px 9px!important;min-height:40px;white-space:normal!important;}
+ body[data-side] .catalog-table thead th[aria-sort="ascending"],body[data-side] .catalog-table thead th[aria-sort="descending"]{border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass);}
+ body[data-side] .catalog-table tbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+ body[data-side] .catalog-table tbody tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;align-content:start;min-width:0;background:var(--surface);border:1px solid var(--axis-edge);border-radius:7px;overflow:hidden;}
+ body[data-side] .catalog-table tbody td{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-width:0;max-width:none;width:auto;height:auto;padding:7px 9px;white-space:normal;border-right:0;border-bottom:1px solid var(--line-soft);text-align:left!important;overflow-wrap:anywhere;}
+ body[data-side] .catalog-table tbody td[data-label]::before{content:attr(data-label);display:block;color:var(--ink-dim);font:500 12px/1.3 "Barlow Semi Condensed","Segoe UI",sans-serif;margin-bottom:3px;}
+ body[data-side] #p-navi .catalog-table td.unit-name-cell,body[data-side] #p-aerei .catalog-table td.unit-name-cell{display:block;grid-column:1/-1;width:auto;min-width:0;max-width:none;height:auto;font-size:17px;padding:10px;background:var(--surface2);}
+ body[data-side] .catalog-table td.unit-name-cell::before{display:none;}
+ body[data-side] #p-navi .catalog-table td.ship-historical-class{min-width:0;max-width:none;}
+ body[data-side] #p-navi .catalog-table .historical-profile{float:none;display:flex;width:220px;max-width:100%;margin:6px auto 0;}
+ body[data-side] .catalog-table tbody td.nhost-catalog-actions{display:flex;grid-column:1/-1;flex-direction:row;gap:8px;border-bottom:0;padding:8px;}
+ body[data-side] .catalog-table tbody td.nhost-catalog-actions .btn{flex:1;min-width:0;min-height:44px;margin:0;white-space:normal;}
+ body[data-side] .catalog-table .naval-state,body[data-side] .catalog-table .air-status{min-width:0;max-width:100%;white-space:normal;line-height:1.2;padding:4px 6px;}
+ body[data-side] .catalog-table .naval-state .naval-icon{width:40px;height:22px;max-width:30px;}
+}
+@media(max-width:850px){body[data-side] .port-container{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:720px){
+ body[data-side] .wrap,body[data-side] .pennant,body[data-side] nav.tabs,body[data-side] .royal-hero,body[data-side] .admiralty-approved{width:calc(100% - 16px);}
+ body[data-side] .pennant{grid-template-columns:repeat(2,minmax(0,1fr));padding:0;}
+ body[data-side] .pennant>.fleet-summary-cell{grid-column:1/-1;grid-row:2;}
+ body[data-side] .pennant .axis-fleet-cell .naval-four-states{grid-template-columns:repeat(2,minmax(0,1fr));}
+ body[data-side] .naval-four-states .naval-total-label{font-size:12px;}
+ body[data-side] .naval-total-top .naval-icon{width:70px;height:30px;}
+ body[data-side] .naval-total-top .naval-sunk-icon{width:45px;height:36px;}
+ body[data-side] nav.tabs{grid-template-columns:repeat(2,minmax(0,1fr));}
+ body[data-side] nav.tabs button{min-height:48px;gap:7px;padding:8px 5px;font-size:15px;}
+ body[data-side] .admiralty-mast{padding:8px;align-items:center;justify-content:center;}
+ body[data-side] .admiralty-mast .header-left{flex:1 1 100%;display:flex;justify-content:center;}
+ body[data-side] .admiralty-mast .header-right{flex:1 1 100%;justify-content:center;}
+ body[data-side] .admiralty-mast .header-right .btn{flex:1 1 auto;min-height:44px;}
+ body[data-side] .admiralty-mast .axis-brand small,body[data-side] .admiralty-mast .royal-brand small{display:block;margin:0;}
+ body[data-side] .catalog-table tbody{grid-template-columns:minmax(0,1fr);}
+ body[data-side] .catalog-filter-bar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+ body[data-side] .catalog-filter-bar .nhost-search,body[data-side] .catalog-filter-bar .catalog-visible-count{grid-column:1/-1;width:100%;max-width:none;margin:0;}
+ body[data-side] .catalog-filter-bar select{width:100%;}
+ body[data-side] .row:not(.battle-report-grid){align-items:stretch;}
+ body[data-side] .row>.card{flex:1 1 100%!important;}
+ body[data-side] .row>.note{flex:1 1 100%!important;}
+ body[data-side] .unit{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;padding:7px;}
+ body[data-side] .unit .seg,body[data-side] .unit .st{grid-column:2/-1;justify-self:stretch;}
+ body[data-side] .unit .seg button{flex:1;min-width:0;min-height:42px;padding:5px;font-size:14px;overflow-wrap:anywhere;}
+ body[data-side] .unit .st{justify-self:end;}
+ body[data-side] .battle-report-grid .unit .st{margin-left:0;}
+ body[data-side] .battle-wave-head small{flex-basis:100%;}
+ body[data-side] .battle-wave-head .tag{margin-left:0;}
+ body[data-side] .nhost-card-body{padding:10px;}
+ body[data-side] .nhost-actions>input{flex:1 1 100%;width:100%;}
+ body[data-side] .nhost-actions .btn{min-height:44px;}
+ body[data-side] .miniform{align-items:stretch;flex-direction:column;}
+ body[data-side] .miniform .mf input,body[data-side] .miniform .mf select{width:100%!important;}
+ .nhost-edit-form{padding:16px;}
+ .nhost-form-buttons>button,dialog .dfoot>button{flex:1 1 120px;min-height:44px;}
+}
+@media(max-width:560px){body[data-side] .port-container{grid-template-columns:minmax(0,1fr);}body[data-side] .slot{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px;padding:6px;}body[data-side] .slot .role{width:auto;}body[data-side] .slot .sigla{justify-self:start;}body[data-side] .slot .pt{width:auto;}body[data-side] .slot select{grid-column:1/3;grid-row:2;width:100%;}body[data-side] .slot .pt{grid-column:3;grid-row:2;}}
+@media(pointer:coarse),(max-width:720px){input:not([type="checkbox"]):not([type="radio"]),select,textarea{font-size:16px!important;min-height:44px;}button.btn,nav.tabs button{min-height:44px;}body[data-side] .slot select{font-size:16px!important;}body[data-side] .catalog-table th button{min-height:44px;}}
+/* Safari/Chrome meno recenti: i bordi restano visibili anche senza color-mix. */
+@supports not (background:color-mix(in srgb,red 10%,white)){.naval-state,.naval-total-label,.air-status{background:var(--surface2);}.battle-wave.support{background:var(--surface2);}}
