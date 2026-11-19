@@ -262,3 +262,12 @@ body[data-side] .air-status.ok{color:var(--ok);}
 body[data-side] .air-status.obsolete{color:var(--sunk);}
 body[data-side] .air-status.building{color:var(--building);}
 .air-catalog-table td:nth-child(7),.air-catalog-table th:nth-child(7){text-align:center;}
+
+/* v1.23 — menu Regia Marina, alternativa B: silhouette piene e monocromatiche. Solo nav.tabs. */
+body[data-side="axis"] nav.tabs{gap:8px;}
+body[data-side="axis"] nav.tabs button{gap:10px;min-height:54px;padding:9px 9px;border-radius:7px;color:var(--ink);font-weight:700;}
+body[data-side="axis"] nav.tabs button .command-tab-icon{display:block;flex:none;width:27px;height:27px;color:inherit;filter:none;}
+body[data-side="axis"] nav.tabs button .command-tab-icon-wide{width:41px;}
+body[data-side="axis"] nav.tabs button[aria-selected="true"]{color:#11242e;}
+@media(min-width:1151px) and (max-width:1380px){body[data-side="axis"] nav.tabs button{gap:6px;padding-inline:5px;font-size:13px;}body[data-side="axis"] nav.tabs button .command-tab-icon{width:24px;height:24px;}body[data-side="axis"] nav.tabs button .command-tab-icon-wide{width:34px;}}
+@media(max-width:620px){body[data-side="axis"] nav.tabs button{min-height:48px;gap:7px;padding:7px 5px;}body[data-side="axis"] nav.tabs button .command-tab-icon{width:23px;height:23px;}body[data-side="axis"] nav.tabs button .command-tab-icon-wide{width:35px;}}
