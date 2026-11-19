@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.13 (Nhost)
+# Campagna W@S Mediterraneo — v1.14 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,13 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.14
+- 36 silhouette locali SVG, 35 classi (due serie Soldati), dalle tavole consegnate dal giocatore. Versione grafica V2: colore uniforme #D8EAF2, fondo trasparente, dettagli minuti e cavi ridotti, contorni semplificati; Pegaso ottenuto seguendo lo scafo della tavola non ombreggiata.
+- Scala grafica comune: lunghezze fuori tutto indicative, 240 m per viewport, senza normalizzazione individuale a tutta larghezza. I dati del repertorio non determinano i punti o le regole di gioco.
+- Bolzano escluso perché la tavola locale coincide con Zara; per le classi non coperte resta il precedente repertorio remoto, esplicitamente non in scala. Profili di classe, non ricostruzioni delle singole configurazioni per ogni turno.
+- Riferimenti dimensionali: https://regiamarina.net/vessels-specifications-by-class/ ; https://www.italiansubmarines.com/classes/ ; https://naval-encyclopedia.com/ww2/italy/italian-destroyers-of-ww2.php .
+- Nessuna modifica Nhost, ai cataloghi privati, ai punteggi o al motore di gioco.
 
 ## Novità v1.13
 - Rimosse integralmente dal frontend le sagome vettoriali della v1.12 e i riferimenti alle tavole non approvate. Repertorio esclusivamente Navypedia: 65 associazioni (51 classi con almeno un profilo associato), con didascalia originale nave/anno e link alla scheda. Se manca un profilo della variante corretta, non viene sostituito con uno fittizio.

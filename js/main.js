@@ -1,11 +1,12 @@
-import { shipProfile } from './ship-profiles.js?v=1.13';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.13';
-import { historicalClass } from './historical-classes.js?v=1.13';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.13';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.13';
-import { generateBattle } from './battle-engine.js?v=1.13';
-import { SEASONS } from './config.js?v=1.13';
-import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.13';
+import { localShipProfile } from './local-ship-profiles.js?v=1.14';
+import { shipProfile } from './ship-profiles.js?v=1.14';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.14';
+import { historicalClass } from './historical-classes.js?v=1.14';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.14';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.14';
+import { generateBattle } from './battle-engine.js?v=1.14';
+import { SEASONS } from './config.js?v=1.14';
+import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.14';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -76,7 +77,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.13':'./css/royal.css?v=1.13';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.14':'./css/royal.css?v=1.14';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent=statusText();
@@ -98,17 +99,17 @@ function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+a
 }
 const AXIS_NAV_ICONS=Object.freeze({porto:'⚓',battaglia:'⚔',storico:'▤',gestione:'⚙',regole:'▧'});
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk']});
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.13';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.14';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
- const profile=shipProfile(u,historicalClass(u));if(!profile)return;
- const wrap=make('span','historical-profile navypedia-profile');
- const source=make('a','profile-source',profile.image?profile.caption:'Scheda Navypedia · profilo non disponibile');
- source.href=profile.page;source.target='_blank';source.rel='noopener noreferrer';source.referrerPolicy='no-referrer';source.title='Navypedia · '+profile.className+' · '+profile.caption;
+ const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
+ const wrap=make('span','historical-profile navypedia-profile'+(profile.local?' local-profile':''));
+ const source=make(profile.page?'a':'span','profile-source',profile.image?profile.caption+(profile.local?'':' · non in scala'):'Scheda Navypedia · profilo non disponibile');
+ if(profile.page){source.href=profile.page;source.target='_blank';source.rel='noopener noreferrer';source.referrerPolicy='no-referrer';}source.title=(profile.local?'Tavola del giocatore · scala indicativa · ':'Navypedia · non in scala · ')+profile.caption;
  if(profile.image){
   const img=make('img');img.alt=profile.caption;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
   // Non mostrare un'icona rotta né usare una sagoma generica se l'host rifiuta la richiesta.
-  img.addEventListener('error',()=>{img.remove();source.textContent='Navypedia · apri profilo';},{once:true});
+  img.addEventListener('error',()=>{img.remove();source.textContent=profile.page?'Navypedia · apri scheda':'Profilo non disponibile';},{once:true});
   img.src=profile.image;wrap.append(img);
  }
  wrap.append(source);td.append(wrap);
@@ -415,7 +416,7 @@ function renderCatalog(p,tab){
   tbl.append(tbody);wrap.append(tbl);if(!filtered.length)text(wrap,'div','Nessuna unità trovata.','nhost-card-body note');
  };
  if(ships)text(p,'div','Ordine predefinito: tipo BB → BC → CV → CA → CL → DD → SUB; classi raggruppate per valore massimo, punti decrescenti.','note');
- if(ships)text(p,'div','Profili originali Navypedia · nave e anno del disegno indicati sotto ogni immagine. Se il profilo non è reperibile o il sito non consente il caricamento, resta solo il collegamento alla scheda; nessuna ricostruzione grafica.','note axis-profile-note');
+ if(ships)text(p,'div','Silhouette chiare V2 dalle tavole originali · stessa scala grafica fra i profili locali (lunghezze fuori tutto indicative). Le altre classi conservano i disegni Navypedia, non in scala. Bolzano: tavola locale duplicata, esclusa.','note axis-profile-note');
  sel.onchange=()=>{catalogFilter=sel.value;update();};search.oninput=()=>{term=search.value;update();};update();
 }
 // Solo la fazione proprietaria puo modificare la propria battaglia prima di concluderla.

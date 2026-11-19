@@ -219,3 +219,8 @@ body[data-side="axis"] .naval-state .naval-sunk-icon{width:52px;height:38px;}
 #p-navi .navypedia-profile img{display:block;filter:none!important;object-fit:contain;object-position:center;max-width:100%;width:100%;height:46px;background:#fff;border-radius:2px;}
 #p-navi .navypedia-profile .profile-source{max-width:100%;white-space:normal;text-align:center;font-size:10px;line-height:1.2;}
 @media(max-width:620px){#p-navi .navypedia-profile{width:145px;}}
+
+/* v1.14 — medesimo viewport per tutti i profili locali; nessun ingrandimento individuale. */
+#p-navi .local-profile img{display:block;width:100%;height:auto;aspect-ratio:240/64;max-width:100%;object-fit:contain;background:transparent;border-radius:0;filter:none!important;}
+:root[data-theme="light"] #p-navi .local-profile img{filter:brightness(.44)!important;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) #p-navi .local-profile img{filter:brightness(.44)!important;}}
