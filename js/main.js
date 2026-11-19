@@ -1,12 +1,12 @@
-import { localShipProfile } from './local-ship-profiles.js?v=1.35';
-import { shipProfile } from './ship-profiles.js?v=1.35';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.35';
-import { historicalClass } from './historical-classes.js?v=1.35';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.35';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.35';
-import { generateBattle } from './battle-engine.js?v=1.35';
-import { SEASONS } from './config.js?v=1.35';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus } from './fleet-rules.js?v=1.35';
+import { localShipProfile } from './local-ship-profiles.js?v=1.36';
+import { shipProfile } from './ship-profiles.js?v=1.36';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.36';
+import { historicalClass } from './historical-classes.js?v=1.36';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.36';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.36';
+import { generateBattle } from './battle-engine.js?v=1.36';
+import { SEASONS } from './config.js?v=1.36';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule } from './fleet-rules.js?v=1.36';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -42,12 +42,13 @@ let stopWatching = null, syncPending = false, syncWorking = false, syncTimer = n
 let syncRetryDelay = 500, sessionEpoch = 0;
 let syncMode = 'automatico';
 let refreshSerial = 0;
+const expandedHulls=new Set();
 
 function make(tag, className = '', content) { const x=document.createElement(tag); if(className)x.className=className; if(content!==undefined && content!==null)x.textContent=String(content); return x; }
 function text(parent,tag,value,cls='') {const e=make(tag,cls,value);parent.append(e);return e;}
 function toast(message,isError=false){ const x=$('toast');x.textContent=message;x.style.color=isError?'var(--sunk)':'';x.classList.add('on');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('on'),3800); }
 function themeApply(){if(theme)document.documentElement.setAttribute('data-theme',theme);else document.documentElement.removeAttribute('data-theme');}
-function showLogin(){ sessionEpoch++;refreshSerial++;stopLiveSync();saving=false;model=null;catalogStatusFilter='';delete document.body.dataset.side;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso';setAppFavicon(null); }
+function showLogin(){ sessionEpoch++;refreshSerial++;stopLiveSync();saving=false;model=null;catalogStatusFilter='';expandedHulls.clear();delete document.body.dataset.side;$('command-root').replaceChildren();$('app-page').hidden=true;$('login-page').hidden=false;$('password').value='';document.title='Campagna Mediterraneo — Accesso';setAppFavicon(null); }
 // Stessa tabella stagioni utilizzata dalla validazione SQL di Nhost.
 function campaignYear(){return CAMPAIGN_YEARS[Number(model.campaign.turn_index)] ?? 1940;}
 function catalogStatus(unit,ships=true){return ships?catalogShipStatus(unit,model.state.perdite,model.campaign.turn_index):catalogAircraftStatus(unit,model.campaign.turn_index);}
@@ -95,7 +96,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.35';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.36';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -171,6 +172,46 @@ function optionPool(squad,index,current,state=model.state){
   // Eventuali vecchie assegnazioni sono mostrate separatamente, disabilitate.
   return list.sort((a,b)=>a.nome.localeCompare(b.nome,'it',{numeric:true}));
 }
+// Cambia solo assegnazioni esistenti, compatibili e operative.
+let lastUpgradeAttempt='',upgradeNotice='';
+function planPortUpgrade(draft,turnIndex=model.campaign.turn_index){
+ const pending=pendingPortModernizations(draft,turnIndex),applied=[],blocked=[];
+ if(duplicateHull(draft))return {applied,blocked:pending};
+ const squads=new Map(sortedSquads().map(s=>[s.id,s]));
+ for(const p of pending){
+  const squad=squads.get(p.id),slots=draft.porto[p.id];
+  if(!squad||p.index>=squadSlots(squad,slots,draft).len||!optionPool(squad,p.index,p.oldName,draft).some(u=>u.nome===p.next.nome)||
+    (p.id==='CV1'&&p.index===0&&slots.slice(1+Number(p.next.hangar??3)).some(Boolean))){
+   blocked.push(p);continue;
+  }
+  slots[p.index]=p.next.nome;applied.push(p);
+ }
+ return {applied,blocked};
+}
+function portUpgradeWarning(p){
+ const pending=pendingPortModernizations(model.state,model.campaign.turn_index);
+ if(!pending.length)return;
+ note(p,'Ammodernamenti nel Porto da sincronizzare: '+pending.map(x=>x.oldName+' → '+x.next.nome+' ('+x.id+')').join('; ')+'. '+(upgradeNotice||'Verificare prima della battaglia.'));
+ if(canEdit())appendAction(p,'Sincronizza ammodernamenti',async()=>{try{await refresh();}catch(e){toast(e.message,true);}},false,'btn primary');
+}
+async function syncPortUpgrades(m,epoch,serial,live){
+ if(!canEdit())return;
+ const key=[m.campaign.id,m.side,m.campaign.turn_index,m.stateRevision].join('|');
+ if(live&&lastUpgradeAttempt===key)return;
+ lastUpgradeAttempt=key;upgradeNotice='';
+ const draft=structuredClone(m.state),plan=planPortUpgrade(draft,m.campaign.turn_index);
+ if(!plan.applied.length){if(plan.blocked.length)upgradeNotice='Sostituzione incompatibile con casella o capacità della squadra. Correggerla manualmente.';return;}
+ saving=true;
+ try{
+  const saved=await saveLogistics(draft,m.stateRevision);
+  if(epoch!==sessionEpoch||serial!==refreshSerial||model!==m)return;
+  m.state=saved.state;m.stateRevision=saved.revision;m.updatedAt=saved.updatedAt;
+  if(plan.blocked.length)upgradeNotice='Alcune sostituzioni richiedono correzione manuale.';
+  toast(plan.applied.length+' ammodernamenti sincronizzati nel Porto.');
+ }catch(e){
+  if(epoch===sessionEpoch&&model===m)upgradeNotice='Nhost non ha accettato la sincronizzazione automatica: '+e.message+'. Nessuna modifica forzata.';
+ }finally{if(epoch===sessionEpoch)saving=false;}
+}
 async function persistDraft(draft){
   if(!canEdit())throw new Error('Le modifiche sono bloccate durante una battaglia.');
   saving=true;
@@ -222,6 +263,7 @@ function slotCard(container,s,names){
   container.append(sq);
 }
 function renderPort(p){
+ portUpgradeWarning(p);
   const info=make('div','row');info.style.marginBottom='14px';
   const duplicate=duplicateHull(model.state);if(duplicate)note(p,'Attenzione: scafo duplicato nel porto ('+duplicate+'). Liberare le caselle duplicate prima di generare una battaglia.');
   const intro=make('div','note',canEdit()?'Assegna le unità alle squadre. Sono selezionabili solo quelle disponibili; ogni modifica viene salvata su Nhost.':'Porto in sola lettura: modifiche bloccate durante o dopo una battaglia.');intro.style.flex='1';info.append(intro);
@@ -317,6 +359,7 @@ function dialogUnit(kind,source){
   const dialog=make('dialog','nhost-edit-dialog');const form=make('form','nhost-edit-form');form.method='dialog';
   text(form,'h3',original?'Modifica '+original.nome:(isNave?'Aggiungi nave':'Aggiungi aereo'));
   const name=controlField(form,'Nome',original?.nome||'','text');name.maxLength=120;
+  if(isNave&&original&&(hullGroups(model.state.navi).get(shipBase(original.nome))||[]).length>1)name.readOnly=true;
   const cls=isNave?controlField(form,'Classe',original?.cls||'C','select', [['BB','Corazzata'],['C','Incrociatore'],['DD','Cacciatorpediniere'],['CV','Portaerei'],['SUB','Sommergibile']]):null;
   const tipo=controlField(form,'Tipo',original?.tipo|| (isNave?'CA':'F'),'text');tipo.maxLength=12;
   const anno=controlField(form,'Anno entrata in servizio',original?.anno??campaignYear(),'number');
@@ -337,14 +380,49 @@ function dialogUnit(kind,source){
     else value.base=extra.value;
     if(original){const idx=items.findIndex(u=>u.nome===prevName);if(idx<0){toast('Unità non più presente.',true);return;}items[idx]=value;}
     else items.push(value);
+    if(isNave){
+     const versions=hullGroups(items).get(shipBase(newName))||[];
+     if(versions.length>1&&(!original||shipBase(prevName)!==shipBase(newName))){toast('Usare Ammodernamento dalla nave esistente.',true);return;}
+     const problem=validateHullSchedule(versions);if(problem){toast(problem,true);return;}
+    }
     if(prevName&&prevName!==newName)for(const slots of Object.values(draft.porto||{}))for(let i=0;i<slots.length;i++)if(slots[i]===prevName)slots[i]=newName;
     save.disabled=true;
     try{await persistDraft(draft);dialog.close();}catch{save.disabled=false;}
   };
   dialog.showModal();
 }
+function dialogUpgrade(base){
+ if(!canEdit())return;
+ const versions=hullGroups(model.state.navi).get(base)||[],last=versions.at(-1);
+ if(!last||shipStatus(base,model.state.perdite,model.campaign.turn_index)==='affondata'||hullVersionNumber(last.nome)>=3)return;
+ const nextName=base+' ('+({2:'II',3:'III'}[hullVersionNumber(last.nome)+1])+')';
+ const dialog=make('dialog','nhost-edit-dialog'),form=make('form','nhost-edit-form');form.method='dialog';
+ text(form,'h3','Ammodernamento '+base);
+ note(form,'Nuova configurazione '+nextName+'. Stesso scafo, rapporti passati invariati.');
+ const minYear=Math.max(campaignYear()+1,Number(last.anno)+1);
+ const year=controlField(form,'Anno di aggiornamento',minYear,'number');year.min=String(minYear);year.max='1943';year.required=true;
+ const points=controlField(form,'Nuovi punti',last.pt,'number');points.step='any';points.max='1000';points.required=true;
+ const hangar=last.cls==='CV'?controlField(form,'Hangar',last.hangar??3,'number'):null;if(hangar){hangar.max='20';hangar.required=true;}
+ const actions=make('div','nhost-form-buttons'),cancel=make('button','btn','Annulla'),save=make('button','btn primary','Programma aggiornamento');cancel.type='button';save.type='submit';cancel.onclick=()=>dialog.close();actions.append(cancel,save);form.append(actions);dialog.append(form);document.body.append(dialog);
+ dialog.addEventListener('close',()=>dialog.remove());
+ form.onsubmit=async e=>{
+  e.preventDefault();if(!canEdit())return;
+  const y=Number(year.value),pt=Number(points.value),capacity=hangar?Number(hangar.value):null;
+  if(!year.value||!points.value||!Number.isInteger(y)||y<Math.max(campaignYear()+1,Number(last.anno)+1)||y>1943||!Number.isFinite(pt)||pt<0||pt>1000||(hangar&&(!hangar.value||!Number.isInteger(capacity)||capacity<0||capacity>20))){toast('Verificare anno, punti e hangar.',true);return;}
+  const draft=cloneState(),group=hullGroups(draft.navi).get(base)||[],prev=group.at(-1);
+  if(!prev||prev.nome!==last.nome||shipStatus(base,draft.perdite,model.campaign.turn_index)==='affondata'){toast('Scafo non più aggiornabile.',true);return;}
+  if(prev.ritirato&&Number(prev.ritirato)<=y){toast('Nave già prevista in ritiro entro l’anno scelto.',true);return;}
+  if([...draft.navi,...draft.aerei].some(u=>u.nome===nextName)){toast('Versione già presente.',true);return;}
+  const next={...prev,nome:nextName,anno:y,pt,ritirato:prev.ritirato??null};if(hangar)next.hangar=capacity;
+  prev.ritirato=y;draft.navi.push(next);
+  const problem=validateHullSchedule([...group,next]);if(problem){toast(problem,true);return;}
+  save.disabled=true;try{await persistDraft(draft);dialog.close();}catch{save.disabled=false;}
+ };
+ dialog.showModal();
+}
 async function removeUnit(kind,item){
  if(!canEdit())return;const oldName=item.nome;
+ if(kind==='navi'&&(hullGroups(model.state.navi).get(shipBase(oldName))||[]).length>1){toast('La catena delle versioni è protetta.',true);return;}
  const msg='Rimuovere '+oldName+' dal catalogo? Le eventuali caselle occupate saranno liberate. Unità presenti nello storico o fra le perdite non possono essere rimosse.';
  if(!confirm(msg))return;
  const draft=cloneState();draft[kind]=draft[kind].filter(u=>u.nome!==oldName);
@@ -367,7 +445,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/naval/allies/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.35':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/naval/allies/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.36':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
@@ -377,7 +455,9 @@ function appendUnitFlag(parent,unit,ships){
  parent.append(flag);
 }
 function renderCatalog(p,tab){
- const ships=tab==='navi',source=(ships?model.state.navi:model.state.aerei)||[];
+ const ships=tab==='navi',all=(ships?model.state.navi:model.state.aerei)||[];
+ const groups=ships?hullGroups(all):new Map();
+ const source=ships?[...groups.values()].map(v=>visibleHullVersion(v,model.state.perdite,model.campaign.turn_index)):all;
  const add=card(ships?'Aggiungi nave':'Aggiungi aereo');add.classList.add('axis-catalog-add');const body=make('div','nhost-card-body');const bt=make('button','btn primary',ships?'Aggiungi nave':'Aggiungi aereo');bt.disabled=!canEdit();bt.onclick=()=>dialogUnit(tab);body.append(bt);
  text(body,'div',canEdit()?'Può modificare le anagrafiche; ogni salvataggio è immediato sul database.':'Modifiche bloccate finché è in corso una battaglia.','nhost-notification');add.append(body);add.classList.add('catalog-add-bottom');
  const bar=make('div','nhost-actions catalog-filter-bar');const sel=make('select','btn sm');
@@ -387,12 +467,13 @@ function renderCatalog(p,tab){
  for(const [value,label] of opts){const o=make('option','',label);o.value=value;sel.append(o);}sel.value=catalogFilter;
  const search=make('input','btn sm nhost-search');search.type='search';search.placeholder=ships?'Cerca nome o classe':'Cerca un nome';search.value=term;search.setAttribute('aria-label','Cerca unità');
  sel.setAttribute('aria-label',ships?'Tipo Nave':'Base aereo');bar.append(sel);let stateSel=null;{stateSel=make('select','btn sm');stateSel.setAttribute('aria-label',ships?'Stato nave':'Stato aereo');const stateOpts=ships?[['','Tutti gli stati'],['attiva','Operative'],['riparazione','In riparazione'],['affondata','Perse'],['costruzione','In costruzione'],['ritirata','Ritirate']]:[['','Tutti gli stati'],['attiva','Operativi'],['obsoleto','Obsoleti'],['costruzione','In costruzione']];for(const [val,label] of stateOpts){const o=make('option','',label);o.value=val;stateSel.append(o);}stateSel.value=catalogStatusFilter;bar.append(stateSel);}bar.append(search);if(ships){const reset=make('button','btn sm','Ordine predefinito');reset.type='button';reset.title='Tipo, classe più costosa, punti';reset.onclick=()=>{Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});update();};bar.append(reset);}const count=make('span','catalog-visible-count');count.setAttribute('role','status');count.setAttribute('aria-live','polite');count.setAttribute('aria-atomic','true');bar.append(count);p.append(bar);
+ if(ships)text(p,'div','Una riga per scafo. Espandere il numero di configurazioni per consultare le versioni passate e future.','note');
  const wrap=make('div','card scroll-x catalog-table');if(ships)wrap.classList.add('axis-catalog-table');if(!ships)wrap.classList.add('air-catalog-table');p.append(wrap);
  const fields=ships?[['Nome','nome'],['Classe','historicalClass'],['Tipo','tipo'],['Punti','pt'],['Anno','anno'],['Ritiro','ritirato'],['Stato','stato'],['Azioni',null]]:
   [['Nome','nome'],['Tipo','tipo'],['Punti','pt'],['Anno','anno'],['Ritiro','ritirato'],['Base','base'],['Stato','stato'],['Azioni',null]];
  const update=()=>{
-  const filtered=source.filter(x=>{const c=!catalogFilter||(ships?String(x.tipo||'').trim().toUpperCase()===catalogFilter:x.base===catalogFilter);return c&&(!catalogStatusFilter||catalogStatus(x,ships)===catalogStatusFilter)&&(String(x.nome||'')+' '+String(x.tipo||'')+(ships?' '+historicalClass(x):'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));});
-  count.textContent=filtered.length+' di '+source.length+(ships?' navi visibili':' aerei visibili');
+  const filtered=source.filter(x=>{const c=!catalogFilter||(ships?String(x.tipo||'').trim().toUpperCase()===catalogFilter:x.base===catalogFilter);return c&&(!catalogStatusFilter||catalogStatus(x,ships)===catalogStatusFilter)&&(String(x.nome||'')+' '+String(x.tipo||'')+(ships?' '+historicalClass(x)+' '+(groups.get(shipBase(x.nome))||[]).map(u=>u.nome).join(' '):'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));});
+  count.textContent=filtered.length+' di '+source.length+(ships?' scafi visibili':' aerei visibili');
   const order=catalogSort[tab];
   const defaultCompare=ships&&order.key==='fleetDefault'?fleetOrder(source,historicalClass):null;
   const sorted=filtered.map((unit,index)=>({unit,index})).sort((a,b)=>
@@ -413,11 +494,31 @@ function renderCatalog(p,tab){
    header.append(th);
   }
   thead.append(header);tbl.append(thead);const tbody=make('tbody');tbody.setAttribute('role','rowgroup');
-  for(const u of sorted){
-   const row=make('tr');row.setAttribute('role','row');const values=ships?[u.nome,historicalClass(u)||'—',u.tipo,u.pt,u.anno,u.ritirato??'—',catalogStatus(u)]:[u.nome,u.tipo,u.pt,u.anno,u.ritirato??'—',u.base||'—',catalogStatus(u,false)];
-   values.forEach((v,i)=>{const key=fields[i][1];const td=make('td',key==='pt'?'num':'');td.setAttribute('role','cell');td.dataset.label=fields[i][0];if(key==='historicalClass'){td.classList.add('ship-historical-class');td.textContent=v;}else if(key==='nome'){td.classList.add('unit-name-cell');if(ships)td.classList.add('axis-ship-name');appendUnitFlag(td,u,ships);text(td,'span',v??'—',ships?'axis-name':'unit-name');if(ships)appendHistoricalProfile(td,u);}else if(key==='tipo'){const t=make('span','catalog-type'+(ships?' axis-type':''),v??'—');t.dataset.type=String(u.tipo||'').trim().toUpperCase();td.append(t);}else if(key==='stato'){if(!ships)td.append(aircraftStatusBadge(v));else td.append(navalStatusBadge(v));}else{td.textContent=v??'—';if(key==='tipo'&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];}if(key==='pt')td.style.textAlign='center';row.append(td);});
+  function versionLabel(u,versions){
+   const base=shipBase(u.nome),lost=shipStatus(base,model.state.perdite,model.campaign.turn_index)==='affondata';
+   const representative=visibleHullVersion(versions,model.state.perdite,model.campaign.turn_index);
+   if(lost)return u===representative?'Ultima configurazione · persa':versions.indexOf(u)>versions.indexOf(representative)?'Annullata':'Superata';
+   if(Number(u.anno)>campaignYear())return 'Prevista';
+   if(u===representative)return currentHullVersion(versions,model.campaign.turn_index)?'Attuale':'Ritirata';
+   return 'Superata';
+  }
+  function renderRow(u,child=false){
+   const base=shipBase(u.nome),versions=ships?(groups.get(base)||[u]):[u];
+   const row=make('tr',child?'hull-version-row':'');row.setAttribute('role','row');const values=ships?[u.nome,historicalClass(u)||'—',u.tipo,u.pt,u.anno,u.ritirato??'—',catalogStatus(u)]:[u.nome,u.tipo,u.pt,u.anno,u.ritirato??'—',u.base||'—',catalogStatus(u,false)];
+   values.forEach((v,i)=>{const key=fields[i][1];const td=make('td',key==='pt'?'num':'');td.setAttribute('role','cell');td.dataset.label=fields[i][0];if(key==='historicalClass'){td.classList.add('ship-historical-class');td.textContent=v;}else if(key==='nome'){td.classList.add('unit-name-cell');if(ships)td.classList.add('axis-ship-name');if(ships&&!child&&versions.length>1){const button=make('button','btn sm hull-toggle',(expandedHulls.has(base)?'▾':'▸')+' '+versions.length);button.type='button';button.setAttribute('aria-expanded',String(expandedHulls.has(base)));button.setAttribute('aria-label','Versioni di '+base);button.onclick=()=>{if(expandedHulls.has(base))expandedHulls.delete(base);else expandedHulls.add(base);update();};td.append(button);}appendUnitFlag(td,u,ships);const shown=ships&&versions.length>1&&u.nome===base?base+' (I)':v;text(td,'span',shown??'—',ships?'axis-name':'unit-name');if(child)text(td,'span','↳ Configurazione '+(['','I','II','III'][hullVersionNumber(u.nome)]||''),'hull-version-tag');if(ships)appendHistoricalProfile(td,u);}else if(key==='tipo'){const t=make('span','catalog-type'+(ships?' axis-type':''),v??'—');t.dataset.type=String(u.tipo||'').trim().toUpperCase();td.append(t);}else if(key==='stato'){if(!ships)td.append(aircraftStatusBadge(v));else if(child)text(td,'span',versionLabel(u,versions),'hull-version-tag');else td.append(navalStatusBadge(v));}else{td.textContent=v??'—';if(key==='tipo'&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];}if(key==='pt')td.style.textAlign='center';row.append(td);});
    const action=make('td','nhost-catalog-actions');action.setAttribute('role','cell');const edit=make('button','btn sm','Modifica');edit.disabled=!canEdit();edit.onclick=()=>dialogUnit(tab,u);
-   const del=make('button','btn sm danger','Rimuovi');del.disabled=!canEdit();del.onclick=()=>removeUnit(tab,u);action.append(edit,del);row.append(action);tbody.append(row);
+   action.append(edit);
+   if(!child&&ships){
+    const last=versions.at(-1);
+    const upgrade=make('button','btn sm hull-upgrade','Ammodernamento');upgrade.disabled=!canEdit()||!last||hullVersionNumber(last.nome)>=3||Math.max(Number(last.anno),campaignYear())>=1943||shipStatus(base,model.state.perdite,model.campaign.turn_index)==='affondata'||(last.ritirato&&Number(last.ritirato)<=Math.max(Number(last.anno),campaignYear())+1);
+    upgrade.onclick=()=>dialogUpgrade(base);action.append(upgrade);
+   }
+   if(!ships||versions.length===1){const del=make('button','btn sm danger','Rimuovi');del.disabled=!canEdit();del.onclick=()=>removeUnit(tab,u);action.append(del);}
+   row.append(action);tbody.append(row);
+  }
+  for(const u of sorted){
+   renderRow(u);
+   if(ships&&expandedHulls.has(shipBase(u.nome)))for(const v of groups.get(shipBase(u.nome))||[])renderRow(v,true);
   }
   tbl.append(tbody);wrap.append(tbl);if(!filtered.length)text(wrap,'div','Nessuna unità trovata.','nhost-card-body note');
  };
@@ -570,13 +671,15 @@ function renderBattle(p){
  const otherConcluded=!!model.campaign[(model.side==='axis'?'allies':'axis')+'_concluded'];
  const mineReady=!!model.campaign[model.side+'_ready'];
  const toolbar=make('div','row');toolbar.style.marginBottom='14px';
+ const pendingUpgrade=!b&&phase==='battle'&&!mineConcluded&&pendingPortModernizations(model.state,model.campaign.turn_index).length>0;
+ if(pendingUpgrade)portUpgradeWarning(p);
  if(phase==='battle'&&!mineConcluded){
   appendAction(toolbar,b?'Estrai un’altra formazione':'Genera formazione',async()=>{
    if(b&&!confirm('Sostituire la formazione? Tutti gli esiti segnati verranno cancellati.'))return;
    const seed=new Uint32Array(1);crypto.getRandomValues(seed);
    try{await storeBattle(generateBattle(model.state,model.campaign.turn_index,seed[0]));}
    catch(e){if(!/Nhost|revisione|errore|scadut/i.test(e.message))toast(e.message,true);}
-  },saving,'btn primary');
+  },saving||pendingUpgrade,'btn primary');
   const seedInput=make('input','btn sm num');seedInput.type='number';seedInput.min='0';seedInput.max='4294967295';seedInput.placeholder='Seme';seedInput.style.width='110px';
   if(b)seedInput.value=b.seed;toolbar.append(seedInput);
   appendAction(toolbar,'Carica seme',async()=>{
@@ -585,7 +688,7 @@ function renderBattle(p){
    if(b&&!confirm('Caricare un altro seme? Si perderanno gli esiti registrati.'))return;
    try{await storeBattle(generateBattle(model.state,model.campaign.turn_index,seed));}
    catch(e){toast(e.message,true);}
-  },saving);
+  },saving||pendingUpgrade);
   if(b)appendAction(toolbar,'Scarta formazione',async()=>{
    if(!confirm('Scartare la formazione attuale?'))return;
    try{await storeBattle(null);}catch{}
@@ -885,11 +988,14 @@ async function refresh({live=false}={}){
  const newSession=!old||old.side!==m.side||!$('p-porto');
  const changed=newSession||String(old.campaign.id)!==String(m.campaign.id)||String(old.campaign.revision)!==String(m.campaign.revision)||String(old.stateRevision)!==String(m.stateRevision);
  model=m;
+ if(newSession){expandedHulls.clear();lastUpgradeAttempt='';upgradeNotice='';}
+ await syncPortUpgrades(m,epoch,serial,live);
+ if(epoch!==sessionEpoch||serial!==refreshSerial||model!==m)return false;
  if(newSession){showApp();}
  else {
   const status=$('nhost-statusbar');if(status)status.textContent=statusText();
   // Nessun ridisegno su notifiche equivalenti; i campi attivi sono protetti prima e dopo la richiesta.
-  if(!live||changed)render();
+  if(!live||changed||Number(m.stateRevision)!==Number(old.stateRevision))render();
  }
  return true;
 }

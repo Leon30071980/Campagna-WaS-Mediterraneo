@@ -1,10 +1,11 @@
-import { isAvailable, duplicateHull } from './fleet-rules.js?v=1.35';
+import { isAvailable, duplicateHull, pendingPortModernizations } from './fleet-rules.js?v=1.36';
 // Motore di estrazione della campagna, derivato dal codice originale Regia Marina 27 / Royal Navy 28.
 // Il catalogo e i nomi delle squadre arrivano dallo stato privato Nhost: non sono inclusi qui.
 export function generateBattle(state, turnIndex, seed) {
   if(!Number.isInteger(turnIndex)||turnIndex<0||turnIndex>9)throw Error('Turno non valido.');
   if(!Number.isInteger(seed)||seed<0||seed>4294967295)throw Error('Seme non valido.');
   const S=state;
+  if(pendingPortModernizations(S,turnIndex).length)throw Error('Ammodernamenti nel Porto da sincronizzare prima della battaglia.');
   const duplicate=duplicateHull(S);
   if(duplicate)throw Error('Scafo assegnato piu volte: '+duplicate+'. Correggere il porto prima della battaglia.');
   const CATALOGO=new Map();
