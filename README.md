@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.28 (Nhost)
+# Campagna W@S Mediterraneo — v1.29 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,9 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.29
+- Profilo Orsa (Pegaso): contrasto tonale e riempimento dello scafo corretti sulla tavola esistente; canvas 528 × 152, scala 2 px/m, lunghezza 89,3 m e allineamento invariati. Nessun altro profilo o dato di gioco modificato.
 
 ## Novità v1.28
 - 38 profili Axis (comprese le due serie Soldati e le classi francesi e tedesche già mappate) rielaborati dalle tavole PNG dettagliate del pacchetto v1.14 e dai GIF originali di Bolzano e Acciaio. Non dalle sagome SVG semplificate. Tutti i WebP sono lossless, con tinta #D8EAF2 e trasparenza tonale, senza nuove ricostruzioni.
