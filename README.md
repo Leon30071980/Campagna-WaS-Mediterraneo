@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.18 (Nhost)
+# Campagna W@S Mediterraneo — v1.19 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,10 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.19
+- Ripristinata la poppa del profilo locale Acciaio: tratto affusolato continuo e non più coincidente con la linea di galleggiamento. Correzione manuale del contorno in riferimento alla tavola del giocatore (Acciaio 1942); non è una nuova scansione o una ricostruzione integrale.
+- Lunghezza fuori tutto 60,2 m, scala comune, colore #D8EAF2 e sfondo trasparente conservati; centro geometrico a 120 m. Nessun altro profilo navale, dato, regola di gioco o schema Nhost modificato.
 
 ## Novità v1.18
 - Sostituiti esclusivamente i profili locali dei sommergibili tedeschi: Tipo VIIB (prima immagine fornita) e Tipo VIIC (seconda immagine fornita).
