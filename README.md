@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.15 (Nhost)
+# Campagna W@S Mediterraneo — v1.16 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.16
+- Test A approvato: torri e canne principali ripristinate su 14 profili locali BB, CA e CL, per 54 postazioni di torre tracciate dalle tavole fornite; stile semplice, senza contorno decorativo.
+- Scala reciproca e colore invariati. Profili BC e altre classi senza tavole locali restano invariati. Le canne sono leggermente stilizzate per la leggibilità nel catalogo.
+- Nessuna modifica Nhost, ai dati della campagna o al motore di gioco.
 
 ## Novità v1.15
 - Integrate le due nuove tavole originali del giocatore: Bolzano (196,9 m) e Acciaio (60,2 m, arrotondato da 60,18 m). La tavola corretta di Bolzano sostituisce il precedente riferimento remoto; Acciaio e le altre unità della classe hanno ora il proprio profilo locale.

@@ -1,12 +1,12 @@
-import { localShipProfile } from './local-ship-profiles.js?v=1.15';
-import { shipProfile } from './ship-profiles.js?v=1.15';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.15';
-import { historicalClass } from './historical-classes.js?v=1.15';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.15';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.15';
-import { generateBattle } from './battle-engine.js?v=1.15';
-import { SEASONS } from './config.js?v=1.15';
-import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.15';
+import { localShipProfile } from './local-ship-profiles.js?v=1.16';
+import { shipProfile } from './ship-profiles.js?v=1.16';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.16';
+import { historicalClass } from './historical-classes.js?v=1.16';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.16';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.16';
+import { generateBattle } from './battle-engine.js?v=1.16';
+import { SEASONS } from './config.js?v=1.16';
+import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.16';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -77,7 +77,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.15':'./css/royal.css?v=1.15';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.16':'./css/royal.css?v=1.16';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent=statusText();
@@ -99,7 +99,7 @@ function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+a
 }
 const AXIS_NAV_ICONS=Object.freeze({porto:'⚓',battaglia:'⚔',storico:'▤',gestione:'⚙',regole:'▧'});
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk']});
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.15';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.16';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
