@@ -1,4 +1,4 @@
-// v1.14 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
+// v1.15 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
 const LOCAL_CLASSES=Object.freeze({
   "BB|Littorio": "bb_littorio",
   "BB|Conte di Cavour": "bb_cavour",
@@ -7,6 +7,7 @@ const LOCAL_CLASSES=Object.freeze({
   "CV|Sparviero": "cv_sparviero",
   "CA|Trento": "ca_trento",
   "CA|Zara": "ca_zara",
+  "CA|Bolzano": "ca_bolzano",
   "CA|Suffren": "ca_suffren",
   "CL|Alberto di Giussano": "cl_giussano",
   "CL|Luigi Cadorna": "cl_cadorna",
@@ -27,6 +28,7 @@ const LOCAL_CLASSES=Object.freeze({
   "DD|Oriani": "dd_oriani",
   "DD|Navigatori": "dd_navigatori",
   "DD|Maestrale": "dd_maestrale",
+  "SUB|Acciaio": "sub_acciaio",
   "SUB|Argonauta": "sub_argonauta",
   "SUB|Perla": "sub_perla",
   "SUB|Adua": "sub_adua",
@@ -44,6 +46,7 @@ const LENGTHS=Object.freeze({
   "cv_sparviero": 202.4,
   "ca_trento": 196.9,
   "ca_zara": 182.8,
+  "ca_bolzano": 196.9,
   "ca_suffren": 194,
   "cl_giussano": 169,
   "cl_cadorna": 169.3,
@@ -65,6 +68,7 @@ const LENGTHS=Object.freeze({
   "dd_oriani": 106.7,
   "dd_navigatori": 107,
   "dd_maestrale": 106.7,
+  "sub_acciaio": 60.2,
   "sub_argonauta": 61.5,
   "sub_perla": 60.2,
   "sub_adua": 60.2,
@@ -83,5 +87,5 @@ export function localShipProfile(unit,className){
  const series=key==='DD|Soldati'?(SOLDATI_2.has(name)?2:1):null;
  const file=series===2?'dd_soldati_2':LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/'+file+'.svg?v=1.14',caption:className+(series?' · '+series+'ª serie':'')+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
+ return {image:'./assets/naval/profiles/'+file+'.svg?v=1.15',caption:className+(series?' · '+series+'ª serie':'')+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
 }
