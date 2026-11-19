@@ -196,9 +196,9 @@ export function localShipProfile(unit,className){
  const type=String(unit?.tipo||'').trim().toUpperCase();
  const key=type+'|'+className;
  const allied=ALLIED_PROFILES[key];
- if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.32',caption:className+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
+ if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.33',caption:className+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
  const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.32',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
+ return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.33',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
 }
