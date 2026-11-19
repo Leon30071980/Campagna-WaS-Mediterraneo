@@ -1,12 +1,12 @@
-import { localShipProfile } from './local-ship-profiles.js?v=1.24';
-import { shipProfile } from './ship-profiles.js?v=1.24';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.24';
-import { historicalClass } from './historical-classes.js?v=1.24';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.24';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.24';
-import { generateBattle } from './battle-engine.js?v=1.24';
-import { SEASONS } from './config.js?v=1.24';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus } from './fleet-rules.js?v=1.24';
+import { localShipProfile } from './local-ship-profiles.js?v=1.25';
+import { shipProfile } from './ship-profiles.js?v=1.25';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.25';
+import { historicalClass } from './historical-classes.js?v=1.25';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.25';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.25';
+import { generateBattle } from './battle-engine.js?v=1.25';
+import { SEASONS } from './config.js?v=1.25';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus } from './fleet-rules.js?v=1.25';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -67,7 +67,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.24':'./css/royal.css?v=1.24';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.25':'./css/royal.css?v=1.25';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const wrap=make('div','wrap');
@@ -95,7 +95,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.24';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.25';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -111,7 +111,7 @@ function appendHistoricalProfile(td,u){
  wrap.append(source);td.append(wrap);
 }
 function renderTabs(){const nav=$('tabs');nav.replaceChildren();for(const [id,label]of TABS){
- const b=make('button','');if(model.side==='axis'){const ico=tabIcon(id);if(ico)b.append(ico);}text(b,'span',label);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',String(id===activeTab));b.onclick=()=>{if(activeTab!==id){activeTab=id;term='';catalogFilter='';catalogStatusFilter='';if(id==='navi')Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});}render();};nav.append(b);
+ const b=make('button','');{const ico=tabIcon(id);if(ico)b.append(ico);}text(b,'span',label);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',String(id===activeTab));b.onclick=()=>{if(activeTab!==id){activeTab=id;term='';catalogFilter='';catalogStatusFilter='';if(id==='navi')Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});}render();};nav.append(b);
  $('p-'+id).classList.toggle('on',id===activeTab);
 }}
 function renderPennant(){const p=$('pennant');p.replaceChildren();const fleets=fleetTotals();const pts=scores();
@@ -359,7 +359,7 @@ function compareCatalogUnits(a,b,key,direction,ships=true){
  if(['pt','anno','ritirato'].includes(key))return (Number(av)-Number(bv))*direction;
  return String(av).localeCompare(String(bv),'it',{numeric:true,sensitivity:'base'})*direction;
 }
-const NATION_LABELS=Object.freeze({it:'Italia (Regno d’Italia)', 'de-air':'Luftwaffe (Germania)', 'de-navy':'Kriegsmarine (Germania)', 'gb-navy':'Royal Navy (Regno Unito)', 'gb-air':'Aviazione britannica (RAF / Fleet Air Arm)', fr:'Francia', au:'Australia', nz:'Nuova Zelanda', us:'Stati Uniti', gr:'Grecia'});
+const NATION_LABELS=Object.freeze({it:'Italia (Regno d’Italia)', 'de-air':'Luftwaffe (Germania)', 'de-navy':'Kriegsmarine (Germania)', 'gb-navy':'Royal Navy (Regno Unito)', 'gb-air':'Aviazione britannica (RAF / Fleet Air Arm)', fr:'Francia Libera', au:'Australia', nz:'Nuova Zelanda', ca:'Canada', us:'Stati Uniti', gr:'Grecia'});
 // Immagini storiche corrispondenti ai nomi dei file forniti. Il badge CSS sottostante è il fallback.
 const HISTORICAL_FLAG_URLS=Object.freeze({it:'https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Italy_%281861-1946%29_crowned.svg','de-air':'https://upload.wikimedia.org/wikipedia/commons/1/11/War_ensign_of_Germany_%281938%E2%80%931945%29.svg','de-navy':'https://upload.wikimedia.org/wikipedia/commons/1/11/War_ensign_of_Germany_%281938%E2%80%931945%29.svg'});
 function appendUnitFlag(parent,unit,ships){
@@ -367,7 +367,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr'].includes(nation))?'./assets/naval/allies/'+(nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.25':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});

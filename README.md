@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.24 (Nhost)
+# Campagna W@S Mediterraneo — v1.25 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.25
+- Testata Allies ripresa dalla struttura Axis: cornice dorata, stemma della Royal Navy al centro, scena navale e targa inferiore blu/oro, titolo Quadro Comando Royal Navy, White Ensign ai due lati. Asset locali forniti dal giocatore, convertiti in WebP; lo sfondo è adattato al formato della testata senza deformazione. Nessuna ricostruzione generativa dell'immagine.
+- Menu Royal Navy con le sette icone B originali già approvate per Axis.
+- Cataloghi Allies: White Ensign per Regno Unito, Canada, Australia e Nuova Zelanda; bandiera Francia Libera per le unità francesi riconosciute. Le unità USA e Grecia mantengono i distintivi precedenti. Per i velivoli di origine americana in servizio britannico resta il White Ensign. La Francia è identificata da nazionalità esplicita, sigle di servizio o denominazioni francesi riconosciute; non si inferisce una nazionalità diversa per gli altri modelli.
+- Testata Axis, dati della campagna, motore, icone di stato e Nhost invariati.
 
 ## Novità v1.24
 - Sostituite le sette icone del menu Regia Marina v1.23 con ritagli delle sagome dell'immagine B approvata dal giocatore (barra_di_navigazione_navale_dorata_e_blu.png, 1916 × 821). Nessun ridisegno: rimozione dello sfondo mediante maschere alfa PNG e mantenimento delle proporzioni originali. Il colore si adatta al pulsante attivo e al tema.
