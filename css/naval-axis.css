@@ -267,13 +267,13 @@ body[data-side] .air-status.building{color:var(--building);}
 body[data-side="axis"] nav.tabs{gap:8px;}
 body[data-side="axis"] nav.tabs button{gap:10px;min-height:58px;padding:9px 8px;border-radius:7px;color:var(--ink);font-weight:700;}
 body[data-side="axis"] nav.tabs button .command-tab-icon{display:block;flex:none;background-color:currentColor;width:calc(var(--icon-w)*var(--icon-scale));height:calc(var(--icon-h)*var(--icon-scale));--icon-scale:.72px;mask-image:var(--icon-mask);mask-repeat:no-repeat;mask-position:center;mask-size:contain;-webkit-mask-image:var(--icon-mask);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:contain;}
-body[data-side="axis"] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.27');}
-body[data-side="axis"] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.27');}
-body[data-side="axis"] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.27');}
-body[data-side="axis"] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.27');}
-body[data-side="axis"] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.27');}
-body[data-side="axis"] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.27');}
-body[data-side="axis"] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.27');}
+body[data-side="axis"] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.28');}
+body[data-side="axis"] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.28');}
+body[data-side="axis"] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.28');}
+body[data-side="axis"] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.28');}
+body[data-side="axis"] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.28');}
+body[data-side="axis"] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.28');}
+body[data-side="axis"] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.28');}
 body[data-side="axis"] nav.tabs button[aria-selected="true"]{color:#11242e;}
 @media(min-width:1151px) and (max-width:1380px){body[data-side="axis"] nav.tabs button{gap:6px;padding-inline:5px;font-size:13px;}body[data-side="axis"] nav.tabs button .command-tab-icon{--icon-scale:.54px;}}
 @media(max-width:620px){body[data-side="axis"] nav.tabs button{min-height:48px;gap:7px;padding:7px 5px;}body[data-side="axis"] nav.tabs button .command-tab-icon{--icon-scale:.53px;}}
@@ -357,9 +357,8 @@ body[data-side="allies"] .pennant .fleet-summary-cell{grid-column:auto;grid-row:
 @media(max-width:720px){body[data-side="allies"] .pennant{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="allies"] .pennant>.fleet-summary-cell{grid-row:2;}}
 @media(max-width:620px){body[data-side="allies"] .pennant{width:calc(100% - 16px);}body[data-side="allies"] .naval-total-top .naval-icon{width:52px;height:26px;}body[data-side="allies"] .naval-total-top .naval-sunk-icon{width:45px;height:36px;}body[data-side="allies"] .naval-total-top .v{font-size:20px;}body[data-side="allies"] .naval-four-states .naval-total-label{font-size:12px;}body[data-side="allies"] .axis-fleet-cell .nhost-summary{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
-/* v1.27 — profili Royal Navy: stessa scala orizzontale indicativa del canvas Axis (240 m).
-   Il canvas britannico copre 264 m e permette di mostrare Hood senza ritaglio.
-   La colonna riserva spazio aggiuntivo senza ingrandire i profili Axis. */
-#p-navi .royal-local-profile{width:220px;max-width:48%;}
-#p-navi .royal-local-profile img{aspect-ratio:528/152;}
-@media(max-width:620px){#p-navi .royal-local-profile{width:159.5px;}}
+/* v1.28 — canvas comune Axis e Allies: 528 × 152 px, scala nominale 2 px/m.
+   Stessa larghezza di visualizzazione per entrambe le fazioni. */
+#p-navi .scaled-local-profile{width:220px;max-width:48%;}
+#p-navi .scaled-local-profile img{aspect-ratio:528/152;}
+@media(max-width:620px){#p-navi .scaled-local-profile{width:159.5px;}}

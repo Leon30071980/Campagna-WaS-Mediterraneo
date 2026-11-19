@@ -1,4 +1,4 @@
-// v1.27 — profili dalle tavole fornite, contorni semplificati e scala comune indicativa.
+// v1.28 — profili dettagliati delle tavole fornite, scala comune Axis e Allies.
 const LOCAL_CLASSES=Object.freeze({
   "BB|Littorio": "bb_littorio",
   "BB|Conte di Cavour": "bb_cavour",
@@ -196,9 +196,9 @@ export function localShipProfile(unit,className){
  const type=String(unit?.tipo||'').trim().toUpperCase();
  const key=type+'|'+className;
  const allied=ALLIED_PROFILES[key];
- if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.27',caption:className+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,royal:true,page:null,length:allied.length};
+ if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.28',caption:className+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
  const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/'+file+'.svg?v=1.27',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,page:null,length};
+ return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.28',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
 }

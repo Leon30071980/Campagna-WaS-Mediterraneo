@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.27 (Nhost)
+# Campagna W@S Mediterraneo — v1.28 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.28
+- 38 profili Axis (comprese le due serie Soldati e le classi francesi e tedesche già mappate) rielaborati dalle tavole PNG dettagliate del pacchetto v1.14 e dai GIF originali di Bolzano e Acciaio. Non dalle sagome SVG semplificate. Tutti i WebP sono lossless, con tinta #D8EAF2 e trasparenza tonale, senza nuove ricostruzioni.
+- Stesso canvas 528 × 152 e scala nominale 2 px/m della Royal Navy: proporzioni, dettagli del disegno e allineamento alla base conservati. Le immagini Royal Navy v1.27 sono invariate. La scala visualizzata è indicativa; non costituisce una tavola costruttiva.
+- Vecchi SVG conservati come archivio; mappatura storica, lunghezze nominali, testata, regole, punteggi e Nhost invariati. Le classi non comprese nel repertorio conservano il comportamento precedente.
 
 ## Novità v1.27
 - 27 profili locali Royal Navy / Commonwealth per BB, BC, CV, CA, CL e DD, derivati dai GIF dello ZIP «royal navy.zip» consegnato dal giocatore. WebP lossless trasparenti, colore #D8EAF2, contorni e proporzioni originali preservati; nessuna ricostruzione. Refuso artehusa corretto in arethusa. J e K hanno lo stesso disegno nel lotto originale.

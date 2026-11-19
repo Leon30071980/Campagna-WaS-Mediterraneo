@@ -1,12 +1,12 @@
-import { localShipProfile } from './local-ship-profiles.js?v=1.27';
-import { shipProfile } from './ship-profiles.js?v=1.27';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.27';
-import { historicalClass } from './historical-classes.js?v=1.27';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.27';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.27';
-import { generateBattle } from './battle-engine.js?v=1.27';
-import { SEASONS } from './config.js?v=1.27';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus } from './fleet-rules.js?v=1.27';
+import { localShipProfile } from './local-ship-profiles.js?v=1.28';
+import { shipProfile } from './ship-profiles.js?v=1.28';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.28';
+import { historicalClass } from './historical-classes.js?v=1.28';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.28';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.28';
+import { generateBattle } from './battle-engine.js?v=1.28';
+import { SEASONS } from './config.js?v=1.28';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus } from './fleet-rules.js?v=1.28';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -67,7 +67,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.27':'./css/royal.css?v=1.27';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.28':'./css/royal.css?v=1.28';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const wrap=make('div','wrap');
@@ -95,11 +95,11 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.27';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.28';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
- const wrap=make('span','historical-profile navypedia-profile'+(profile.local?' local-profile':'')+(profile.royal?' royal-local-profile':''));
+ const wrap=make('span','historical-profile navypedia-profile'+(profile.local?' local-profile':'')+(profile.scaled?' scaled-local-profile':''));
  const source=make(profile.page?'a':'span','profile-source',profile.image?profile.caption+(profile.local?'':' · non in scala'):'Scheda Navypedia · profilo non disponibile');
  if(profile.page){source.href=profile.page;source.target='_blank';source.rel='noopener noreferrer';source.referrerPolicy='no-referrer';}source.title=(profile.local?'Tavola del giocatore · scala indicativa · ':'Navypedia · non in scala · ')+profile.caption;
  if(profile.image){
@@ -367,7 +367,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/naval/allies/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.27':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/naval/allies/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.28':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
