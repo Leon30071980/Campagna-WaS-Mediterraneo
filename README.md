@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.11 (Nhost)
+# Campagna W@S Mediterraneo — v1.12 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,13 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.12
+- Primo repertorio di profili laterali: 35 sagome SVG semplificate ricavate manualmente da tavole di riconoscimento navale statunitensi del 1943, con associazione a 43 classi storiche e ai relativi gruppi. Fonte per ogni profilo visibile nel catalogo; le immagini originali non vengono ripubblicate e l'app non carica risorse remote per il nuovo repertorio.
+- La sagoma documenta il profilo della classe/gruppo, non l'allestimento esatto di ogni nave nel singolo turno. Non sono disegni costruttivi né sagome in scala reciproca. Le varianti Queen Elizabeth/Valiant, Warspite e Malaya sono distinte; Barham non ha un profilo in questo lotto. Vittorio Veneto e Littorio conservano il disegno fornito dal giocatore.
+- Fonti: [FM 30-50, settembre 1943 (Regia Marina)](https://www.lonesentry.com/blog/italian-navy-ship-silhouettes.html); U.S. Army–Navy Journal of Recognition, novembre 1943 ([tavola BB/CV/CA](https://www.coatneyhistory.com/RNBBsCVs.jpg), [tavola CL/DD](https://www.coatneyhistory.com/RNCAsCLsDDs.jpg)); scansioni consultate solo come riferimento, tracciati vettoriali originali.
+- Classi non coperte (in particolare sommergibili, portaerei mancanti e alcune classi di incrociatori/cacciatorpediniere) restano senza profilo; nessuna sagoma generica assegnata al posto di quella documentata.
+- Testata approvata, bandiere, NP5/AE1, ordinamenti, Nhost e regole del gioco invariati.
 
 ## Novità v1.11
 - Sostituite le icone Axis con le proposte selezionate NP5 (esplosione, fumo e nave affondata) e AE1 (caccia WWII con elica visto dall'alto).
