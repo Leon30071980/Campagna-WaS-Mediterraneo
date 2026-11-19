@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 62">
+<title>Caccia monomotore a elica degli anni 1940</title>
+<!-- Sagoma stilizzata dall'alto di un caccia ad ala bassa, non di un modello specifico. -->
+<g fill="#e9dfc5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M39.8 7C36.4 8.5 35.7 12.1 35.6 18.7L35 22.2 10.3 28.7Q3 30.5 3.8 35.4Q5 38.9 11.7 38L35.2 33.2 36.8 47 26.6 50.9Q22.1 54.5 26.7 55.6L38.6 53.5 40 59 41.4 53.5 53.3 55.6Q57.9 54.5 53.4 50.9L43.2 47 44.8 33.2 68.3 38Q75 38.9 76.2 35.4Q77 30.5 69.7 28.7L45 22.2 44.4 18.7C44.3 12.1 43.6 8.5 39.8 7Z"/>
+<path d="M40 2V9M28 5Q40 3 52 5" fill="none" stroke="#e9dfc5" stroke-width="2.3"/>
+</g>
+<path d="M40 20Q36.9 18 37.8 14Q40 11.5 42.2 14Q43.1 18 40 20Z" fill="#637783"/>
+<path d="M40 41V52" stroke="#9fa9aa" stroke-width="1.2"/>
+</svg>

@@ -1,4 +1,4 @@
-/* W@S v1.9 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.10 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
@@ -193,3 +193,6 @@ body[data-side="axis"] .admiralty-banner-v19{position:relative;width:100%;line-h
 body[data-side="axis"] .admiralty-banner-v19 .admiralty-side-flag{position:absolute;top:83.3%;width:8.5%;height:auto;display:block;pointer-events:none;filter:drop-shadow(0 1px 2px #0007);transform:translateY(-50%);}
 body[data-side="axis"] .admiralty-banner-v19 .admiralty-side-flag.left{left:2.8%;}
 body[data-side="axis"] .admiralty-banner-v19 .admiralty-side-flag.right{right:2.8%;transform:translateY(-50%) scaleX(-1);}
+
+/* v1.10 — caccia monomotore a elica, distinta dalla sagoma navale. */
+body[data-side="axis"] nav.tabs .naval-aircraft-icon{width:33px;height:25px;}
