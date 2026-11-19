@@ -1,11 +1,11 @@
-import { shipProfile } from './ship-profiles.js?v=1.12';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.12';
-import { historicalClass } from './historical-classes.js?v=1.12';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.12';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.12';
-import { generateBattle } from './battle-engine.js?v=1.12';
-import { SEASONS } from './config.js?v=1.12';
-import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.12';
+import { shipProfile } from './ship-profiles.js?v=1.13';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.13';
+import { historicalClass } from './historical-classes.js?v=1.13';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.13';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.13';
+import { generateBattle } from './battle-engine.js?v=1.13';
+import { SEASONS } from './config.js?v=1.13';
+import { CAMPAIGN_YEARS, shipBase, shipStatus, isAvailable, assignedHullBases, duplicateHull } from './fleet-rules.js?v=1.13';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -76,7 +76,7 @@ function showApp(){
  $('login-page').hidden=true;$('app-page').hidden=false;
  document.body.dataset.side=model.side;
  setAppFavicon(model.side);
- $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.12':'./css/royal.css?v=1.12';
+ $('side-css').href=model.side==='axis'?'./css/regia.css?v=1.13':'./css/royal.css?v=1.13';
  const root=$('command-root');root.replaceChildren();
  root.append($('header-'+model.side).content.cloneNode(true));
  const status=make('div','nhost-statusbar');status.id='nhost-statusbar';status.textContent=statusText();
@@ -98,20 +98,20 @@ function render(){if(!model)return;renderTabs();renderPennant();const p=$('p-'+a
 }
 const AXIS_NAV_ICONS=Object.freeze({porto:'⚓',battaglia:'⚔',storico:'▤',gestione:'⚙',regole:'▧'});
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk']});
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.12';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.13';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const profile=shipProfile(u,historicalClass(u));if(!profile)return;
- const wrap=make('span','historical-profile');wrap.title=profile.caption+(profile.source?' · '+profile.source.title+' · sagoma vettoriale semplificata':'');
+ const wrap=make('span','historical-profile navypedia-profile');
+ const source=make('a','profile-source',profile.image?profile.caption:'Scheda Navypedia · profilo non disponibile');
+ source.href=profile.page;source.target='_blank';source.rel='noopener noreferrer';source.referrerPolicy='no-referrer';source.title='Navypedia · '+profile.className+' · '+profile.caption;
  if(profile.image){
-  const img=make('img');img.src=profile.image+'?v=1.12';img.alt=profile.caption;img.loading='lazy';wrap.append(img);
- }else{
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox',profile.viewBox);svg.setAttribute('role','img');svg.setAttribute('aria-label',profile.caption);svg.setAttribute('preserveAspectRatio','xMidYMid meet');
-  const polygon=document.createElementNS('http://www.w3.org/2000/svg','polygon');polygon.setAttribute('points',profile.points);polygon.setAttribute('fill','currentColor');svg.append(polygon);wrap.append(svg);
+  const img=make('img');img.alt=profile.caption;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
+  // Non mostrare un'icona rotta né usare una sagoma generica se l'host rifiuta la richiesta.
+  img.addEventListener('error',()=>{img.remove();source.textContent='Navypedia · apri profilo';},{once:true});
+  img.src=profile.image;wrap.append(img);
  }
- if(profile.source){const source=make('a','profile-source','Profilo storico');source.href=profile.source.url;source.target='_blank';source.rel='noopener noreferrer';source.title='Fonte: '+profile.source.title;source.setAttribute('aria-label','Fonte storica del profilo '+profile.caption);wrap.append(source);}
- else if(String(u.nome).toUpperCase()==='LITTORIO')text(wrap,'small','Profilo di classe');
- td.append(wrap);
+ wrap.append(source);td.append(wrap);
 }
 function renderTabs(){const nav=$('tabs');nav.replaceChildren();for(const [id,label]of TABS){
  const b=make('button','');if(model.side==='axis'){if(id==='navi')b.append(navalIcon('operational'));else if(id==='aerei')b.append(navalIcon('aircraft'));else {const ico=make('span','axis-tab-icon',AXIS_NAV_ICONS[id]||'');ico.setAttribute('aria-hidden','true');b.append(ico);}}text(b,'span',label);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',String(id===activeTab));b.onclick=()=>{if(activeTab!==id){activeTab=id;term='';catalogFilter='';if(id==='navi')Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});}render();};nav.append(b);
@@ -415,7 +415,7 @@ function renderCatalog(p,tab){
   tbl.append(tbody);wrap.append(tbl);if(!filtered.length)text(wrap,'div','Nessuna unità trovata.','nhost-card-body note');
  };
  if(ships)text(p,'div','Ordine predefinito: tipo BB → BC → CV → CA → CL → DD → SUB; classi raggruppate per valore massimo, punti decrescenti.','note');
- if(ships)text(p,'div','Profili storici: sagome vettoriali semplificate dalle tavole di riconoscimento del 1943; indicazione del gruppo ove necessario. Le unità senza riscontro documentale non mostrano una sagoma.','note axis-profile-note');
+ if(ships)text(p,'div','Profili originali Navypedia · nave e anno del disegno indicati sotto ogni immagine. Se il profilo non è reperibile o il sito non consente il caricamento, resta solo il collegamento alla scheda; nessuna ricostruzione grafica.','note axis-profile-note');
  sel.onchange=()=>{catalogFilter=sel.value;update();};search.oninput=()=>{term=search.value;update();};update();
 }
 // Solo la fazione proprietaria puo modificare la propria battaglia prima di concluderla.

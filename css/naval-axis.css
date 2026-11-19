@@ -1,4 +1,4 @@
-/* W@S v1.12 — restyling circoscritto al Quadro Comando Axis. */
+/* W@S v1.13 — restyling circoscritto al Quadro Comando Axis. */
 body[data-side="axis"] {--r:7px;--axis-accent:#59c6ed;--axis-edge:#386a82;--axis-panel:#0b2b3b;--axis-ship-brightness:1;}
 :root:not([data-theme="light"]) body[data-side="axis"]{--bg:#061b28;--surface:#092735;--surface2:#10394c;--raised:#124358;--line:#37667f;--line-soft:#294d60;--ink:#e5f0f6;--ink-dim:#b2c9d5;--ink-faint:#93b0bf;--brass:#e0bc70;--brass-ink:#17242c;--sea:#66cbea;--ok:#71e09a;--ripara:#ffd05a;--sunk:#ff7771;background:radial-gradient(ellipse at 15% 0,#16475e 0,transparent 45%),linear-gradient(145deg,#061923,#061521 75%,#092b3d);min-height:100vh;}
 @media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{--bg:#e6eef1;--surface:#f5fafb;--surface2:#e1edf2;--raised:#fff;--line:#a9c2ce;--line-soft:#cddde4;--ink:#142e3b;--ink-dim:#405e6b;--ink-faint:#496575;--ok:#176335;--ripara:#805800;--sunk:#a72e35;--sea:#236b8a;--brass:#987336;--brass-ink:#fff;--axis-ship-brightness:.31;background:var(--bg);}}
@@ -213,3 +213,9 @@ body[data-side="axis"] .naval-state .naval-sunk-icon{width:52px;height:38px;}
 #p-navi .historical-profile .profile-source:hover{color:var(--sea);}
 #p-navi .historical-profile small{font-size:10px;line-height:1;}
 @media(max-width:620px){#p-navi .historical-profile{width:135px;}}
+
+/* v1.13 — disegni originali Navypedia: niente filtri, sagome ricostruite o deformazioni. */
+#p-navi .navypedia-profile{width:200px;max-width:48%;color:var(--ink-dim);}
+#p-navi .navypedia-profile img{display:block;filter:none!important;object-fit:contain;object-position:center;max-width:100%;width:100%;height:46px;background:#fff;border-radius:2px;}
+#p-navi .navypedia-profile .profile-source{max-width:100%;white-space:normal;text-align:center;font-size:10px;line-height:1.2;}
+@media(max-width:620px){#p-navi .navypedia-profile{width:145px;}}

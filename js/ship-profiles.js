@@ -1,388 +1,748 @@
-// v1.12 — profili vettoriali semplificati da tavole storiche statunitensi del 1943.
-// Tracciati manuali: non sono scansioni, disegni costruttivi o sagome in scala reciproca.
-// Nessun dato di flotta privata o di partita. Nessuna sostituzione per classi non documentate.
-const PLATES={
-  "it": {
-    "title": "FM 30-50, Recognition Pictorial Manual of Naval Vessels, settembre 1943",
-    "url": "https://www.lonesentry.com/blog/italian-navy-ship-silhouettes.html"
-  },
-  "gb1": {
-    "title": "U.S. Army–Navy Journal of Recognition, novembre 1943 — tavola BB/CV/CA",
-    "url": "https://www.coatneyhistory.com/RNBBsCVs.jpg"
-  },
-  "gb2": {
-    "title": "U.S. Army–Navy Journal of Recognition, novembre 1943 — tavola CL/DD",
-    "url": "https://www.coatneyhistory.com/RNCAsCLsDDs.jpg"
-  }
-};
-const PROFILES=[
-  {
-    "plate": "it",
-    "type": "BB",
-    "classes": [
-      "Littorio"
-    ],
-    "caption": "Littorio",
-    "viewBox": "23 52 207 45",
-    "points": "24,95 25,89 65,88 72,84 87,84 93,85 97,79 97,72 100,72 100,82 106,82 106,74 110,74 110,82 114,81 114,72 119,72 119,81 125,81 125,53 127,53 127,73 131,73 131,66 136,66 136,71 140,71 140,79 150,80 178,85 178,89 227,87 224,95"
-  },
-  {
-    "plate": "it",
-    "type": "BB",
-    "classes": [
-      "Conte di Cavour"
-    ],
-    "caption": "Cavour",
-    "viewBox": "23 144 164 45",
-    "points": "24,186 25,181 50,181 59,178 69,177 78,176 78,164 81,164 81,147 82,147 82,164 85,164 85,176 97,177 98,170 103,170 103,176 113,176 114,169 118,169 118,164 121,164 121,171 126,171 126,176 139,178 151,181 185,180 181,186"
-  },
-  {
-    "plate": "it",
-    "type": "BB",
-    "classes": [
-      "Andrea Doria"
-    ],
-    "caption": "Doria",
-    "viewBox": "23 234 164 45",
-    "points": "24,277 26,271 57,270 73,266 73,253 75,253 75,269 91,269 91,256 96,256 96,268 100,267 100,261 105,261 105,267 109,265 109,252 113,252 113,235 114,235 114,251 119,251 119,262 122,262 122,266 134,267 147,271 184,270 181,277"
-  },
-  {
-    "plate": "it",
-    "type": "CA",
-    "classes": [
-      "Bolzano"
-    ],
-    "caption": "Bolzano",
-    "viewBox": "258 23 175 46",
-    "points": "260,66 261,61 287,61 291,57 307,57 307,55 314,55 314,60 322,60 322,51 327,51 327,53 331,53 331,25 333,25 333,52 336,52 336,59 355,59 355,51 363,51 363,48 366,48 366,43 369,43 369,39 370,39 370,47 374,47 374,49 377,49 377,53 386,53 386,57 395,57 395,60 431,59 427,66"
-  },
-  {
-    "plate": "it",
-    "type": "CA",
-    "classes": [
-      "Zara"
-    ],
-    "caption": "Gorizia",
-    "viewBox": "258 77 162 47",
-    "points": "260,122 262,117 293,117 296,113 306,111 317,111 321,108 326,108 326,81 329,81 329,112 337,112 337,106 341,106 341,111 348,112 350,105 353,105 353,97 356,97 356,101 361,101 361,106 365,106 365,111 390,114 390,117 417,116 415,122"
-  },
-  {
-    "plate": "it",
-    "type": "CL",
-    "classes": [
-      "Raimondo Montecuccoli"
-    ],
-    "caption": "Montecuccoli",
-    "viewBox": "259 151 158 41",
-    "points": "260,189 261,184 290,184 290,181 307,180 312,178 316,174 320,174 320,153 322,153 322,169 326,169 326,181 351,181 351,172 356,172 356,176 360,176 360,172 365,172 365,170 369,170 369,176 373,176 373,181 386,182 386,184 414,184 409,189"
-  },
-  {
-    "plate": "it",
-    "type": "CL",
-    "classes": [
-      "Duca degli Abruzzi"
-    ],
-    "caption": "Garibaldi",
-    "viewBox": "259 203 162 38",
-    "points": "260,237 261,231 299,231 302,227 306,227 306,220 312,220 312,204 314,204 314,229 331,229 331,219 335,219 335,229 343,229 343,221 348,221 348,229 355,229 355,216 358,216 358,224 362,224 362,218 365,218 365,230 419,230 415,237"
-  },
-  {
-    "plate": "it",
-    "type": "CL",
-    "classes": [
-      "Luigi Cadorna"
-    ],
-    "caption": "Luigi Cadorna",
-    "viewBox": "258 254 151 33",
-    "points": "260,285 261,280 285,280 289,276 300,276 301,279 319,279 319,271 324,271 324,267 326,267 326,255 327,255 327,272 330,272 330,278 339,278 340,271 346,271 346,276 351,276 351,269 355,269 355,264 357,264 357,270 362,270 362,275 372,277 372,280 406,279 405,285"
-  },
-  {
-    "plate": "it",
-    "type": "CL",
-    "classes": [
-      "Capitani Romani"
-    ],
-    "caption": "Regolo",
-    "viewBox": "259 310 119 26",
-    "points": "261,333 264,328 277,328 277,326 289,325 298,328 308,328 308,321 312,321 312,327 331,327 331,322 336,322 336,326 339,326 339,312 340,312 340,320 345,320 345,326 350,326 350,328 375,328 371,333"
-  },
-  {
-    "plate": "it",
-    "type": "DD",
-    "classes": [
-      "Navigatori"
-    ],
-    "caption": "Navigatore",
-    "viewBox": "465 70 98 25",
-    "points": "466,92 469,89 487,89 487,76 488,76 490,89 495,89 496,85 499,85 499,82 503,82 503,87 507,87 507,84 511,84 511,89 522,89 522,81 528,81 528,72 529,72 529,79 534,79 534,82 539,82 539,87 547,87 547,89 560,88 557,92"
-  },
-  {
-    "plate": "it",
-    "type": "DD",
-    "classes": [
-      "Turbine"
-    ],
-    "caption": "Turbine",
-    "viewBox": "475 134 87 25",
-    "points": "477,156 480,152 490,152 491,150 496,150 496,138 497,138 498,151 503,151 503,149 507,149 507,153 519,153 519,147 524,147 524,152 527,152 528,137 529,137 529,146 533,146 533,149 539,149 539,152 560,151 557,156"
-  },
-  {
-    "plate": "it",
-    "type": "DD",
-    "classes": [
-      "Spica"
-    ],
-    "caption": "Spica",
-    "viewBox": "486 202 75 20",
-    "points": "488,219 491,215 503,215 506,212 507,212 507,203 508,203 509,215 514,215 514,213 519,213 519,215 525,215 525,212 528,212 528,204 530,204 530,210 534,210 534,215 540,215 540,212 544,212 544,216 559,215 556,219"
-  },
-  {
-    "plate": "it",
-    "type": "DD",
-    "classes": [
-      "Maestrale",
-      "Soldati"
-    ],
-    "caption": "Grecale–Aviere (gruppo)",
-    "viewBox": "465 259 97 26",
-    "points": "467,282 469,278 487,278 488,264 489,264 490,276 498,276 498,274 503,274 503,277 508,277 508,274 512,274 512,278 520,278 520,272 524,272 524,266 528,266 528,260 529,260 529,267 534,267 534,272 538,272 538,276 544,276 544,278 560,277 557,282"
-  },
-  {
-    "plate": "gb1",
-    "type": "BC",
-    "classes": [
-      "Renown"
-    ],
-    "caption": "Renown",
-    "viewBox": "3 408 330 70",
-    "points": "5,475 6,467 45,467 65,464 84,459 105,457 110,449 112,422 114,422 115,452 119,452 119,462 140,460 144,438 154,438 157,460 166,459 168,440 180,440 182,455 188,445 190,410 193,410 193,439 202,439 202,444 220,445 220,455 231,455 231,460 247,460 263,463 330,462 330,475"
-  },
-  {
-    "plate": "gb1",
-    "type": "BB",
-    "classes": [
-      "King George V"
-    ],
-    "caption": "King George V",
-    "viewBox": "3 491 310 69",
-    "points": "5,558 5,550 28,548 60,549 78,544 91,538 99,534 99,505 101,505 106,532 114,534 114,540 120,539 120,522 130,522 130,541 149,542 150,521 164,521 164,539 167,533 169,492 171,492 171,517 179,517 179,522 195,522 195,533 205,537 221,537 221,541 244,546 310,547 307,558"
-  },
-  {
-    "plate": "gb1",
-    "type": "BB",
-    "classes": [
-      "Nelson"
-    ],
-    "caption": "Nelson",
-    "viewBox": "3 575 295 67",
-    "points": "5,641 5,633 36,631 47,627 54,617 57,579 59,579 61,612 64,620 82,624 83,610 93,610 94,626 104,623 104,615 109,610 109,596 114,596 114,599 121,599 121,606 127,606 127,615 133,616 133,625 160,626 172,620 184,621 190,626 205,626 227,630 294,629 292,641"
-  },
-  {
-    "plate": "gb1",
-    "type": "BB",
-    "classes": [
-      "Queen Elizabeth"
-    ],
-    "caption": "Queen Elizabeth–Valiant",
-    "viewBox": "3 656 270 70",
-    "points": "5,724 5,717 39,716 65,710 80,705 87,697 94,696 96,657 98,657 99,698 106,706 119,709 130,705 132,690 143,690 145,705 151,696 152,680 157,680 157,660 159,660 160,682 168,684 168,689 179,690 179,702 190,707 207,707 213,711 231,714 269,714 268,724"
-  },
-  {
-    "plate": "gb1",
-    "type": "BB",
-    "classes": [
-      "Queen Elizabeth"
-    ],
-    "caption": "Warspite",
-    "viewBox": "3 742 267 68",
-    "points": "5,808 5,800 35,799 52,797 74,792 88,784 93,780 95,746 96,746 97,785 106,791 120,793 134,791 136,775 146,775 146,790 152,786 151,761 155,761 155,745 157,745 158,763 164,765 164,774 175,775 181,783 181,790 191,793 202,793 216,799 267,799 266,808"
-  },
-  {
-    "plate": "gb1",
-    "type": "BB",
-    "classes": [
-      "Queen Elizabeth"
-    ],
-    "caption": "Malaya",
-    "viewBox": "3 824 267 70",
-    "points": "5,892 6,884 32,882 57,880 77,876 84,870 92,871 96,826 98,826 99,870 106,876 122,877 129,872 130,856 145,856 145,875 153,868 154,845 158,845 158,825 160,825 161,847 170,849 171,862 176,875 190,878 206,878 221,882 267,883 267,891"
-  },
-  {
-    "plate": "gb1",
-    "type": "BB",
-    "classes": [
-      "Revenge"
-    ],
-    "caption": "Royal Sovereign",
-    "viewBox": "3 908 257 69",
-    "points": "5,975 5,968 45,967 65,964 81,959 101,957 104,918 106,918 106,953 109,953 110,961 132,961 134,950 142,950 145,935 151,935 151,909 153,909 153,931 160,931 160,945 164,952 174,956 187,956 196,961 209,961 219,967 257,966 257,975"
-  },
-  {
-    "plate": "gb1",
-    "type": "CV",
-    "classes": [
-      "Illustrious"
-    ],
-    "caption": "Illustrious",
-    "viewBox": "418 77 313 69",
-    "points": "421,128 442,129 452,128 452,102 453,102 453,126 567,126 570,119 576,116 586,116 586,109 594,109 594,103 601,103 606,84 607,84 608,103 616,104 616,112 623,113 623,119 646,121 648,110 649,110 649,125 683,125 685,112 686,112 687,126 728,129 720,143 430,142"
-  },
-  {
-    "plate": "gb1",
-    "type": "CA",
-    "classes": [
-      "County (Kent)"
-    ],
-    "caption": "Kent–Devonshire–Norfolk (profilo gruppo)",
-    "viewBox": "418 591 270 54",
-    "points": "421,642 422,634 458,634 474,626 488,625 492,596 494,596 495,625 505,626 518,620 528,626 540,629 542,610 549,610 553,629 557,629 557,610 564,610 570,629 575,629 575,611 580,611 582,625 587,616 587,604 589,604 590,613 600,615 607,625 624,628 639,632 683,633 681,642"
-  },
-  {
-    "plate": "gb1",
-    "type": "CL",
-    "classes": [
-      "Town (Edinburgh)"
-    ],
-    "caption": "Belfast",
-    "viewBox": "418 918 260 60",
-    "points": "420,974 421,967 453,966 470,959 480,957 487,952 496,951 500,947 504,952 514,951 515,927 517,927 518,954 525,953 526,941 537,941 539,955 546,955 552,948 564,948 573,958 581,949 584,931 588,931 588,921 590,921 591,940 600,940 608,946 614,952 631,956 644,961 674,963 671,974"
-  },
-  {
-    "plate": "gb2",
-    "type": "CL",
-    "classes": [
-      "Town (Southampton)",
-      "Town (Gloucester)"
-    ],
-    "caption": "Southampton (profilo gruppo)",
-    "viewBox": "13 12 246 56",
-    "points": "15,66 15,60 51,58 64,54 78,52 84,45 91,44 96,22 98,22 98,46 107,50 120,49 120,42 127,42 130,51 137,51 145,46 155,48 159,36 164,36 165,14 167,14 168,35 175,35 175,41 186,41 191,46 191,51 201,50 208,54 227,56 255,56 255,66"
-  },
-  {
-    "plate": "gb2",
-    "type": "CL",
-    "classes": [
-      "Crown Colony (Fiji)",
-      "Crown Colony (Ceylon)"
-    ],
-    "caption": "Fiji–Uganda (profilo gruppo)",
-    "viewBox": "13 103 231 47",
-    "points": "15,148 15,142 48,140 60,137 76,134 81,105 83,105 83,134 89,134 89,140 105,140 110,124 117,124 120,140 137,139 144,131 155,130 157,113 159,113 160,125 170,125 170,130 182,130 182,135 197,136 211,140 242,140 241,148"
-  },
-  {
-    "plate": "gb2",
-    "type": "CL",
-    "classes": [
-      "Dido"
-    ],
-    "caption": "Dido (5 torri)",
-    "viewBox": "13 181 216 54",
-    "points": "15,232 15,225 36,223 49,221 69,215 78,216 81,192 83,192 83,215 89,215 92,208 99,208 102,222 119,222 122,210 129,210 130,222 133,214 135,184 137,184 137,201 143,202 146,208 151,208 151,213 162,215 162,220 176,220 193,223 226,222 225,232"
-  },
-  {
-    "plate": "gb2",
-    "type": "CL",
-    "classes": [
-      "Leander"
-    ],
-    "caption": "Leander",
-    "viewBox": "13 266 232 53",
-    "points": "15,315 15,309 48,306 58,302 70,299 81,297 83,278 85,278 85,297 92,298 94,305 111,305 117,306 129,300 130,290 141,290 143,303 151,300 153,281 154,267 156,267 156,283 162,283 164,289 175,291 179,299 190,299 199,303 211,306 243,306 241,315"
-  },
-  {
-    "plate": "gb2",
-    "type": "CL",
-    "classes": [
-      "Leander (Perth)"
-    ],
-    "caption": "Hobart",
-    "viewBox": "13 353 233 47",
-    "points": "15,398 15,392 48,391 60,386 73,385 80,380 84,354 86,354 86,381 92,384 104,384 104,373 111,373 113,386 140,386 141,374 149,374 150,386 157,382 159,362 161,362 161,372 170,372 174,378 182,378 182,385 191,386 207,390 244,390 243,398"
-  },
-  {
-    "plate": "gb2",
-    "type": "CL",
-    "classes": [
-      "Arethusa"
-    ],
-    "caption": "Arethusa",
-    "viewBox": "13 430 214 53",
-    "points": "15,480 15,475 38,474 50,469 62,467 63,432 65,432 65,467 72,469 86,469 87,456 94,456 94,471 110,471 118,457 125,457 125,470 133,463 136,454 139,431 141,431 141,450 146,452 151,456 161,458 161,463 176,464 191,471 223,471 221,480"
-  },
-  {
-    "plate": "gb2",
-    "type": "DD",
-    "classes": [
-      "Tribal"
-    ],
-    "caption": "Tribal",
-    "viewBox": "384 22 160 46",
-    "points": "386,65 386,60 409,58 425,55 436,55 438,49 442,49 442,56 458,56 459,52 465,52 467,58 471,53 476,47 477,25 479,25 480,46 485,46 487,51 497,52 502,55 516,57 541,56 537,65"
-  },
-  {
-    "plate": "gb2",
-    "type": "DD",
-    "classes": [
-      "L"
-    ],
-    "caption": "L–M (profilo gruppo)",
-    "viewBox": "384 103 160 47",
-    "points": "386,148 386,143 406,142 415,137 426,139 439,142 459,139 461,134 469,134 473,128 474,109 476,109 477,127 484,128 484,133 493,135 505,138 520,140 540,139 537,148"
-  },
-  {
-    "plate": "gb2",
-    "type": "DD",
-    "classes": [
-      "J",
-      "K",
-      "N"
-    ],
-    "caption": "J–K–N (profilo gruppo)",
-    "viewBox": "384 184 147 50",
-    "points": "386,232 386,228 406,225 414,221 422,223 438,226 451,222 457,222 461,216 465,216 466,187 468,187 468,215 475,216 478,219 490,220 497,225 515,225 528,224 525,232"
-  },
-  {
-    "plate": "gb2",
-    "type": "DD",
-    "classes": [
-      "P"
-    ],
-    "caption": "O–T (profilo gruppo)",
-    "viewBox": "384 269 140 47",
-    "points": "386,315 386,310 405,308 415,304 421,306 436,309 449,306 456,306 458,301 462,301 464,280 466,280 466,300 472,300 475,304 483,304 490,308 506,309 521,308 518,315"
-  },
-  {
-    "plate": "gb2",
-    "type": "DD",
-    "classes": [
-      "D",
-      "E",
-      "F",
-      "G",
-      "H",
-      "I"
-    ],
-    "caption": "A–I (profilo gruppo)",
-    "viewBox": "384 350 136 49",
-    "points": "386,398 386,394 404,393 410,388 416,388 417,379 419,379 419,392 434,392 443,390 444,383 450,383 450,392 460,390 464,382 465,365 467,365 467,381 474,381 476,386 484,387 492,392 518,391 518,398"
-  },
-  {
-    "plate": "gb2",
-    "type": "DD",
-    "classes": [
-      "V e W"
-    ],
-    "caption": "V–W (profilo gruppo)",
-    "viewBox": "384 608 132 39",
-    "points": "386,645 387,641 402,640 411,637 421,638 430,641 450,640 455,635 459,639 464,637 468,630 470,613 472,613 472,630 478,631 482,637 494,640 513,640 512,645"
-  }
+// Campagna W@S Mediterraneo v1.13 — solo profili originali Navypedia, nessuna ricostruzione.
+// I percorsi sono estratti dagli hyperlink delle sezioni Standard scale images delle schede indicate.
+// Le immagini NON sono state scaricate/verificate nel browser autenticato: il caricamento avviene dal sito sorgente.
+// Classe o variante e anno del disegno sono sempre dichiarati. Nessuna sagoma sostitutiva.
+const BASE='https://www.navypedia.org';
+const ROWS=[
+  [
+    "italy",
+    "BB",
+    "Littorio",
+    "it_bb_vittorio_veneto",
+    "it_bb_24.gif",
+    "Littorio 1940"
+  ],
+  [
+    "italy",
+    "BB",
+    "Conte di Cavour",
+    "it_bb_giulio_cesare",
+    "it_bb_26.gif",
+    "Giulio Cesare 1940"
+  ],
+  [
+    "italy",
+    "BB",
+    "Andrea Doria",
+    "it_bb_duilio",
+    "it_bb_75.jpg",
+    "Andrea Doria 1942"
+  ],
+  [
+    "italy",
+    "BB",
+    "Andrea Doria",
+    "it_bb_duilio",
+    "it_bb_76.jpg",
+    "Caio Duilio 1942",
+    [
+      "CAIO DUILIO"
+    ]
+  ],
+  [
+    "italy",
+    "CV",
+    "Aquila",
+    "it_cv_aquila",
+    "it_cv_27.gif",
+    "Aquila (progetto)"
+  ],
+  [
+    "italy",
+    "CA",
+    "Trento",
+    "it_cr_trento",
+    "it_cr_55.gif",
+    "Trieste 1941"
+  ],
+  [
+    "italy",
+    "CA",
+    "Zara",
+    "it_cr_zara",
+    "it_cr_54.gif",
+    "Zara 1940"
+  ],
+  [
+    "italy",
+    "CA",
+    "Bolzano",
+    "it_cr_bolzano",
+    "it_cr_53.gif",
+    "Bolzano 1940"
+  ],
+  [
+    "italy",
+    "CL",
+    "Alberto di Giussano",
+    "it_cr_giussano",
+    "it_cr_62.gif",
+    "Alberto di Giussano 1941"
+  ],
+  [
+    "italy",
+    "CL",
+    "Luigi Cadorna",
+    "it_cr_cadorna",
+    "it_cr_61.gif",
+    "Luigi Cadorna 1941"
+  ],
+  [
+    "italy",
+    "CL",
+    "Raimondo Montecuccoli",
+    "it_cr_montecuccoli",
+    "it_cr_60.gif",
+    "Raimondo Montecuccoli 1940"
+  ],
+  [
+    "italy",
+    "CL",
+    "Duca d’Aosta",
+    "it_cr_duca_daosta",
+    "it_cr_78.jpg",
+    "Emanuele Filiberto Duca d’Aosta 1942"
+  ],
+  [
+    "italy",
+    "CL",
+    "Duca degli Abruzzi",
+    "it_cr_abruzzi",
+    "it_cr_58.gif",
+    "Giuseppe Garibaldi 1940"
+  ],
+  [
+    "italy",
+    "CL",
+    "Capitani Romani",
+    "it_cr_regolo",
+    "it_cr_73.jpg",
+    "Attilio Regolo 1942"
+  ],
+  [
+    "italy",
+    "CL",
+    "Capitani Romani",
+    "it_cr_regolo",
+    "it_cr_57.gif",
+    "Scipione Africano 1943",
+    [
+      "SCIPIONE AFRICANO"
+    ]
+  ],
+  [
+    "italy",
+    "DD",
+    "Leone",
+    "it_dd_leone",
+    "it_dd_20.gif",
+    "Tigre 1940"
+  ],
+  [
+    "italy",
+    "DD",
+    "Turbine",
+    "it_dd_turbine",
+    "it_dd_111.gif",
+    "Espero 1940"
+  ],
+  [
+    "italy",
+    "DD",
+    "Navigatori",
+    "it_dd_navigatori",
+    "it_dd_108.gif",
+    "Luca Tarigo 1940"
+  ],
+  [
+    "italy",
+    "DD",
+    "Dardo",
+    "it_dd_freccia",
+    "it_dd_107.gif",
+    "Dardo 1940"
+  ],
+  [
+    "italy",
+    "DD",
+    "Soldati",
+    "it_dd_soldati",
+    "it_dd_81.gif",
+    "Camicia Nera 1940"
+  ],
+  [
+    "italy",
+    "DD",
+    "Spica",
+    "it_dd_spica",
+    "it_dd_115.gif",
+    "Canopo 1940"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Sirena",
+    "it_ss_sirena",
+    "it_ss_62.gif",
+    "Ametista 1940"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Liuzzi",
+    "it_ss_liuzzi",
+    "it_ss_36.gif",
+    "Console Generale Liuzzi 1940"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Marconi",
+    "it_ss_marconi",
+    "it_ss_38.gif",
+    "Guglielmo Marconi 1940"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Acciaio",
+    "it_ss_acciaio",
+    "it_ss_71.gif",
+    "Acciaio 1942"
+  ],
+  [
+    "uk",
+    "BB",
+    "King George V",
+    "brit_bb1_king_george_v",
+    "brit_b3.gif",
+    "King George V 1940"
+  ],
+  [
+    "uk",
+    "BB",
+    "Nelson",
+    "brit_bb1_nelson",
+    "brit_b4.gif",
+    "Rodney 1939"
+  ],
+  [
+    "uk",
+    "BB",
+    "Queen Elizabeth",
+    "brit_bb1_queen_elizabeth",
+    "brit_b224.gif",
+    "Queen Elizabeth 1941",
+    [
+      "QUEEN ELIZABETH",
+      "VALIANT"
+    ]
+  ],
+  [
+    "uk",
+    "BB",
+    "Queen Elizabeth",
+    "brit_bb1_queen_elizabeth",
+    "brit_b17.gif",
+    "Barham 1941",
+    [
+      "BARHAM"
+    ]
+  ],
+  [
+    "uk",
+    "BB",
+    "Queen Elizabeth",
+    "brit_bb1_queen_elizabeth",
+    "brit_b45.jpg",
+    "Warspite 1942",
+    [
+      "WARSPITE"
+    ]
+  ],
+  [
+    "uk",
+    "BB",
+    "Queen Elizabeth",
+    "brit_bb1_queen_elizabeth",
+    "brit_b67.gif",
+    "Malaya 1937 (anteguerra)",
+    [
+      "MALAYA"
+    ]
+  ],
+  [
+    "uk",
+    "BB",
+    "Revenge",
+    "brit_bb1_royal_sovereign",
+    "brit_b19.gif",
+    "Royal Oak 1939"
+  ],
+  [
+    "uk",
+    "BC",
+    "Admiral",
+    "brit_bb1_hood",
+    "brit_b5.gif",
+    "Hood 1940"
+  ],
+  [
+    "uk",
+    "CV",
+    "Eagle",
+    "brit_cv1_eagle",
+    "brit_c15.gif",
+    "Eagle 1939"
+  ],
+  [
+    "uk",
+    "CV",
+    "Ark Royal",
+    "brit_cv1_ark_royal",
+    "brit_c11.gif",
+    "Ark Royal 1939"
+  ],
+  [
+    "uk",
+    "CV",
+    "Illustrious",
+    "brit_cv1_illustrious",
+    "brit_c10.gif",
+    "Victorious 1941"
+  ],
+  [
+    "uk",
+    "CV",
+    "Illustrious",
+    "brit_cv1_indomitable",
+    "brit_c178.gif",
+    "Indomitable 1943",
+    [
+      "INDOMITABLE"
+    ]
+  ],
+  [
+    "uk",
+    "CA",
+    "County (Kent)",
+    "brit_cr_kent",
+    "brit_c12.gif",
+    "Canberra 1940"
+  ],
+  [
+    "uk",
+    "CA",
+    "York",
+    "brit_cr_york",
+    "brit_c47.jpg",
+    "York 1941",
+    [
+      "YORK"
+    ]
+  ],
+  [
+    "uk",
+    "CA",
+    "York",
+    "brit_cr_exeter",
+    "brit_c6.gif",
+    "Exeter 1941",
+    [
+      "EXETER"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "C (Ceres)",
+    "brit_cr_ceres",
+    "brit_c44.gif",
+    "Coventry 1940",
+    [
+      "COVENTRY",
+      "CURLEW"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "C (Ceres)",
+    "brit_cr_ceres",
+    "brit_c99.gif",
+    "Curacoa 1941",
+    [
+      "CURACAO",
+      "CURACOA"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "Leander",
+    "brit_cr_leander",
+    "brit_c17.jpg",
+    "Ajax 1943"
+  ],
+  [
+    "uk",
+    "CL",
+    "Arethusa",
+    "brit_cr_arethusa",
+    "brit_c10.jpg",
+    "Arethusa 1942"
+  ],
+  [
+    "uk",
+    "CL",
+    "Arethusa",
+    "brit_cr_arethusa",
+    "brit_c8.jpg",
+    "Penelope 1940",
+    [
+      "PENELOPE"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "Town (Southampton)",
+    "brit_cr_southampton",
+    "brit_c46.jpg",
+    "Southampton 1940"
+  ],
+  [
+    "uk",
+    "CL",
+    "Town (Southampton)",
+    "brit_cr_southampton",
+    "brit_c103.gif",
+    "Sheffield 1943",
+    [
+      "SHEFFIELD"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "Town (Edinburgh)",
+    "brit_cr_edinburgh",
+    "brit_c12.jpg",
+    "Edinburgh 1941"
+  ],
+  [
+    "uk",
+    "CL",
+    "Town (Edinburgh)",
+    "brit_cr_edinburgh",
+    "brit_c13.jpg",
+    "Belfast 1943",
+    [
+      "BELFAST"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "Dido",
+    "brit_cr_dido",
+    "brit_c48.gif",
+    "Scylla 1942 (variante 114 mm)",
+    [
+      "SCYLLA",
+      "CHARYBDIS"
+    ]
+  ],
+  [
+    "uk",
+    "CL",
+    "Crown Colony (Fiji)",
+    "brit_cr_fiji",
+    "brit_c36.gif",
+    "Gambia 1943"
+  ],
+  [
+    "uk",
+    "DD",
+    "E",
+    "brit_dd_e_f",
+    "brit_d107.gif",
+    "Eclipse 1939"
+  ],
+  [
+    "uk",
+    "DD",
+    "F",
+    "brit_dd_e_f",
+    "brit_d52.gif",
+    "Qu’Appelle (ex Foxhound) 1943"
+  ],
+  [
+    "uk",
+    "DD",
+    "G",
+    "brit_dd_g_h_i",
+    "brit_d48.gif",
+    "Greyhound 1939"
+  ],
+  [
+    "uk",
+    "DD",
+    "I",
+    "brit_dd_g_h_i",
+    "brit_d21.gif",
+    "Icarus 1942",
+    [
+      "ICARUS"
+    ]
+  ],
+  [
+    "uk",
+    "DD",
+    "I",
+    "brit_dd_g_h_i",
+    "brit_d21.gif",
+    "Icarus 1942"
+  ],
+  [
+    "uk",
+    "DD",
+    "Tribal",
+    "brit_dd_tribal",
+    "brit_d19.jpg",
+    "Zulu 1941"
+  ],
+  [
+    "uk",
+    "DD",
+    "Tribal",
+    "brit_dd_tribal",
+    "brit_d21.jpg",
+    "Sikh 1942",
+    [
+      "SIKH"
+    ]
+  ],
+  [
+    "uk",
+    "DD",
+    "J",
+    "brit_dd_j_k_n",
+    "brit_d42.gif",
+    "Jupiter 1940"
+  ],
+  [
+    "uk",
+    "DD",
+    "J",
+    "brit_dd_j_k_n",
+    "brit_d51.jpg",
+    "Janus 1940",
+    [
+      "JANUS"
+    ]
+  ],
+  [
+    "uk",
+    "DD",
+    "K",
+    "brit_dd_j_k_n",
+    "brit_d42.gif",
+    "Jupiter 1940 (gruppo J/K)"
+  ],
+  [
+    "uk",
+    "DD",
+    "N",
+    "brit_dd_j_k_n",
+    "brit_d267.gif",
+    "Napier 1942"
+  ],
+  [
+    "uk",
+    "DD",
+    "L",
+    "brit_dd_l_m",
+    "brit_d40.gif",
+    "Lance 1942 (variante 102 mm)",
+    [
+      "GURKHA",
+      "LANCE",
+      "LIVELY",
+      "LEGION"
+    ]
+  ],
+  [
+    "uk",
+    "DD",
+    "P",
+    "brit_dd_o_p",
+    "brit_d39.gif",
+    "Pakenham 1943"
+  ],
+  [
+    "uk",
+    "SUB",
+    "T",
+    "brit_ss_t_prewar",
+    "brit_s84.gif",
+    "Triton 1940 (gruppo prebellico)",
+    [
+      "TRITON",
+      "TALISMAN",
+      "TAKU",
+      "TETRARCH",
+      "TORBAY",
+      "TRIUMPH",
+      "TRUANT",
+      "TRIDENT",
+      "THISTLE",
+      "THETIS",
+      "THUNDERBOLT",
+      "TRIBUNE",
+      "TRITON",
+      "TRIUMPH",
+      "TUNA",
+      "TIGRIS"
+    ]
+  ]
 ];
-export function shipProfile(unit, className){
- const name=String(unit?.nome||'').trim().toUpperCase().replace(/\s*\((?:I|II|III|AA)\)$/,'');
- const type=String(unit?.tipo||'').trim().toUpperCase();
- if(type==='BB'&&['VITTORIO VENETO','LITTORIO'].includes(name))return { image:'./assets/naval/vittorio-veneto.png',caption:name==='LITTORIO'?'Littorio — profilo Vittorio Veneto (disegno fornito)':'Vittorio Veneto — disegno fornito',source:null };
- const matches=PROFILES.filter(p=>p.type===type&&p.classes.includes(className));
- const p=type==='BB'&&className==='Queen Elizabeth' ? matches.find(p=>p.caption===({WARSPITE:'Warspite',MALAYA:'Malaya','QUEEN ELIZABETH':'Queen Elizabeth–Valiant',VALIANT:'Queen Elizabeth–Valiant'}[name])) : matches[0];
- if(!p)return null;
- return {...p,source:PLATES[p.plate]};
+const PENDING=[
+  [
+    "italy",
+    "CV",
+    "Sparviero",
+    "it_cv_sparviero"
+  ],
+  [
+    "italy",
+    "DD",
+    "Nazario Sauro",
+    "it_dd_sauro"
+  ],
+  [
+    "italy",
+    "DD",
+    "Folgore",
+    "it_dd_folgore"
+  ],
+  [
+    "italy",
+    "DD",
+    "Maestrale",
+    "it_dd_maestrale"
+  ],
+  [
+    "italy",
+    "DD",
+    "Oriani",
+    "it_dd_oriani"
+  ],
+  [
+    "italy",
+    "DD",
+    "Dubrovnik",
+    "it_dd_premuda2"
+  ],
+  [
+    "italy",
+    "DD",
+    "Orsa (Pegaso)",
+    "it_dd_pegaso"
+  ],
+  [
+    "italy",
+    "DD",
+    "Ciclone",
+    "it_dd_ciclone"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Argonauta",
+    "it_ss_argonauta2"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Perla",
+    "it_ss_perla"
+  ],
+  [
+    "italy",
+    "SUB",
+    "Adua",
+    "it_ss_adua"
+  ],
+  [
+    "uk",
+    "BC",
+    "Renown",
+    "brit_bb1_renown16"
+  ],
+  [
+    "uk",
+    "CL",
+    "C (Carlisle)",
+    "brit_cr_carlisle"
+  ],
+  [
+    "uk",
+    "CL",
+    "Leander (Perth)",
+    "brit_cr_perth"
+  ],
+  [
+    "uk",
+    "CL",
+    "Town (Gloucester)",
+    "brit_cr_gloucester"
+  ],
+  [
+    "uk",
+    "CL",
+    "Crown Colony (Ceylon)",
+    "brit_cr_fiji"
+  ],
+  [
+    "uk",
+    "DD",
+    "D",
+    "brit_dd_c_d"
+  ],
+  [
+    "uk",
+    "DD",
+    "H",
+    "brit_dd_g_h_i"
+  ],
+  [
+    "uk",
+    "SUB",
+    "U",
+    "brit_ss_u_war_1940_1941"
+  ],
+  [
+    "uk",
+    "SUB",
+    "T",
+    "brit_ss_t_war_1940"
+  ],
+  [
+    "usa",
+    "CV",
+    "Wasp",
+    "us_cv_wasp"
+  ]
+];
+function nameOf(unit){return String(unit?.nome||'').trim().toUpperCase().replace(/\s*\((?:I|II|III|AA)\)$/,'');}
+function pageOf(r){return BASE+'/ships/'+r[0]+'/'+r[3]+'.htm';}
+export function shipProfile(unit,className){
+ const name=nameOf(unit),type=String(unit?.tipo||'').trim().toUpperCase();
+ const list=ROWS.filter(r=>r[1]===type&&r[2]===className);
+ const row=list.find(r=>r[6]?.includes(name))||list.find(r=>!r[6]);
+ if(row)return {image:BASE+'/storage/images/ships/'+row[0]+'/'+row[4],caption:row[5],page:pageOf(row),className};
+ const record=PENDING.find(r=>r[1]===type&&r[2]===className)||list[0];
+ if(record)return {image:null,caption:className,page:pageOf(record),className};
+ return null;
 }

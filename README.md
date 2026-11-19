@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.12 (Nhost)
+# Campagna W@S Mediterraneo — v1.13 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -12,7 +12,14 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
 
-## Novità v1.12
+## Novità v1.13
+- Rimosse integralmente dal frontend le sagome vettoriali della v1.12 e i riferimenti alle tavole non approvate. Repertorio esclusivamente Navypedia: 65 associazioni (51 classi con almeno un profilo associato), con didascalia originale nave/anno e link alla scheda. Se manca un profilo della variante corretta, non viene sostituito con uno fittizio.
+- Fonti esclusive: https://www.navypedia.org/ships/italy/it_index.htm, https://www.navypedia.org/ships/uk/uk_index.htm, https://www.navypedia.org/ships_index.htm. Link immagine estratti da Standard scale images; il sito sorgente mantiene il controllo dei file, non redistribuiti nel repository. I file non sono stati scaricabili nell'ambiente di sviluppo; disponibilità effettiva del singolo GIF/JPG e uso inline da verificare nel browser. Se fallisce il caricamento, appare un link alla scheda, senza icona rotta.
+- Le sagome indicate sono riferimenti reali di classe o sottogruppo e non una certificazione dell'allestimento di ogni singola nave nel turno corrente. Sono inclusi, se indicati, disegni 1937/1939 e progetti non completati. I riferimenti specifici per varianti hanno precedenza.
+- Classi ancora non documentate o schede non accessibili rimangono prive di immagine. Nessun dato privato o modifica Nhost. Le richieste delle immagini esterne non includono referrer o credenziali.
+- Nessuna modifica a testata, bandiere, icone NP5/AE1 e regole di gioco.
+
+## Novità v1.12 (superata dalla v1.13; sagome ritirate)
 - Primo repertorio di profili laterali: 35 sagome SVG semplificate ricavate manualmente da tavole di riconoscimento navale statunitensi del 1943, con associazione a 43 classi storiche e ai relativi gruppi. Fonte per ogni profilo visibile nel catalogo; le immagini originali non vengono ripubblicate e l'app non carica risorse remote per il nuovo repertorio.
 - La sagoma documenta il profilo della classe/gruppo, non l'allestimento esatto di ogni nave nel singolo turno. Non sono disegni costruttivi né sagome in scala reciproca. Le varianti Queen Elizabeth/Valiant, Warspite e Malaya sono distinte; Barham non ha un profilo in questo lotto. Vittorio Veneto e Littorio conservano il disegno fornito dal giocatore.
 - Fonti: [FM 30-50, settembre 1943 (Regia Marina)](https://www.lonesentry.com/blog/italian-navy-ship-silhouettes.html); U.S. Army–Navy Journal of Recognition, novembre 1943 ([tavola BB/CV/CA](https://www.coatneyhistory.com/RNBBsCVs.jpg), [tavola CL/DD](https://www.coatneyhistory.com/RNCAsCLsDDs.jpg)); scansioni consultate solo come riferimento, tracciati vettoriali originali.
