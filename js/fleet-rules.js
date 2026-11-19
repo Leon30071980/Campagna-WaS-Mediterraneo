@@ -43,3 +43,31 @@ export function duplicateHull(state) {
   }
   return null;
 }
+
+// v1.20 — stati di presentazione. Non alterano isAvailable né le regole di combattimento.
+export function catalogShipStatus(unit,losses,turnIndex){
+ const year=CAMPAIGN_YEARS[Number(turnIndex)];
+ const loss=shipStatus(unit.nome,losses,turnIndex);
+ if(loss==='affondata')return loss;
+ if(Number(unit.anno)>year)return 'costruzione';
+ if(loss==='riparazione')return loss;
+ if(unit.ritirato&&year>=Number(unit.ritirato))return 'ritirata';
+ return 'attiva';
+}
+
+export function fleetStatusTotals(units,losses,turnIndex){
+ const year=CAMPAIGN_YEARS[Number(turnIndex)];
+ const groups=new Map(),lists={attiva:[],riparazione:[],affondata:[],costruzione:[]};
+ for(const unit of units||[]){const key=shipBase(unit.nome);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(unit);}
+ for(const versions of groups.values()){
+  const eligible=versions.find(u=>Number(u.anno)<=year&&!(u.ritirato&&year>=Number(u.ritirato)));
+  const loss=shipStatus(versions[0].nome,losses,turnIndex);
+  if(loss==='affondata'||loss==='riparazione'){lists[loss].push(eligible||versions[0]);continue;}
+  if(eligible){lists.attiva.push(eligible);continue;}
+  if(versions.every(u=>Number(u.anno)>year)){
+   const first=versions.reduce((a,b)=>Number(a.anno)<=Number(b.anno)?a:b);
+   lists.costruzione.push(first);
+  }
+ }
+ return lists;
+}

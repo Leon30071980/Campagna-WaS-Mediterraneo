@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.19 (Nhost)
+# Campagna W@S Mediterraneo — v1.20 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.20
+- Nuovo stato automatico **In costruzione** (anno di entrata in servizio maggiore dell'anno del turno corrente); icona A blu, scafo su scalo di varo, identica alla proposta approvata. Le icone Operativa, In riparazione e Persa restano quelle originali.
+- Catalogo Naviglio di entrambe le fazioni: filtro Stato combinabile con Tipo Nave e ricerca; ordinamento Stato per etichetta. Le versioni ritirate sono riconoscibili come Ritirata (solo catalogo, senza nuova icona), per non confonderle con le operative.
+- Riepilogo: quattro stati, conteggio per scafo mediante la stessa funzione shipBase esistente. Gli ammodernamenti futuri non incrementano il totale costruzioni se una versione dello scafo è già entrata in servizio. Le perdite definitive prevalgono, le riparazioni e le disponibilità mantengono le regole precedenti.
+- Stato calcolato solo nel frontend, aggiornato al cambio di turno. Nessuna modifica ai dati, ai punti, alla logica di disponibilità del porto, al motore o a Nhost.
 
 ## Novità v1.19
 - Ripristinata la poppa del profilo locale Acciaio: tratto affusolato continuo e non più coincidente con la linea di galleggiamento. Correzione manuale del contorno in riferimento alla tavola del giocatore (Acciaio 1942); non è una nuova scansione o una ricostruzione integrale.
