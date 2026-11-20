@@ -151,6 +151,10 @@ const ALLIED_PROFILES=Object.freeze({
     "file": "cl_sydney",
     "length": 171.4
   },
+  "CV|Wasp": {
+    "file": "cv_wasp",
+    "length": 225.9
+  },
   "CV|Ark Royal": {
     "file": "cv_ark_royal",
     "length": 240
@@ -246,6 +250,8 @@ const ALLIED_PROFILES=Object.freeze({
 });
 // v1.35 — la variante per singolo scafo ha precedenza sul profilo di classe.
 const ALLIED_NAMED=Object.freeze({
+  "CV|WASP": {"file":"cv_wasp","length":225.9},
+  "CV|USS WASP": {"file":"cv_wasp","length":225.9},
   "BB|QUEEN ELIZABETH": {
     "file": "bb_queen_elizabeth",
     "length": 196.8,
@@ -298,13 +304,13 @@ function alliedHullName(unit){return String(unit?.nome||'').trim().toUpperCase()
 const VERSION_PROFILES=Object.freeze({});
 export function localShipProfile(unit,className){
  const exact=VERSION_PROFILES[String(unit?.tipo||'').trim().toUpperCase()+'|'+String(unit?.nome||'').trim().toUpperCase()];
- if(exact)return {image:'./assets/naval/profiles/'+exact.folder+'/'+exact.file+'.webp?v=1.39',caption:className+' · '+exact.caption+' · '+exact.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:exact.length};
+ if(exact)return {image:'./assets/naval/profiles/'+exact.folder+'/'+exact.file+'.webp?v=1.40',caption:className+' · '+exact.caption+' · '+exact.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:exact.length};
  const type=String(unit?.tipo||'').trim().toUpperCase();
  const key=type+'|'+className;
  const allied=ALLIED_NAMED[type+'|'+alliedHullName(unit)]||ALLIED_PROFILES[key];
- if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.39',caption:className+(allied.variant?' · profilo '+allied.variant:'')+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
+ if(allied)return {image:'./assets/naval/profiles/royal/'+allied.file+'.webp?v=1.40',caption:className+(allied.variant?' · profilo '+allied.variant:'')+' · '+allied.length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length:allied.length};
  if(!Object.hasOwn(LOCAL_CLASSES,key))return null;
  const file=LOCAL_CLASSES[key];
  const length=LENGTHS[file];
- return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.39',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
+ return {image:'./assets/naval/profiles/axis/'+file+'.webp?v=1.40',caption:className+' · '+length.toLocaleString('it-IT')+' m',className,local:true,scaled:true,page:null,length};
 }
