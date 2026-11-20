@@ -14,10 +14,10 @@ export const AXIS_AIRCRAFT = Object.freeze({
     "match": "exact"
   },
   "BF109G": {
-    "slug": "bf109g",
-    "id": "bf-109g-6",
-    "label": "Bf 109 G-6",
-    "match": "family"
+    "slug": "bf109g14as",
+    "id": "bf-109g-14as",
+    "label": "Bf 109 G-14/AS",
+    "match": "variant"
   },
   "CR42": {
     "slug": "cr42",
@@ -68,9 +68,9 @@ export const AXIS_AIRCRAFT = Object.freeze({
     "match": "exact"
   },
   "RE2001OR": {
-    "slug": "re2001or",
-    "id": "re_2001_serie1",
-    "label": "Re.2001 serie 1",
+    "slug": "re2001cb",
+    "id": "re_2001_cb",
+    "label": "Re.2001 CB",
     "match": "variant"
   },
   "FW200": {

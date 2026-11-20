@@ -26,3 +26,10 @@ assert.equal(aircraftProfile({nome:'SWORDFISH MK.I'},'axis'),null);
 assert.equal(aircraftProfile({nome:'MC202'},'allies'),null);
 assert.equal(aircraftProfile({nome:'MC202'},'unknown'),null);
 console.log(checked+' associazioni aerei controllate.');
+
+// Le due varianti approvate condividono il file, non duplicano gli asset.
+for(const [alias,original] of [['BF109G','BF109G14AS'],['RE2001OR','RE2001CB']]){
+ const p=aircraftProfile({nome:alias},'axis'),q=aircraftProfile({nome:original},'axis');
+ assert(p.image && p.image===q.image,alias);
+ assert.equal(p.match,'variant',alias);
+}

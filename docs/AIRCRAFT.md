@@ -1,4 +1,4 @@
-# Profili aerei — v1.43
+# Profili aerei — v1.44
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
@@ -13,7 +13,7 @@ Sono state importate 16 miniature Axis (PNG forniti dal giocatore, convertiti in
 Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit contain. Usare immagini uniformi, senza deformare o capovolgere i contrassegni. Per associare un file autorizzato, aggiungere la voce al registro ASSETS usando lo slug indicato e i campi file, credit, license, source. Se assente o corrotto, il catalogo non mostra icone rotte.
 
 ## Stato importazione
-Axis: 16/20 miniature locali; mancanti Ba.65 M, Bf 109G, Re.2001 OR, CANT Z.506. Allies: 0/19.
+Axis: 18/20 modelli coperti da 16 immagini locali; mancanti Ba.65 M e CANT Z.506. Allies: 0/19.
 
 ## Riferimenti identificati
 ### AXIS
@@ -22,7 +22,7 @@ Axis: 16/20 miniature locali; mancanti Ba.65 M, Bf 109G, Re.2001 OR, CANT Z.506.
 |---|---|---|---|
 | BA65M | ba65m.webp | [Ba.65 (K.14) L](https://wiki.warthunder.com/unit/ba_65_k14_l) | variant |
 | JU87R2 | ju87r2.webp | [Ju 87 R-2 italiano](https://wiki.warthunder.com/unit/ju-87r-2_italy) | exact |
-| BF109G | bf109g.webp | [Bf 109 G-6](https://wiki.warthunder.com/unit/bf-109g-6) | family |
+| BF109G | bf109g14as.webp | [Bf 109 G-14/AS](https://wiki.warthunder.com/unit/bf-109g-14as) | variant |
 | CR42 | cr42.webp | [CR.42](https://wiki.warthunder.com/unit/fiat_cr42_italy) | exact |
 | MC202 | mc202.webp | [C.202](https://wiki.warthunder.com/unit/mc-202_italy) | exact |
 | MC205 | mc205.webp | [C.205 serie 1](https://wiki.warthunder.com/unit/mc-205_serie1) | family |
@@ -31,7 +31,7 @@ Axis: 16/20 miniature locali; mancanti Ba.65 M, Bf 109G, Re.2001 OR, CANT Z.506.
 | FW190A6 | fw190a6.webp | [Fw 190 A-5](https://wiki.warthunder.com/unit/fw-190a-5_cannons) | variant |
 | RE2000 | re2000.webp | [Re.2000 serie 1](https://wiki.warthunder.com/unit/re_2000_int) | family |
 | RE2001CB | re2001cb.webp | [Re.2001 CB](https://wiki.warthunder.com/unit/re_2001_cb) | exact |
-| RE2001OR | re2001or.webp | [Re.2001 serie 1](https://wiki.warthunder.com/unit/re_2001_serie1) | variant |
+| RE2001OR | re2001cb.webp | [Re.2001 CB](https://wiki.warthunder.com/unit/re_2001_cb) | variant |
 | FW200 | fw200.webp | [Fw 200 C-1](https://wiki.warthunder.com/unit/fw_200c_1) | family |
 | P108B | p108b.webp | [P.108B serie 1](https://wiki.warthunder.com/unit/p_108b_serie1) | family |
 | BR20 | br20.webp | [B.R.20M M1](https://wiki.warthunder.com/unit/br_20m_m1) | family |
