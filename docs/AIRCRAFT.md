@@ -1,8 +1,8 @@
-# Profili aerei — v1.42
+# Profili aerei — v1.43
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
-Le miniature non sono ancora state importate: il download dal server di War Thunder non è riuscito e le [condizioni Gaijin](https://legal.gaijin.net/contentrules) limitano la redistribuzione di risorse grafiche. Le schede ufficiali sono collegate, non incorporate. Per l'importazione usare solo immagini con diritto di ripubblicazione verificato, conservando la provenienza e l'attribuzione.
+Sono state importate 16 miniature Axis (PNG forniti dal giocatore, convertiti in WebP a 512 × 256 pixel). Gli altri modelli mantengono i riferimenti alle schede: l’app non scarica immagini da host esterni. Fonte: War Thunder / Gaijin; diritto di ripubblicazione non verificato indipendentemente. Consultare le [condizioni Gaijin](https://legal.gaijin.net/contentrules).
 
 ## Percorsi
 - `assets/axis/aircraft/`: immagini Axis.
@@ -12,10 +12,13 @@ Le miniature non sono ancora state importate: il download dal server di War Thun
 
 Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit contain. Usare immagini uniformi, senza deformare o capovolgere i contrassegni. Per associare un file autorizzato, aggiungere la voce al registro ASSETS usando lo slug indicato e i campi file, credit, license, source. Se assente o corrotto, il catalogo non mostra icone rotte.
 
+## Stato importazione
+Axis: 16/20 miniature locali; mancanti Ba.65 M, Bf 109G, Re.2001 OR, CANT Z.506. Allies: 0/19.
+
 ## Riferimenti identificati
 ### AXIS
 
-| Chiave | File futuro | Scheda | Corrispondenza |
+| Chiave | File locale previsto | Scheda | Corrispondenza |
 |---|---|---|---|
 | BA65M | ba65m.webp | [Ba.65 (K.14) L](https://wiki.warthunder.com/unit/ba_65_k14_l) | variant |
 | JU87R2 | ju87r2.webp | [Ju 87 R-2 italiano](https://wiki.warthunder.com/unit/ju-87r-2_italy) | exact |
@@ -40,7 +43,7 @@ Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit c
 
 ### ALLIES
 
-| Chiave | File futuro | Scheda | Corrispondenza |
+| Chiave | File locale previsto | Scheda | Corrispondenza |
 |---|---|---|---|
 | B25JMITCHELL | b25j.webp | [B-25J-1](https://wiki.warthunder.com/unit/b_25j_1) | family |
 | BLENHEIMMKIV | blenheim-mkiv.webp | [Blenheim Mk IV](https://wiki.warthunder.com/unit/blenheim_mkiv) | exact |

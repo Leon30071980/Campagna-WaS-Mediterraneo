@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.42 (Nhost)
+# Campagna W@S Mediterraneo — v1.43 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.43
+- Importate 16 miniature Axis fornite dal giocatore, convertite da PNG a WebP senza modificare dimensioni (512 × 256), orientamento o trasparenza. File locali in assets/axis/aircraft/, attribuzione e fonte nei registri.
+- I quattro modelli Axis non forniti (Ba.65 M, Bf 109G, Re.2001 OR, CANT Z.506) mantengono i riferimenti già presenti. Le varianti di riferimento restano esplicitamente indicate. Allies invariato.
+- Diritti di ripubblicazione delle miniature War Thunder non verificati indipendentemente. Nessuna modifica al database o alle regole.
 
 ## Novità v1.42
 - Catalogo Aerei: layout comune per miniature locali a colori, stessa dimensione e visualizzazione responsive; riferimenti pubblici a War Thunder e nota esplicita per le varianti diverse.

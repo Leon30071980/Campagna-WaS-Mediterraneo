@@ -124,4 +124,101 @@ export const AXIS_AIRCRAFT = Object.freeze({
 });
 // Aggiungere soltanto file locali verificati e autorizzati, con provenienza e licenza.
 // Esempio di struttura della voce: slug: {file:'slug.webp',credit:'Autore',license:'Licenza o permesso',source:'URL della fonte'}.
-export const AXIS_AIRCRAFT_ASSETS = Object.freeze({});
+export const AXIS_AIRCRAFT_ASSETS = Object.freeze({
+  "ju87r2": {
+    "file": "ju87r2.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/ju-87r-2_italy"
+  },
+  "cr42": {
+    "file": "cr42.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/fiat_cr42_italy"
+  },
+  "mc202": {
+    "file": "mc202.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/mc-202_italy"
+  },
+  "mc205": {
+    "file": "mc205.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/mc-205_serie1"
+  },
+  "bf109g14as": {
+    "file": "bf109g14as.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/bf-109g-14as"
+  },
+  "bf110e": {
+    "file": "bf110e.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/bf-110f-2"
+  },
+  "fw190a6": {
+    "file": "fw190a6.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/fw-190a-5_cannons"
+  },
+  "re2000": {
+    "file": "re2000.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/re_2000_int"
+  },
+  "re2001cb": {
+    "file": "re2001cb.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/re_2001_cb"
+  },
+  "fw200": {
+    "file": "fw200.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/fw_200c_1"
+  },
+  "p108b": {
+    "file": "p108b.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/p_108b_serie1"
+  },
+  "br20": {
+    "file": "br20.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/br_20m_m1"
+  },
+  "he111h6": {
+    "file": "he111h6.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/he-111h-6"
+  },
+  "ju88a4": {
+    "file": "ju88a4.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/ju-88a-4"
+  },
+  "z1007": {
+    "file": "z1007.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/z_1007_bis_serie3"
+  },
+  "sm79": {
+    "file": "sm79.webp",
+    "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/sm_79_1941_italy"
+  }
+});
