@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.36 (Nhost)
+# Campagna W@S Mediterraneo — v1.37 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,9 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.37
+- Naviglio: pulsante Rimuovi sulle configurazioni future espanse. Si annulla prima l’ultima versione programmata, senza eliminare lo scafo; se il ritiro precedente coincide con l’ingresso della versione cancellata, viene ripristinata la scadenza finale ereditata. Sono protette le configurazioni già entrate in servizio o referenziate. Salvataggio tramite mutazione Nhost esistente, nessuna migrazione SQL.
 
 ## Novità v1.36
 - Naviglio Axis/Allies: un solo scafo per riga; versioni espandibili, attuale/passata/futura/annullata. Filtri e conteggi per scafo.

@@ -119,3 +119,26 @@ export function catalogAircraftStatus(unit,turnIndex){
  if(unit.ritirato&&year>=Number(unit.ritirato))return 'obsoleto';
  return 'attiva';
 }
+
+// v1.37 — annullamento sicuro di una configurazione non ancora entrata in servizio.
+function containsExactReference(node,name){
+ if(node===name)return true;
+ if(!node||typeof node!=='object')return false;
+ return Object.entries(node).some(([key,value])=>key===name||containsExactReference(value,name));
+}
+export function planCancelModernization(state,name,turnIndex,group){
+ const versions=group||hullGroups(state?.navi).get(shipBase(name))||[];
+ const current=versions.find(u=>u.nome===name),year=CAMPAIGN_YEARS[Number(turnIndex)];
+ if(!current||versions.length<2||versions[0]===current)return {reason:'La configurazione iniziale non può essere rimossa.'};
+ if(!Number.isFinite(Number(current.anno))||year===undefined||Number(current.anno)<=year)return {reason:'Configurazione già entrata in servizio: deve essere conservata.'};
+ if(versions.at(-1)!==current)return {reason:'Rimuovere prima l’ammodernamento successivo.'};
+ if(['porto','perdite','storico','battaglia'].some(key=>containsExactReference(state?.[key],name)))return {reason:'Configurazione già referenziata nel Porto, nelle perdite o nello storico.'};
+ const prev=versions.at(-2);
+ // Un ritiro coincidente con l'entrata della versione rimossa è la fine della
+ // configurazione precedente; ripristinare la data finale ereditata.
+ // Un ritiro antecedente è invece conservato (possibile intervallo storico).
+ const restore=Number(prev.ritirato)===Number(current.anno);
+ const previous={...prev,ritirato:restore?(current.ritirato??null):(prev.ritirato??null)};
+ const reason=validateHullSchedule([...versions.slice(0,-2),previous]);
+ return reason?{reason}:{previous,restore,remove:name};
+}
