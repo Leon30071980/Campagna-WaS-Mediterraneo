@@ -85,13 +85,13 @@ body[data-side] .naval-state .naval-construction-icon{width:70px;height:29px;}
 body[data-side] nav.tabs{gap:8px;}
 body[data-side] nav.tabs button{gap:10px;min-height:58px;padding:9px 8px;border-radius:7px;color:var(--ink);font-weight:700;}
 body[data-side] nav.tabs button .command-tab-icon{display:block;flex:none;background-color:currentColor;width:calc(var(--icon-w)*var(--icon-scale));height:calc(var(--icon-h)*var(--icon-scale));--icon-scale:.72px;mask-image:var(--icon-mask);mask-repeat:no-repeat;mask-position:center;mask-size:contain;-webkit-mask-image:var(--icon-mask);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:contain;}
-body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.38');}
-body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.38');}
-body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.38');}
-body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.38');}
-body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.38');}
-body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.38');}
-body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.38');}
+body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/porto.png?v=1.39');}
+body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../assets/naval/menu-b/battaglia.png?v=1.39');}
+body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../assets/naval/menu-b/navi.png?v=1.39');}
+body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../assets/naval/menu-b/aerei.png?v=1.39');}
+body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../assets/naval/menu-b/storico.png?v=1.39');}
+body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/gestione.png?v=1.39');}
+body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../assets/naval/menu-b/regole.png?v=1.39');}
 body[data-side] nav.tabs button[aria-selected="true"]{color:#11242e;}
 
 /* Palette esplicita per i due temi, anche con la preferenza di sistema. */
@@ -262,3 +262,13 @@ body[data-side] .catalog-table .nhost-catalog-actions{white-space:normal;}
 /* v1.37 — motivazione del blocco rimozione */
 body[data-side] .hull-version-row .nhost-catalog-actions .hull-version-tag{white-space:normal;margin-top:4px;max-width:220px;}
 @media(max-width:960px){body[data-side] .hull-version-row .nhost-catalog-actions .hull-version-tag{flex-basis:100%;max-width:none;}}
+
+/* v1.39 — campagna attiva e copie di ripristino */
+body[data-side] .active-save-status{display:grid;gap:4px;border:1px solid var(--line-soft);padding:12px;margin:12px 0 6px;border-radius:6px;background:var(--surface2);}
+body[data-side] .active-save-status strong{font-size:clamp(16px,1.5vw,21px);overflow-wrap:anywhere;}
+body[data-side] .snapshot-section-title{margin:16px 0 4px;font-size:15px;}
+body[data-side] .snapshot-row{border-top:1px solid var(--line-soft);display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 0;}
+body[data-side] .snapshot-info{flex:1 1 230px;min-width:0;display:grid;gap:3px;overflow-wrap:anywhere;}
+body[data-side] .snapshot-season{font-size:13px;}
+body[data-side] .snapshot-actions{display:flex;gap:6px;flex-wrap:wrap;}
+@media(max-width:600px){body[data-side] .snapshot-actions{width:100%;}body[data-side] .snapshot-actions .btn{flex:1 1 90px;min-height:44px;}body[data-side] .snapshot-info{flex-basis:100%;}}

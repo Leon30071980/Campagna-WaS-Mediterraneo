@@ -1,12 +1,12 @@
-import { localShipProfile } from './local-ship-profiles.js?v=1.38';
-import { shipProfile } from './ship-profiles.js?v=1.38';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.38';
-import { historicalClass } from './historical-classes.js?v=1.38';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.38';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.38';
-import { generateBattle } from './battle-engine.js?v=1.38';
-import { SEASONS } from './config.js?v=1.38';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.38';
+import { localShipProfile } from './local-ship-profiles.js?v=1.39';
+import { shipProfile } from './ship-profiles.js?v=1.39';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.39';
+import { historicalClass } from './historical-classes.js?v=1.39';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.39';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.39';
+import { generateBattle } from './battle-engine.js?v=1.39';
+import { SEASONS } from './config.js?v=1.39';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.39';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -96,7 +96,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.38';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={sunk:'np5-v111.webp',aircraft:'ae1-v111.webp',construction:'construction-v120.svg'};img.src='./assets/naval/'+(assets[file]||file+'.png')+'?v=1.39';if(file==='aircraft')img.classList.add('naval-aircraft-icon');if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -458,7 +458,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/naval/allies/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.38':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/naval/allies/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.39':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
@@ -562,7 +562,7 @@ async function storeBattle(battle){
  saving=true;
  try{
   const result=await saveBattle(battle,model.stateRevision);
-  model.state=result.state;model.stateRevision=result.revision;
+  model.state=result.state;model.stateRevision=result.revision;model.updatedAt=result.updatedAt??model.updatedAt;
   toast('Battaglia salvata su Nhost.');
  }catch(e){toast(e.message,true);throw e;}
  finally{saving=false;try{await refresh();}catch(e){toast(e.message,true);}}
@@ -805,6 +805,37 @@ function renderHistory(p){
  if(!reports.length)note(p,'I rapporti con la composizione delle due flotte compariranno qui dopo entrambe le conclusioni.');
 }
 // v0.7: catalogo pubblico dei soli NOMI. Gli snapshot veri rimangono privati.
+// v1.39 — il catalogo non espone l'origine degli snapshot. Non attribuire
+// un'origine certa ai vecchi archivi: il prefisso Manuale è riservato alla UI.
+const MANUAL_PREFIX='[Manuale] ';
+const SNAPSHOT_LABEL_MAX=80;
+function snapshotKind(save){
+ const label=String(save?.label||'').trim();
+ if(label.startsWith(MANUAL_PREFIX))return 'manual';
+ if(/^(?:\[auto(?:matico)?\]|auto(?:matico)?\s*[:·—-]|backup\s+automatico\b|salvataggio\s+automatico\b|backup\s+pre[-\s]?(?:reset|ripristino|restore|load)\b|auto[-\s]?save\b)/i.test(label))return 'automatic';
+ return 'legacy';
+}
+function snapshotDisplayLabel(save){
+ const label=String(save?.label||'');
+ return snapshotKind(save)==='manual'?label.trim().slice(MANUAL_PREFIX.length):label;
+}
+function manualSnapshotLabel(name){
+ const label=String(name||'').trim();
+ if(!label||label.length>SNAPSHOT_LABEL_MAX-MANUAL_PREFIX.length)return null;
+ return MANUAL_PREFIX+label;
+}
+function snapshotTimestamp(value){
+ if(!value)return 'Non disponibile';
+ const date=new Date(value);
+ if(!Number.isFinite(date.getTime()))return 'Non disponibile';
+ return new Intl.DateTimeFormat('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(date);
+}
+function groupSnapshots(saves){
+ const groups={manual:[],automatic:[],legacy:[]};
+ for(const save of saves||[])groups[snapshotKind(save)].push(save);
+ return groups;
+}
+
 function renderManagement(p) {
   const connection=card('Connessione Nhost');
   const cb=make('div','nhost-card-body');
@@ -812,17 +843,24 @@ function renderManagement(p) {
   const warning=make('div','nhost-status nhost-synced','Dati privati Nhost · Le formazioni avversarie diventano consultabili soltanto nei rapporti delle battaglie concluse. Le due fazioni avanzano insieme.');cb.append(warning);
   connection.append(cb);p.append(connection);
   const pending=model.pendingRequest;
-  const intro=card('Gestione campagna');
+  const intro=card('Campagna attiva','Salvataggio automatico');
   const ib=make('div','nhost-card-body');
-  note(ib,'I salvataggi comprendono entrambe le flotte, porti, perdite, battaglie, punteggi e rapporti. Il caricamento e il reset richiedono la conferma di Axis e Allies.');
-  summary(ib,[['Campagna',model.campaign.name],['Stagione attuale',SEASONS[model.campaign.turn_index]||'—'],['Salvataggi',model.saves.length]]);
+  const groups=groupSnapshots(model.saves);
+  note(ib,'La campagna attiva è salvata su Nhost a ogni modifica confermata. Non occorre creare un punto di ripristino per uscire o riprendere la partita.');
+  summary(ib,[['Campagna',model.campaign.name],['Stagione attuale',SEASONS[model.campaign.turn_index]||'—'],['Punti di ripristino',model.saves.length]]);
+  const last=make('div','active-save-status');
+  text(last,'span','Ultima modifica registrata da Nhost · '+(model.side==='axis'?'Regia Marina':'Royal Navy'),'k');
+  text(last,'strong',snapshotTimestamp(model.updatedAt),'num');
+  text(last,'span','Ora del dispositivo · revisione '+String(model.stateRevision??'—'),'note');
+  ib.append(last);
+  note(ib,'Il timestamp riguarda i dati della propria fazione, non quelli privati dell’avversario.');
   intro.append(ib);p.append(intro);
 
   if(pending){
     const save=model.saves.find(x=>x.snapshot_id===pending.snapshot_id);
     const box=card('Richiesta in attesa della seconda fazione','Conferma obbligatoria');
     const body=make('div','nhost-card-body');
-    note(body,'Operazione proposta da '+(pending.requested_by==='axis'?'Regia Marina':'Royal Navy')+': '+(save?.label||'Salvataggio')+'.');
+    note(body,'Operazione proposta da '+(pending.requested_by==='axis'?'Regia Marina':'Royal Navy')+': '+(save?snapshotDisplayLabel(save):'Punto di ripristino')+'.');
     summary(body,[['Regia Marina',pending.axis_approved?'Ha confermato':'In attesa'],['Royal Navy',pending.allies_approved?'Ha confermato':'In attesa']]);
     const buttons=make('div','nhost-actions');
     const ownApproved=model.side==='axis'?pending.axis_approved:pending.allies_approved;
@@ -841,44 +879,69 @@ function renderManagement(p) {
     body.append(buttons);box.append(body);p.append(box);
   }
 
-  const sav=card('Salvataggi della campagna');const sb=make('div','nhost-card-body');
+  const create=card('Crea punto di ripristino');const createBody=make('div','nhost-card-body');
+  note(createBody,'Copia congelata dell’intera campagna: entrambe le flotte, porti, perdite, battaglie, punteggi e rapporti. Le modifiche successive non aggiornano questa copia.');
   const newRow=make('div','nhost-actions');const name=make('input','btn sm');
-  name.type='text';name.maxLength=80;name.placeholder='Nome del nuovo salvataggio';name.style.minWidth='min(100%,260px)';
-  newRow.append(name);
-  appendAction(newRow,'Salva campagna',async()=>{
-    const label=name.value.trim();if(!label){toast('Inserire un nome per il salvataggio.',true);return;}
-    saving=true;try{await createCampaignSave(label);await refresh();toast('Salvataggio creato.');}
+  name.type='text';name.maxLength=SNAPSHOT_LABEL_MAX-MANUAL_PREFIX.length;name.placeholder='Nome del punto di ripristino';name.style.minWidth='min(100%,260px)';name.setAttribute('aria-label','Nome del punto di ripristino');newRow.append(name);
+  appendAction(newRow,'Crea punto di ripristino',async()=>{
+    const label=manualSnapshotLabel(name.value);if(!label){toast('Inserire un nome valido, massimo '+(SNAPSHOT_LABEL_MAX-MANUAL_PREFIX.length)+' caratteri.',true);return;}
+    saving=true;try{await createCampaignSave(label);await refresh();toast('Punto di ripristino creato.');}
     catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
-  },saving||!!pending,'btn primary');sb.append(newRow);
-  if(!model.snapshotStatusSupported)note(sb,'Stato di compatibilità degli archivi non disponibile: completare la migrazione Nhost v1.0.');
-  if(!model.saves.length)note(sb,'Nessun salvataggio disponibile.');
-  if(model.saves.some(s=>s.restorable===false))note(sb,'I vecchi archivi incompleti sono conservati ma non possono essere caricati in sicurezza.');
-  for(const save of model.saves){
-    const r=make('div','nhost-actions');r.style.cssText='border-top:1px solid var(--line,#46515a);padding:10px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;';
+  },saving||!!pending,'btn primary');createBody.append(newRow);create.append(createBody);p.append(create);
+
+  const archive=card('Archivio punti di ripristino',String(model.saves.length));const archiveBody=make('div','nhost-card-body');
+  note(archiveBody,'Il ripristino sostituisce la campagna attiva con la copia selezionata e richiede l’approvazione di entrambe le fazioni. Eliminare una copia non elimina la campagna attiva.');
+  if(!model.snapshotStatusSupported)note(archiveBody,'Stato di compatibilità degli archivi non disponibile: completare la migrazione Nhost v1.0.');
+  if(model.saves.some(s=>s.restorable===false))note(archiveBody,'I vecchi archivi incompleti sono conservati ma non possono essere caricati in sicurezza.');
+  function appendSnapshotRows(body,saves,kind){
+   for(const save of saves){
+    const row=make('div','snapshot-row nhost-actions');
     const unavailable=save.restorable===false;
-    const label=make('span','',save.label+(unavailable?' · Archivio storico non ripristinabile':''));label.style.flex='1 1 220px';r.append(label);
-    const season=make('span','note',SEASONS[save.turn_index]||'Turno '+(save.turn_index+1));r.append(season);
-    appendAction(r,'Rinomina',async()=>{
-      const renamed=prompt('Nuovo nome del salvataggio:',save.label);
+    const displayed=snapshotDisplayLabel(save);
+    const info=make('div','snapshot-info');text(info,'strong',displayed);
+    text(info,'span',SEASONS[save.turn_index]||'Turno '+(Number(save.turn_index)+1),'snapshot-season');
+    text(info,'span','Creato: '+snapshotTimestamp(save.created_at),'note');
+    if(unavailable)text(info,'span','Archivio storico non ripristinabile','note');
+    row.append(info);
+    const buttons=make('div','snapshot-actions nhost-actions');
+    // Non alterare le etichette dei backup riconosciuti, utili per classificarli.
+    if(kind!=='automatic')appendAction(buttons,'Rinomina',async()=>{
+      const renamed=prompt('Nuovo nome del punto di ripristino:',displayed);
       if(renamed===null)return;
-      saving=true;try{await renameCampaignSave(save.snapshot_id,renamed.trim());await refresh();toast('Nome aggiornato.');}
+      const proposed=renamed.trim();
+      const label=kind==='manual'?manualSnapshotLabel(proposed):proposed;
+      if(!label||label.length>SNAPSHOT_LABEL_MAX||(kind==='legacy'&&snapshotKind({label})!=='legacy')){toast('Nome non valido o prefisso riservato.',true);return;}
+      saving=true;try{await renameCampaignSave(save.snapshot_id,label);await refresh();toast('Nome aggiornato.');}
       catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
     },saving||!!pending);
-    appendAction(r,'Carica',async()=>{
-      if(!confirm('Richiedere il caricamento di «'+save.label+'»? Anche l’altra fazione dovrà approvare.'))return;
-      saving=true;try{await requestCampaignLoad(save.snapshot_id);await refresh();toast('Richiesta di caricamento inviata.');}
+    appendAction(buttons,'Carica',async()=>{
+      if(!confirm('Richiedere il ripristino di «'+displayed+'»? La campagna attiva verrà sostituita solo dopo l’approvazione dell’altra fazione.'))return;
+      saving=true;try{await requestCampaignLoad(save.snapshot_id);await refresh();toast('Richiesta di ripristino inviata.');}
       catch(e){toast(e.message,true);}finally{saving=false;if(model)render();}
     },saving||!!pending||unavailable,'btn sm');
-    appendAction(r,'Elimina',async()=>{
-      if(!confirm('Eliminare definitivamente il salvataggio «'+save.label+'»?\nLa campagna attiva non verrà modificata. Questa operazione non è reversibile.'))return;
-      saving=true;
-      try{await deleteCampaignSave(save.snapshot_id);await refresh();toast('Salvataggio eliminato.');}
+    appendAction(buttons,'Elimina',async()=>{
+      if(!confirm('Eliminare definitivamente il punto di ripristino «'+displayed+'»?\\nLa campagna attiva non verrà modificata. L’operazione non è reversibile.'))return;
+      saving=true;try{await deleteCampaignSave(save.snapshot_id);await refresh();toast('Punto di ripristino eliminato.');}
       catch(e){toast(e.message,true);alert('Impossibile eliminare: '+e.message);}
       finally{saving=false;if(model)render();}
     },saving||!!pending,'btn sm danger');
-    sb.append(r);
+    row.append(buttons);body.append(row);
+   }
   }
-  sav.append(sb);p.append(sav);
+  text(archiveBody,'h4','Punti manuali · '+groups.manual.length,'snapshot-section-title');
+  if(!groups.manual.length)note(archiveBody,'Nessun nuovo punto manuale presente.');
+  appendSnapshotRows(archiveBody,groups.manual,'manual');
+  if(groups.legacy.length){
+    text(archiveBody,'h4','Archivi precedenti · '+groups.legacy.length,'snapshot-section-title');
+    note(archiveBody,'Origine non identificabile dai dati esposti da Nhost. Questi archivi restano disponibili con le normali azioni.');
+    appendSnapshotRows(archiveBody,groups.legacy,'legacy');
+  }
+  archive.append(archiveBody);p.append(archive);
+
+  const backups=card('Backup automatici',''+groups.automatic.length);const backupsBody=make('div','nhost-card-body');
+  note(backupsBody,'Sono mostrati separatamente i backup riconoscibili dalla denominazione. La creazione automatica e il backup preventivo di reset/ripristino sono gestiti dal server; il frontend non genera copie duplicate. La frequenza effettiva dipende dalle funzioni Nhost installate.');
+  if(!groups.automatic.length)note(backupsBody,'Nessun backup riconoscibile nell’archivio corrente.');
+  appendSnapshotRows(backupsBody,groups.automatic,'automatic');backups.append(backupsBody);p.append(backups);
 
   // Punteggi di partenza: soltanto dopo un reset da stagione successiva
   // al primo turno, e prima che una delle fazioni generi una battaglia.

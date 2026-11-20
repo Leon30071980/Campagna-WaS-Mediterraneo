@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.38 (Nhost)
+# Campagna W@S Mediterraneo — v1.39 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Novità v1.39
+- Gestione campagna: distinta la campagna attiva salvata su Nhost da Crea punto di ripristino, Archivio punti di ripristino e Backup automatici. Data e ora dell’ultima modifica della propria fazione e revisione; ogni copia mostra data di creazione e stagione.
+- Nuovi salvataggi manuali riconoscibili dal prefisso riservato [Manuale] (nascosto nell’interfaccia, conservato nelle rinomine). Backup riconoscibili solo per etichetta, non per metadati certificati; vecchi archivi di origine indeterminata restano accessibili e non vengono modificati.
+- Nessuna scrittura aggiuntiva al cambio turno, per evitare duplicazioni tra le fazioni. Le funzioni SQL private di creazione automatica dei backup non sono disponibili nel repository: verifica della frequenza effettiva e relativo intervento server ancora da eseguire.
+- Nessuna migrazione Nhost, nessuna modifica a dati, regole o salvataggi esistenti.
 
 ## Novità v1.38
 - Dopo l’annullamento dell’ultima versione futura, il Naviglio chiude il ramo e mostra una sola riga. Un suffisso (I) isolato viene nascosto nel Naviglio e nel Porto, senza rinominare le chiavi storiche nel database. Il ramo non può essere espanso con una sola configurazione. Elimina nave è distinto da Rimuovi ammodernamento e richiede di digitare il nome dello scafo. Nessun dato della campagna ripristinato o modificato dal rilascio.

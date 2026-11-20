@@ -1,6 +1,6 @@
 // Campagna W@S Mediterraneo v1.2
-import { NHOST } from './config.js?v=1.38';
-import { getAccessToken, refreshAccessToken } from './auth.js?v=1.38';
+import { NHOST } from './config.js?v=1.39';
+import { getAccessToken, refreshAccessToken } from './auth.js?v=1.39';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }
@@ -143,7 +143,7 @@ export async function saveBattle(battle,revision) {
     }
   }`;
   const r=await campaignMutation(query,{battle,revision},'campaign_save_battle');
-  return {state:typeof r.state==='string'?JSON.parse(r.state):r.state,revision:Number(r.revision)};
+  return {state:typeof r.state==='string'?JSON.parse(r.state):r.state,revision:Number(r.revision),updatedAt:r.updated_at};
 }
 export async function concludeBattle(revision) {
   const query=`mutation($revision:bigint!){
