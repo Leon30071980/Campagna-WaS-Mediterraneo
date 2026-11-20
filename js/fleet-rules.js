@@ -142,3 +142,11 @@ export function planCancelModernization(state,name,turnIndex,group){
  const reason=validateHullSchedule([...versions.slice(0,-2),previous]);
  return reason?{reason}:{previous,restore,remove:name};
 }
+
+// v1.38 — etichetta di presentazione: non rinominare le chiavi usate da Porto,
+// perdite e storico. Un'eventuale configurazione I isolata è la nave originaria.
+export function hullDisplayName(unit,versions){
+ const name=String(unit?.nome||'');
+ if(!versions||versions.length!==1)return versions?.length>1&&name===shipBase(name)?name+' (I)':name;
+ return hullVersionNumber(name)===1?shipBase(name):name;
+}

@@ -1,6 +1,6 @@
 // Campagna W@S Mediterraneo v1.2
-import { NHOST } from './config.js?v=1.37';
-import { getAccessToken, refreshAccessToken } from './auth.js?v=1.37';
+import { NHOST } from './config.js?v=1.38';
+import { getAccessToken, refreshAccessToken } from './auth.js?v=1.38';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }
