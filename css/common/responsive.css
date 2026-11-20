@@ -91,13 +91,13 @@ body[data-side] .naval-state .naval-construction-icon{width:70px;height:29px;}
 body[data-side] nav.tabs{gap:8px;}
 body[data-side] nav.tabs button{gap:10px;min-height:58px;padding:9px 8px;border-radius:7px;color:var(--ink);font-weight:700;}
 body[data-side] nav.tabs button .command-tab-icon{display:block;flex:none;background-color:currentColor;width:calc(var(--icon-w)*var(--icon-scale));height:calc(var(--icon-h)*var(--icon-scale));--icon-scale:.72px;mask-image:var(--icon-mask);mask-repeat:no-repeat;mask-position:center;mask-size:contain;-webkit-mask-image:var(--icon-mask);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:contain;}
-body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../../assets/common/menu/porto.png?v=1.41');}
-body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../../assets/common/menu/battaglia.png?v=1.41');}
-body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../../assets/common/menu/navi.png?v=1.41');}
-body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../../assets/common/menu/aerei.png?v=1.41');}
-body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../../assets/common/menu/storico.png?v=1.41');}
-body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../../assets/common/menu/gestione.png?v=1.41');}
-body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../../assets/common/menu/regole.png?v=1.41');}
+body[data-side] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../../assets/common/menu/porto.png?v=1.42');}
+body[data-side] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../../assets/common/menu/battaglia.png?v=1.42');}
+body[data-side] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../../assets/common/menu/navi.png?v=1.42');}
+body[data-side] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../../assets/common/menu/aerei.png?v=1.42');}
+body[data-side] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../../assets/common/menu/storico.png?v=1.42');}
+body[data-side] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../../assets/common/menu/gestione.png?v=1.42');}
+body[data-side] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../../assets/common/menu/regole.png?v=1.42');}
 body[data-side] nav.tabs button[aria-selected="true"]{color:#11242e;}
 
 /* Palette esplicita per i due temi, anche con la preferenza di sistema. */
@@ -278,3 +278,16 @@ body[data-side] .snapshot-info{flex:1 1 230px;min-width:0;display:grid;gap:3px;o
 body[data-side] .snapshot-season{font-size:13px;}
 body[data-side] .snapshot-actions{display:flex;gap:6px;flex-wrap:wrap;}
 @media(max-width:600px){body[data-side] .snapshot-actions{width:100%;}body[data-side] .snapshot-actions .btn{flex:1 1 90px;min-height:44px;}body[data-side] .snapshot-info{flex-basis:100%;}}
+
+/* v1.42 — miniature aerei locali, layout uniforme per Axis e Allies */
+body[data-side] .aircraft-name-layout{display:flex;align-items:center;gap:12px;min-width:0;}
+body[data-side] .aircraft-name-info{display:flex;flex-direction:column;gap:3px;min-width:0;overflow-wrap:anywhere;}
+body[data-side] .aircraft-name-title{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+body[data-side] .aircraft-thumbnail{width:160px;height:80px;flex:0 0 160px;object-fit:contain;object-position:center;display:block;}
+body[data-side] .aircraft-profile-source,body[data-side] .aircraft-profile-note{font-size:11px;line-height:1.35;color:var(--ink-dim);}
+body[data-side] .aircraft-profile-source{text-decoration:underline;text-underline-offset:2px;}
+@media(max-width:960px){
+ body[data-side] .aircraft-thumbnail{width:124px;height:64px;flex-basis:124px;}
+ body[data-side] .aircraft-name-layout{gap:8px;}
+}
+@media(max-width:380px){body[data-side] .aircraft-thumbnail{width:104px;height:56px;flex-basis:104px;}}

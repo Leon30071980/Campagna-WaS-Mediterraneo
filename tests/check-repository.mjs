@@ -20,3 +20,6 @@ for(const k of [...Object.keys(LOCAL_CLASSES),...Object.keys(ALLIED_PROFILES)]){
 for(const k of Object.keys(ALLIED_NAMED)){const [tipo,nome]=k.split('|'),p=localShipProfile({tipo,nome},'Test');assert(p&&existsSync(resolve(root,p.image.split('?')[0])),k);profiles++;}
 for(const path of ['assets/common/status/operational.png','assets/common/status/repair.png','assets/common/status/sunk.webp','assets/common/status/construction.svg','assets/common/icons/favicon.png','assets/axis/icons/favicon.png','assets/allies/icons/favicon.png','assets/allies/flags/white-ensign.webp','assets/allies/flags/us-flag.webp','assets/allies/flags/free-france.webp'])assert(existsSync(resolve(root,path)),path);
 console.log(refs+' riferimenti statici e '+profiles+' associazioni profilo verificati.');
+
+// Verifica anche il registro delle miniature aeree.
+import '../tests/check-aircraft.mjs';

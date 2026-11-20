@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.41 (Nhost)
+# Campagna W@S Mediterraneo — v1.42 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -15,6 +15,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
 
+## Novità v1.42
+- Catalogo Aerei: layout comune per miniature locali a colori, stessa dimensione e visualizzazione responsive; riferimenti pubblici a War Thunder e nota esplicita per le varianti diverse.
+- 39 associazioni storiche, 36 schede reperite e 3 da integrare. I riferimenti non costituiscono il catalogo attivo Nhost.
+- Predisposte le cartelle assets/axis/aircraft e assets/allies/aircraft; registri separati, caricamento esclusivamente locale di immagini autorizzate. Nessuna miniatura originale Gaijin è stata redistribuita: download non riuscito e diritto di riuso da verificare. Il catalogo visualizza i collegamenti e non tenta il caricamento esterno.
+- Nessuna modifica a punteggi, nave/aereo, motore di battaglia o database. Vedere docs/AIRCRAFT.md.
+ 
 ## Novità v1.41
 - Riordinati asset e moduli per common, axis e allies; testate e registri delle sagome separati. Motore e API Nhost unici.
 - Rimossi dal ramo corrente 53 asset obsoleti/sostituiti e 2 file di codice/stile non caricati. File originali recuperabili dalla cronologia Git.
