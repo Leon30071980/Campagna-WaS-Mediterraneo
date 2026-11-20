@@ -1,0 +1,23 @@
+/* Classe costruttiva: separata dal Tipo; stile discreto su entrambe le fazioni. */
+#p-navi td.ship-historical-class{font-size:.85em;font-style:italic;font-weight:400;color:var(--ink-dim);min-width:105px;max-width:170px;line-height:1.2;}
+
+/* v1.3 — insegne e badge condivisi; il restyling scenografico resta Axis. */
+.unit-flag{display:inline-block;vertical-align:middle;width:26px;height:17px;margin-right:8px;border:1px solid #a8b7bd;border-radius:2px;box-shadow:0 1px 3px #0005;background-size:100% 100%;background-repeat:no-repeat;position:relative;flex:none;box-sizing:border-box;}
+.unit-flag[data-nation="it"]{background:linear-gradient(90deg,#16834a 0 33.33%,#fafafa 33.33% 66.66%,#c72235 66.66%);}
+.unit-flag[data-nation="it"]::after{content:"";position:absolute;left:39%;top:19%;width:24%;height:62%;background:linear-gradient(90deg,transparent 40%,white 40% 60%,transparent 60%),linear-gradient(0deg,transparent 40%,white 40% 60%,transparent 60%),#c72235;border:1px solid #174a91;border-radius:1px;}
+.unit-flag[data-nation^="de-"]{background:#d6dce0;}
+.unit-flag[data-nation^="de-"]::after{content:"✚";position:absolute;inset:0;text-align:center;color:#20272c;font:bold 16px/15px Arial;text-shadow:1px 0 white,-1px 0 white;}
+.unit-flag[data-nation="gb-air"],.unit-flag[data-nation="gb-navy"]{background:linear-gradient(0deg,transparent 40%,#c8102e 40% 60%,transparent 60%),linear-gradient(90deg,transparent 43%,#c8102e 43% 57%,transparent 57%),linear-gradient(0deg,transparent 32%,white 32% 68%,transparent 68%),linear-gradient(90deg,transparent 35%,white 35% 65%,transparent 65%),linear-gradient(32deg,transparent 43%,white 43% 57%,transparent 57%),linear-gradient(-32deg,transparent 43%,white 43% 57%,transparent 57%),#012169;}
+.unit-flag[data-nation="fr"]{background:linear-gradient(90deg,#173c8b 33.33%,#fff 33.33% 66.66%,#d3233c 66.66%);}
+.unit-flag[data-nation="us"]{background:repeating-linear-gradient(to bottom,#b22234 0 1.15px,#fff 1.15px 2.3px);}
+.unit-flag[data-nation="us"]::after{content:"";position:absolute;top:0;left:0;width:45%;height:55%;background:#3c3b6e;}
+.unit-flag[data-nation="gr"]{background:repeating-linear-gradient(to bottom,#2965ae 0 1.7px,#fff 1.7px 3.4px);}
+.unit-flag[data-nation="au"],.unit-flag[data-nation="nz"]{background:#17366f;color:#fff;}
+.unit-flag[data-nation="au"]::after,.unit-flag[data-nation="nz"]::after{content:"✦";position:absolute;right:3px;top:0;font-size:13px;line-height:15px;}
+.unit-flag[data-nation="nz"]::after{color:#f13c50;}
+.unit-name-cell .unit-name{vertical-align:middle;}
+.catalog-type{display:inline-block;min-width:38px;box-sizing:border-box;text-align:center;font:700 13px/1.3 "IBM Plex Mono",monospace;padding:4px 7px;border-radius:5px;color:white;background:#405564;border:1px solid #ffffff38;box-shadow:0 1px 3px #0003;}
+.catalog-type[data-type="BB"]{background:#853b40}.catalog-type[data-type="BC"]{background:#a6505f}.catalog-type[data-type="CV"]{background:#197c76}.catalog-type[data-type="CA"]{background:#1b4f72}.catalog-type[data-type="CL"]{background:#92c7e5;color:#102b39}.catalog-type[data-type="DD"]{background:#2e6950}.catalog-type[data-type="SUB"]{background:#6c4385}
+.catalog-type[data-type="F"]{background:#34668b}.catalog-type[data-type="FB"]{background:#477b83}.catalog-type[data-type="B"]{background:#805331}.catalog-type[data-type="DB"]{background:#986240}.catalog-type[data-type="HB"]{background:#624339}.catalog-type[data-type="PB"]{background:#426d72}.catalog-type[data-type="TB"]{background:#5c547e}
+.air-catalog-table td:nth-child(2),.air-catalog-table th:nth-child(2){text-align:center;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side="axis"]{background:var(--bg);}}

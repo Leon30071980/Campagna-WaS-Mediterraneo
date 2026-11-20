@@ -1,0 +1,59 @@
+/* v1.12 — profili delle tavole storiche, Regia Marina e Royal Navy. */
+#p-navi td.unit-name-cell{min-width:300px;}
+#p-navi .historical-profile{float:right;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:155px;max-width:45%;margin-left:8px;vertical-align:middle;color:var(--ink-dim);}
+#p-navi .historical-profile svg{width:100%;height:35px;display:block;overflow:visible;}
+#p-navi .historical-profile img{width:100%;height:35px;object-fit:contain;}
+#p-navi .historical-profile .profile-source{font-size:9px;line-height:1.1;color:var(--ink-dim);text-decoration:underline;text-underline-offset:2px;}
+#p-navi .historical-profile .profile-source:hover{color:var(--sea);}
+#p-navi .historical-profile small{font-size:10px;line-height:1;}
+@media(max-width:620px){#p-navi .historical-profile{width:135px;}}
+
+/* v1.13 — disegni originali Navypedia: niente filtri, sagome ricostruite o deformazioni. */
+#p-navi .navypedia-profile{width:200px;max-width:48%;color:var(--ink-dim);}
+#p-navi .navypedia-profile img{display:block;filter:none!important;object-fit:contain;object-position:center;max-width:100%;width:100%;height:46px;background:#fff;border-radius:2px;}
+#p-navi .navypedia-profile .profile-source{max-width:100%;white-space:normal;text-align:center;font-size:10px;line-height:1.2;}
+@media(max-width:620px){#p-navi .navypedia-profile{width:145px;}}
+
+/* v1.14 — medesimo viewport per tutti i profili locali; nessun ingrandimento individuale. */
+#p-navi .local-profile img{display:block;width:100%;height:auto;aspect-ratio:240/64;max-width:100%;object-fit:contain;background:transparent;border-radius:0;filter:none!important;}
+:root[data-theme="light"] #p-navi .local-profile img{filter:brightness(.44)!important;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) #p-navi .local-profile img{filter:brightness(.44)!important;}}
+
+/* v1.17 — bandiere storiche delle unità italiane e tedesche, nella proporzione originale. */
+.unit-flag.historical-flag-loaded{background:none;}
+.unit-flag.historical-flag-loaded::after{display:none;}
+.unit-flag .historical-unit-flag{display:block;width:100%;height:100%;object-fit:contain;}
+.unit-flag .historical-unit-flag[hidden]{display:none;}
+.unit-flag[data-nation^="de-"].historical-flag-loaded{width:28px;}
+
+/* v1.20 — nuovo stato, senza modificare gli asset dei tre stati esistenti. */
+body[data-side]{--building:#65b7ff;--retired:var(--ink-dim);}
+:root[data-theme="light"] body[data-side]{--building:#145b9c;}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]) body[data-side]{--building:#145b9c;}}
+body[data-side] .building{color:var(--building);}
+body[data-side] .retired{color:var(--retired);}
+body[data-side="axis"] .axis-fleet-cell .naval-four-states{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;}
+body[data-side="axis"] .naval-four-states .naval-total-top{min-height:48px;gap:3px;}
+body[data-side="axis"] .naval-four-states .naval-total-top .naval-icon{max-width:calc(100% - 37px);min-width:0;flex-shrink:1;}
+body[data-side="axis"] .naval-four-states .naval-total-label{font-size:clamp(10px,.84vw,13px);padding-inline:4px;box-sizing:border-box;max-width:100%;}
+body[data-side="axis"] .naval-four-states .naval-construction-icon{width:clamp(52px,6vw,104px);height:42px;}
+body[data-side="axis"] .naval-state .naval-construction-icon{width:70px;height:29px;}
+body[data-side="allies"] .naval-four-states{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;}
+body[data-side="allies"] .naval-four-states>div{min-width:0;padding:5px;}
+body[data-side="allies"] .naval-four-states .k{font-size:11px;overflow-wrap:anywhere;}
+body[data-side="allies"] .royal-construction .k{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
+body[data-side="allies"] .royal-construction .naval-icon{width:40px;height:18px;object-fit:contain;}
+body[data-side="allies"] .naval-state.building,body[data-side="allies"] .naval-state.retired{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid currentColor;border-radius:20px;padding:2px 8px;font-size:12px;background:color-mix(in srgb,currentColor 10%,var(--surface));white-space:nowrap;}
+body[data-side="allies"] .naval-state .naval-icon{width:48px;height:22px;object-fit:contain;}
+@media(min-width:1151px){body[data-side="axis"] .pennant{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,4.1fr) minmax(0,1.15fr) minmax(0,1.15fr);}}
+@media(min-width:860px){body[data-side="allies"] .pennant{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,2.4fr) minmax(0,1.1fr) minmax(0,1.1fr);}}
+@media(max-width:859px){body[data-side="allies"] .pennant .fleet-summary-cell{grid-column:1/-1;}body[data-side="allies"] .naval-four-states{grid-template-columns:repeat(4,minmax(0,1fr));}}
+@media(max-width:620px){body[data-side="axis"] .axis-fleet-cell .naval-four-states,body[data-side="allies"] .naval-four-states{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="axis"] .naval-four-states .naval-total-label{font-size:12px;}}
+
+/* v1.21 — stati aerei, colori accessibili in entrambi i temi. */
+body[data-side] .air-status{display:inline-flex;min-width:100px;box-sizing:border-box;justify-content:center;align-items:center;border:1px solid currentColor;background:color-mix(in srgb,currentColor 13%,var(--surface));border-radius:20px;padding:3px 10px;font-size:13px;font-weight:600;white-space:nowrap;}
+body[data-side] .air-status.ok{color:var(--ok);}
+body[data-side] .air-status.obsolete{color:var(--sunk);}
+body[data-side] .air-status.building{color:var(--building);}
+.air-catalog-table td:nth-child(7),.air-catalog-table th:nth-child(7){text-align:center;}
+

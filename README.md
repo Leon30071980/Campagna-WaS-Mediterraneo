@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.40 (Nhost)
+# Campagna W@S Mediterraneo — v1.41 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -11,6 +11,15 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 - Storico, punteggi, avanzamento con conferma di entrambi, salvataggi nominati e automatici.
 - Ripristino e reset con doppia approvazione e backup preventivo; punteggio iniziale di scenario.
 - WebSocket sullo stato condiviso, polling di riserva, protezione dei campi attivi.
+
+## Struttura del repository
+Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.41
+- Riordinati asset e moduli per common, axis e allies; testate e registri delle sagome separati. Motore e API Nhost unici.
+- Rimossi dal ramo corrente 53 asset obsoleti/sostituiti e 2 file di codice/stile non caricati. File originali recuperabili dalla cronologia Git.
+- Conservati senza ricompressione tutti gli asset attivi; favicon originali 64×64 estratti dai data URI. Verificati percorsi e mappa dei profili, stessa cascata CSS salvo vecchia galleria non utilizzata.
+- Nessuna migrazione Nhost né modifica a regole, cataloghi privati, salvataggi e punteggi.
 
 ## Novità v1.40
 - Aggiunto il profilo locale della portaerei statunitense USS Wasp (CV-7) dalla tavola originale fornita: WebP trasparente, azzurro chiaro, 528 × 152, 2 px/m e lunghezza fuori tutto 225,9 m (NHHC, DANFS). Nessuna modifica a unità, punti o campagna.
