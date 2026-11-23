@@ -74,15 +74,15 @@ export const ALLIES_AIRCRAFT = Object.freeze({
     "match": "exact"
   },
   "SEAHURRICANEMKIB": {
-    "slug": "hurricane-mkiib",
-    "id": "hurricanemkii",
-    "label": "Hurricane Mk IIB (immagine non navale)",
-    "match": "variant"
+    "slug": "sea-hurricane-mkib",
+    "id": null,
+    "label": "Sea Hurricane Mk.IB",
+    "match": "exact"
   },
   "SEAFIREMKIB": {
-    "slug": "spitfire-mkv",
-    "id": "spitfire_mk5b_notrop",
-    "label": "Spitfire Mk Vb (immagine non navale)",
+    "slug": "seafire-mkiii",
+    "id": null,
+    "label": "Seafire Mk.III (immagine di riferimento per Mk.IB)",
     "match": "variant"
   },
   "HURRICANEMKIIB": {
@@ -125,6 +125,12 @@ export const ALLIES_AIRCRAFT = Object.freeze({
     "slug": "swordfish-mki",
     "id": "swordfish_mk1",
     "label": "Swordfish Mk I",
+    "match": "exact"
+  },
+  "SEAFIREMKIII": {
+    "slug": "seafire-mkiii",
+    "id": null,
+    "label": "Seafire Mk.III",
     "match": "exact"
   }
 });
@@ -242,5 +248,17 @@ export const ALLIES_AIRCRAFT_ASSETS = Object.freeze({
     "license": "Diritti di ripubblicazione non verificati indipendentemente",
     "source": "https://wiki.warthunder.com/unit/swordfish_mk1",
     "original_filename": "swordfish_mk1.png"
+  },
+  "sea-hurricane-mkib": {
+    "file": "sea-hurricane-mkib.webp",
+    "credit": "Miniatura fornita dall’utente (War Thunder/Gaijin)",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "upload utente: hurricane_mk1b.png"
+  },
+  "seafire-mkiii": {
+    "file": "seafire-mkiii.webp",
+    "credit": "Miniatura fornita dall’utente (War Thunder/Gaijin)",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "upload utente: seafire_mk3.png"
   }
 });

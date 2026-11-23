@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.46 (Nhost)
+# Campagna W@S Mediterraneo — v1.47 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.47
+- Importate due nuove immagini Sea fornite dall'utente: Sea Hurricane Mk.IB e Seafire Mk.III in formato WebP trasparente 512×256, nella cartella allies/aircraft. Il Seafire Mk.IB già a catalogo usa la miniatura Mk.III, dichiarata come variante di riferimento; nessuna modifica delle date dei velivoli.
+- Corretto il resolver: nome normalizzato, alias controllati, varianti esplicite e campo `profileKey` persistente per nomi personalizzati. Scelta `Profilo immagine` nel form Aerei, con opzione Auto o selezione manuale; il cambio di nome non perde più l'immagine riconoscibile e una variante corretta prevale sul fallback generico.
+- Bloccata la reinserzione automatica di Sea Hurricane o Seafire se la loro denominazione è cambiata (anche in Mk.III), mantenendo Nhost come unica fonte dello stato privato. Nessuna migrazione, nessuna modifica automatica a Porto o risultati.
+- Controlli su associazioni Axis/Allies, caricamento file e compatibilità con le voci preesistenti; le immagini Gaijin restano soggette a diritti da verificare.
 
 ## Novità v1.46
 - Aggiunte le configurazioni storiche Sea Hurricane Mk.IB (1941–1944) e Seafire Mk.IB (1942–1944) nel registro navale Allies, tipo F, base IMBARCABILE, punteggio ereditato dai modelli terresti corrispondenti (6 nel catalogo iniziale).

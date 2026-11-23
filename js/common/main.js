@@ -1,16 +1,16 @@
-import { aircraftProfile } from './aircraft-profiles.js?v=1.46';
-import { HEADER_AXIS } from '../axis/header.js?v=1.46';
-import { HEADER_ALLIES } from '../allies/header.js?v=1.46';
-import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.46';
-import { localShipProfile } from './local-ship-profiles.js?v=1.46';
-import { shipProfile } from './ship-profiles.js?v=1.46';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.46';
-import { historicalClass } from './historical-classes.js?v=1.46';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.46';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.46';
-import { generateBattle } from './battle-engine.js?v=1.46';
-import { SEASONS } from './config.js?v=1.46';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.46';
+import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.47';
+import { HEADER_AXIS } from '../axis/header.js?v=1.47';
+import { HEADER_ALLIES } from '../allies/header.js?v=1.47';
+import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.47';
+import { localShipProfile } from './local-ship-profiles.js?v=1.47';
+import { shipProfile } from './ship-profiles.js?v=1.47';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.47';
+import { historicalClass } from './historical-classes.js?v=1.47';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.47';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.47';
+import { generateBattle } from './battle-engine.js?v=1.47';
+import { SEASONS } from './config.js?v=1.47';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.47';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -18,9 +18,9 @@ import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull
 const $ = id => document.getElementById(id);
 // Icone originali 64×64 separate per fazione; il lato proviene dalla sessione Nhost.
 const APP_FAVICON_PATHS = Object.freeze({
-  "axis": "./assets/axis/icons/favicon.png?v=1.46",
-  "allies": "./assets/allies/icons/favicon.png?v=1.46",
-  "default": "./assets/common/icons/favicon.png?v=1.46"
+  "axis": "./assets/axis/icons/favicon.png?v=1.47",
+  "allies": "./assets/allies/icons/favicon.png?v=1.47",
+  "default": "./assets/common/icons/favicon.png?v=1.47"
 });
 function setAppFavicon(side) {
   let favicon = $('app-favicon');
@@ -101,7 +101,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.46';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.47';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -416,6 +416,9 @@ function dialogUnit(kind,source){
   const ritirato=controlField(form,'Anno ritiro (vuoto = nessuno)',original?.ritirato||'','number');
   const points=controlField(form,'Punti',original?.pt??0,'number');
   const extra=isNave?controlField(form,'Hangar (solo portaerei)',original?.hangar??'','number'):controlField(form,'Base',original?.base||'LAND BASED','select',[['LAND BASED','Terrestre'],['IDRO','Idrovolante'],['IMBARCABILE','Imbarcabile']]);
+   const profileChoice=isNave?null:controlField(form,'Profilo immagine',original?.profileKey||'','select',
+    [['','Automatico (nome e variante)'],...aircraftChoices(model.side).map(x=>[x.key,x.label+' · '+x.key])]);
+   if(profileChoice)note(form,'Automatico riconosce nomi e varianti più comuni. Per un nome personalizzato selezioni un profilo esplicito: rimarrà associato anche dopo una rinomina.');
   const buttons=make('div','nhost-form-buttons');const cancel=make('button','btn','Annulla');cancel.type='button';cancel.onclick=()=>dialog.close();const save=make('button','btn primary','Salva su Nhost');save.type='submit';buttons.append(cancel,save);form.append(buttons);dialog.append(form);document.body.append(dialog);
   dialog.addEventListener('close',()=>dialog.remove());
   form.onsubmit=async e=>{
@@ -427,7 +430,20 @@ function dialogUnit(kind,source){
     const value=original?{...original}:{},prevName=original?.nome;
     Object.assign(value,{nome:newName,tipo:tipo.value.trim(),anno:year,pt:score,ritirato:retired});
     if(isNave){value.cls=cls.value;value.stato=value.stato||'';if(cls.value==='CV')value.hangar=extra.value===''?3:Number(extra.value);else delete value.hangar;}
-    else value.base=extra.value;
+    else {
+      value.base=extra.value;
+      const choice=profileChoice?.value||'';
+      if(choice)value.profileKey=choice;
+      else {
+       // Se il nome nuovo è riconosciuto, il profilo segue la nuova variante.
+       // Se il nome è personalizzato, conserviamo l'identità precedente.
+       const resolved=aircraftKey({nome:newName},model.side);
+       const previous=original?aircraftKey(original,model.side):null;
+       if(resolved)delete value.profileKey;
+       else if(previous)value.profileKey=previous;
+       else delete value.profileKey;
+      }
+     }
     if(original){const idx=items.findIndex(u=>u.nome===prevName);if(idx<0){toast('Unità non più presente.',true);return;}items[idx]=value;}
     else items.push(value);
     if(isNave){
@@ -508,7 +524,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.46':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.47':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});

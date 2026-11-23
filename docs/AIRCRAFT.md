@@ -1,4 +1,4 @@
-# Profili aerei — v1.46
+# Profili aerei — v1.47
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
@@ -80,3 +80,12 @@ L'archivio ricevuto conteneva 18 PNG originali da 512 × 256. Sono stati importa
 Fonti: [Sea Hurricane IB](https://www.historyofwar.org/articles/weapons_hawker_sea_hurricane_IB.html), [ultimo Sea Hurricane in servizio nel 1944](https://www.classicwarbirds.co.uk/british-aircraft/hawker-sea-hurricane.php), [Seafire IB dal giugno 1942](https://www.historyofwar.org/articles/weapons_supermarine_seafire_Ib.html), [801 Squadron e Seafire IB fino al settembre 1944](https://1000aircraftphotos.com/Contributions/CrupiRay/13008.htm). Il ritiro 1944 del Sea Hurricane è riferito alla famiglia operativa (l'IB fu progressivamente sostituito), e rappresenta una convenzione prudenziale del gioco. Le date non comportano ritiro nella campagna, che termina nel 1943.
 
 L'inserimento è effettuato sulla sola fazione Allies mediante sessione autenticata, mutazione protetta e controllo di revisione. Per battaglie concluse o in corso l'inserimento è rinviato alla successiva fase modificabile. Non vengono modificate le voci terresti preesistenti. La pubblicazione GitHub, da sola, non equivale alla conferma del salvataggio Nhost.
+
+## v1.47 — immagini Sea e rinomina
+
+- `sea-hurricane-mkib.webp`: originale `hurricane_mk1b.png`, riferimento **Sea Hurricane Mk.IB**.
+- `seafire-mkiii.webp`: originale `seafire_mk3.png`, riferimento **Seafire Mk.III**. Per il **Seafire Mk.IB** del catalogo iniziale è una miniatura di altra variante (indicata come tale).
+- Le miniature sono mantenute a 512×256, orientamento e trasparenza originali.
+- Le varianti vengono risolte da `aircraftKey(unit,side)`; usa, in ordine, `profileKey` esplicito, nome esatto, alias controllati e fallback per famiglia. Non si usano distanze ortografiche arbitrarie.
+- Il form Aerei include **Profilo immagine**: Automatico sceglie la variante riconosciuta, mentre una scelta esplicita persiste con `profileKey`. Se un nome è totalmente personalizzato, la prima rinomina conserva il profilo originario.
+- La sincronizzazione Nhost v1.46 non duplica la configurazione Seafire Mk.IB se una versione Seafire Mk.III è stata già rinominata/aggiunta. Nessun intervento retroattivo sulle anagrafiche private.
