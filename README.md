@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.45 (Nhost)
+# Campagna W@S Mediterraneo — v1.46 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.46
+- Aggiunte le configurazioni storiche Sea Hurricane Mk.IB (1941–1944) e Seafire Mk.IB (1942–1944) nel registro navale Allies, tipo F, base IMBARCABILE, punteggio ereditato dai modelli terresti corrispondenti (6 nel catalogo iniziale).
+- Sincronizzazione *idempotente* con la mutazione protetta Nhost al prossimo accesso Allies quando la campagna è modificabile. Nessuna scrittura in caso di battaglia già avviata, nessuna sovrascrittura dei modelli esistenti e nessun cambiamento a Porto, perdite, navi, storico o Axis. Il rilascio su GitHub non certifica l'avvenuto inserimento nello stato privato Nhost.
+- Miniature temporanee riutilizzate da Hurricane Mk.IIB e Spitfire Mk.Vb, dichiarate come immagini di varianti non navali. Nessun file duplicato; vedi docs/AIRCRAFT.md.
+- 1944 è oltre la fine della campagna (1943): entrambi i tipi rimangono disponibili sino alla fine.
 
 ## Novità v1.45
 - Importate 16 miniature Allies WebP (512×256, trasparenza e orientamento originali) dai PNG forniti dall'utente; una per file in assets/allies/aircraft. Copertura Allies 16/19: mancanti Skua, Barracuda e Martlet Mk.II.

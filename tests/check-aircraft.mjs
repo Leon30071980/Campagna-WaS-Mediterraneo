@@ -43,3 +43,19 @@ assert.equal(aircraftProfile({nome:'SUNDERLAND'},'allies').label,'Sunderland Mk 
 assert.equal(aircraftProfile({nome:'SPITFIRE MK. V'},'allies').label,'Spitfire Mk Vb');
 assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,16);
 assert.equal(Object.keys(AXIS_AIRCRAFT_ASSETS).length,17);
+
+import {SEA_AIRCRAFT,missingSeaAircraft} from '../js/allies/sea-aircraft.js';
+assert.equal(SEA_AIRCRAFT.length,2);
+const base={navi:[],aerei:[{nome:'HURRICANE MK. IIB',pt:6},{nome:'SPITFIRE MK. V',pt:6}]};
+const newSea=missingSeaAircraft(base);
+assert.deepEqual(newSea.map(u=>[u.nome,u.anno,u.ritirato,u.base,u.tipo,u.pt]),[
+ ['SEA HURRICANE MK.IB',1941,1944,'IMBARCABILE','F',6],
+ ['SEAFIRE MK.IB',1942,1944,'IMBARCABILE','F',6]
+]);
+assert.equal(missingSeaAircraft({...base,aerei:[...base.aerei,...newSea]}).length,0);
+assert.equal(missingSeaAircraft({...base,aerei:[...base.aerei,{nome:' sea hurricane mk.ib '}]}).length,1);
+assert.equal(base.aerei.length,2);
+for(const k of ['SEAHURRICANEMKIB','SEAFIREMKIB']){
+ const p=aircraftProfile({nome:k},'allies');assert(p?.image&&p.match==='variant',k);
+ assert.equal(aircraftProfile({nome:k},'axis'),null,k);
+}

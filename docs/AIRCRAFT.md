@@ -1,4 +1,4 @@
-# Profili aerei — v1.45
+# Profili aerei — v1.46
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
@@ -69,3 +69,14 @@ Non si assume che le livree o l'angolo di visualizzazione siano identici: verifi
 
 ## Nota sul caricamento v1.45
 L'archivio ricevuto conteneva 18 PNG originali da 512 × 256. Sono stati importati come singoli WebP i 16 associabili agli aerei del catalogo Allied. I file alternativi `gladiator_mk2.png` e `hurricane_mk1c.png` non sono stati pubblicati nel repository per evitare duplicati. È stato scelto `gladiator_mk2_navy.png` per il Gladiator navale. Il Sunderland Mk V raffigurato è una variante posteriore al periodo della campagna: **sola immagine**, dati di gioco invariati. Le versioni Sea di Hurricane e Spitfire potranno essere aggiunte in seguito quando saranno fornite. Il sito non carica le miniature da domini esterni; diritti e permessi di redistribuzione delle immagini War Thunder non verificati indipendentemente.
+
+## Sea Hurricane e Seafire — v1.46
+
+| Nome | Tipo | Entrata | Ritiro | Base | Immagine riutilizzata |
+|---|---|---:|---:|---|---|
+| SEA HURRICANE MK.IB | F | 1941 | 1944 | IMBARCABILE | hurricane-mkiib.webp (variante non navale) |
+| SEAFIRE MK.IB | F | 1942 | 1944 | IMBARCABILE | spitfire-mkv.webp (variante non navale) |
+
+Fonti: [Sea Hurricane IB](https://www.historyofwar.org/articles/weapons_hawker_sea_hurricane_IB.html), [ultimo Sea Hurricane in servizio nel 1944](https://www.classicwarbirds.co.uk/british-aircraft/hawker-sea-hurricane.php), [Seafire IB dal giugno 1942](https://www.historyofwar.org/articles/weapons_supermarine_seafire_Ib.html), [801 Squadron e Seafire IB fino al settembre 1944](https://1000aircraftphotos.com/Contributions/CrupiRay/13008.htm). Il ritiro 1944 del Sea Hurricane è riferito alla famiglia operativa (l'IB fu progressivamente sostituito), e rappresenta una convenzione prudenziale del gioco. Le date non comportano ritiro nella campagna, che termina nel 1943.
+
+L'inserimento è effettuato sulla sola fazione Allies mediante sessione autenticata, mutazione protetta e controllo di revisione. Per battaglie concluse o in corso l'inserimento è rinviato alla successiva fase modificabile. Non vengono modificate le voci terresti preesistenti. La pubblicazione GitHub, da sola, non equivale alla conferma del salvataggio Nhost.

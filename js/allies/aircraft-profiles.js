@@ -73,6 +73,18 @@ export const ALLIES_AIRCRAFT = Object.freeze({
     "label": "Fulmar Mk II",
     "match": "exact"
   },
+  "SEAHURRICANEMKIB": {
+    "slug": "hurricane-mkiib",
+    "id": "hurricanemkii",
+    "label": "Hurricane Mk IIB (immagine non navale)",
+    "match": "variant"
+  },
+  "SEAFIREMKIB": {
+    "slug": "spitfire-mkv",
+    "id": "spitfire_mk5b_notrop",
+    "label": "Spitfire Mk Vb (immagine non navale)",
+    "match": "variant"
+  },
   "HURRICANEMKIIB": {
     "slug": "hurricane-mkiib",
     "id": "hurricanemkii",
