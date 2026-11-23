@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.44 (Nhost)
+# Campagna W@S Mediterraneo — v1.45 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.45
+- Importate 16 miniature Allies WebP (512×256, trasparenza e orientamento originali) dai PNG forniti dall'utente; una per file in assets/allies/aircraft. Copertura Allies 16/19: mancanti Skua, Barracuda e Martlet Mk.II.
+- Aggiunto il Ba.65 Axis fornito in chat: Axis 19/20, manca soltanto CANT Z.506. Le altre immagini e regole Axis rimangono invariate.
+- Varianti dichiarate correttamente: Gladiator Mk II navale, Spitfire Mk Vb e Sunderland Mk V (modello posteriore alla campagna). Due immagini alternative dello ZIP non importate per evitare duplicati.
+- Versioni Sea di Hurricane e Spitfire rinviate alla consegna dei relativi file. Nhost, dati di gioco, bilanciamento, punteggi e salvataggi invariati. Copyright delle immagini Gaijin non verificato indipendentemente.
 
 ## Novità v1.44
 - Bf 109G Gustav e Re.2001 OR riutilizzano rispettivamente le miniature Bf 109G-14/AS e Re.2001 CB, come concordato; niente duplicati e varianti dichiarate.

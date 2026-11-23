@@ -33,3 +33,13 @@ for(const [alias,original] of [['BF109G','BF109G14AS'],['RE2001OR','RE2001CB']])
  assert(p.image && p.image===q.image,alias);
  assert.equal(p.match,'variant',alias);
 }
+
+const axisCovered=Object.keys(AXIS_AIRCRAFT).filter(k=>aircraftProfile({nome:k},'axis').image).length;
+const alliesCovered=Object.keys(ALLIES_AIRCRAFT).filter(k=>aircraftProfile({nome:k},'allies').image).length;
+assert.equal(axisCovered,19);assert.equal(alliesCovered,16);
+for(const k of ['SKUA','BARRACUDA','MARTLETTMKII'])assert.equal(aircraftProfile({nome:k},'allies').image,null);
+assert(aircraftProfile({nome:'BA.65 M "NIBBIO"'},'axis').image.endsWith('ba65m.webp?v=1.45'));
+assert.equal(aircraftProfile({nome:'SUNDERLAND'},'allies').label,'Sunderland Mk V');
+assert.equal(aircraftProfile({nome:'SPITFIRE MK. V'},'allies').label,'Spitfire Mk Vb');
+assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,16);
+assert.equal(Object.keys(AXIS_AIRCRAFT_ASSETS).length,17);

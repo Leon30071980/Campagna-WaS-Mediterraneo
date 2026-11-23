@@ -125,6 +125,7 @@ export const AXIS_AIRCRAFT = Object.freeze({
 // Aggiungere soltanto file locali verificati e autorizzati, con provenienza e licenza.
 // Esempio di struttura della voce: slug: {file:'slug.webp',credit:'Autore',license:'Licenza o permesso',source:'URL della fonte'}.
 export const AXIS_AIRCRAFT_ASSETS = Object.freeze({
+  "ba65m": {"file":"ba65m.webp","credit":"War Thunder / Gaijin — miniatura Ba.65 fornita dall'utente","license":"Diritti di ripubblicazione non verificati indipendentemente","source":"https://wiki.warthunder.com/unit/ba_65_k14_l","original_filename":"ba_65_k14_l.png"},
   "ju87r2": {
     "file": "ju87r2.webp",
     "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",

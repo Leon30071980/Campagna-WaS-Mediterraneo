@@ -1,8 +1,8 @@
-# Profili aerei — v1.44
+# Profili aerei — v1.45
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
-Sono state importate 16 miniature Axis (PNG forniti dal giocatore, convertiti in WebP a 512 × 256 pixel). Gli altri modelli mantengono i riferimenti alle schede: l’app non scarica immagini da host esterni. Fonte: War Thunder / Gaijin; diritto di ripubblicazione non verificato indipendentemente. Consultare le [condizioni Gaijin](https://legal.gaijin.net/contentrules).
+Sono state aggiunte 16 miniature Allies WebP 512 × 256 dallo ZIP Royal Air Force e l'immagine Ba.65 Axis fornita in chat. I 16 asset Axis precedenti restano invariati. Nessun caricamento di miniature da server esterni. Fonte: War Thunder / Gaijin; diritto di ripubblicazione non verificato indipendentemente. Consultare le [condizioni Gaijin](https://legal.gaijin.net/contentrules).
 
 ## Percorsi
 - `assets/axis/aircraft/`: immagini Axis.
@@ -13,7 +13,7 @@ Sono state importate 16 miniature Axis (PNG forniti dal giocatore, convertiti in
 Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit contain. Usare immagini uniformi, senza deformare o capovolgere i contrassegni. Per associare un file autorizzato, aggiungere la voce al registro ASSETS usando lo slug indicato e i campi file, credit, license, source. Se assente o corrotto, il catalogo non mostra icone rotte.
 
 ## Stato importazione
-Axis: 18/20 modelli coperti da 16 immagini locali; mancanti Ba.65 M e CANT Z.506. Allies: 0/19.
+Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 16/19 modelli coperti da 16 WebP; mancano Skua, Barracuda e Martlet Mk.II.
 
 ## Riferimenti identificati
 ### AXIS
@@ -50,9 +50,9 @@ Axis: 18/20 modelli coperti da 16 immagini locali; mancanti Ba.65 M e CANT Z.506
 | CHESAPEAKEMKI | chesapeake-mki.webp | [Chesapeake Mk I](https://wiki.warthunder.com/unit/v_156_b1) | exact |
 | SKUA | skua.webp | Da reperire | missing |
 | BARRACUDA | barracuda.webp | Da reperire | missing |
-| GLADIATORMKII | gladiator-mkii.webp | [Gladiator Mk II](https://wiki.warthunder.com/unit/gladiator_mk2) | exact |
+| GLADIATORMKII | gladiator-mkii.webp | [Gladiator Mk II navale](https://wiki.warthunder.com/unit/gladiator_mk2_navy) | exact |
 | MARTLETTMKII | martlet-mkii.webp | [Martlet Mk IV](https://wiki.warthunder.com/unit/f4f-4_martlet_mk4) | variant |
-| SPITFIREMKV | spitfire-mkv.webp | [Spitfire Mk Vb/trop](https://wiki.warthunder.com/unit/spitfire_mk5b) | family |
+| SPITFIREMKV | spitfire-mkv.webp | [Spitfire Mk Vb](https://wiki.warthunder.com/unit/spitfire_mk5b_notrop) | family |
 | SPITFIREMKIX | spitfire-mkix.webp | [Spitfire F Mk IX](https://wiki.warthunder.com/unit/spitfire_ix_early) | family |
 | BEAUFIGHTERTFMKX | beaufighter-mkx.webp | [Beaufighter Mk X](https://wiki.warthunder.com/unit/beaufighter_mkx) | exact |
 | MOSQUITOMKVI | mosquito-mkvi.webp | [Mosquito FB Mk VI](https://wiki.warthunder.com/unit/mosquito_fb_mk6) | family |
@@ -60,9 +60,12 @@ Axis: 18/20 modelli coperti da 16 immagini locali; mancanti Ba.65 M e CANT Z.506
 | HURRICANEMKIIB | hurricane-mkiib.webp | [Hurricane Mk IIB/Trop](https://wiki.warthunder.com/unit/hurricanemkii) | family |
 | B24LIBERATOR | b24.webp | [B-24D-25-CO](https://wiki.warthunder.com/unit/b_24d) | family |
 | HALIFAX | halifax.webp | [Halifax B Mk IIIa](https://wiki.warthunder.com/unit/halifax_mk3) | family |
-| SUNDERLAND | sunderland.webp | [Sunderland Mk IIIa](https://wiki.warthunder.com/unit/sunderland_mk3a) | family |
+| SUNDERLAND | sunderland.webp | [Sunderland Mk V](https://wiki.warthunder.com/unit/sunderland_mk5) | variant |
 | PBY5CATALINA | pby5.webp | [PBY-5 Catalina](https://wiki.warthunder.com/unit/pby-5) | exact |
 | BEAUFORT | beaufort.webp | [Beaufort Mk VIII](https://wiki.warthunder.com/unit/beaufort_mkviii) | family |
 | SWORDFISHMKI | swordfish-mki.webp | [Swordfish Mk I](https://wiki.warthunder.com/unit/swordfish_mk1) | exact |
 
 Non si assume che le livree o l'angolo di visualizzazione siano identici: verifica visiva dei file richiesta prima della registrazione. 
+
+## Nota sul caricamento v1.45
+L'archivio ricevuto conteneva 18 PNG originali da 512 × 256. Sono stati importati come singoli WebP i 16 associabili agli aerei del catalogo Allied. I file alternativi `gladiator_mk2.png` e `hurricane_mk1c.png` non sono stati pubblicati nel repository per evitare duplicati. È stato scelto `gladiator_mk2_navy.png` per il Gladiator navale. Il Sunderland Mk V raffigurato è una variante posteriore al periodo della campagna: **sola immagine**, dati di gioco invariati. Le versioni Sea di Hurricane e Spitfire potranno essere aggiunte in seguito quando saranno fornite. Il sito non carica le miniature da domini esterni; diritti e permessi di redistribuzione delle immagini War Thunder non verificati indipendentemente.
