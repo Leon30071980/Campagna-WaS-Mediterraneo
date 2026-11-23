@@ -1,5 +1,5 @@
-import {AXIS_AIRCRAFT,AXIS_AIRCRAFT_ASSETS} from '../axis/aircraft-profiles.js?v=1.48';
-import {ALLIES_AIRCRAFT,ALLIES_AIRCRAFT_ASSETS} from '../allies/aircraft-profiles.js?v=1.48';
+import {AXIS_AIRCRAFT,AXIS_AIRCRAFT_ASSETS} from '../axis/aircraft-profiles.js?v=1.49';
+import {ALLIES_AIRCRAFT,ALLIES_AIRCRAFT_ASSETS} from '../allies/aircraft-profiles.js?v=1.49';
 const REFERENCES={axis:AXIS_AIRCRAFT,allies:ALLIES_AIRCRAFT};
 const ASSETS={axis:AXIS_AIRCRAFT_ASSETS,allies:ALLIES_AIRCRAFT_ASSETS};
 export function normalizeAircraftText(value){
@@ -8,6 +8,11 @@ export function normalizeAircraftText(value){
   .replace(/[^A-Z0-9]/g,'');
 }
 const ALIASES=Object.freeze({
+ SEAGLADIATOR:'SEAGLADIATORMKII',SEAGLADIATORMK2:'SEAGLADIATORMKII',GLOSTERSEAGLADIATOR:'SEAGLADIATORMKII',
+ GLOSTERSEAGLADIATORMKII:'SEAGLADIATORMKII',GLADIATORSEA:'SEAGLADIATORMKII',
+ GLADIATORMK2:'GLADIATORMKII',GLOSTERGLADIATORMKII:'GLADIATORMKII',GLADIATOR:'GLADIATORMKII',
+ BLACKBURNSKUA:'SKUA',BLACKBURNSKUAMKII:'SKUA',SKUAMKII:'SKUA',SKUAMK2:'SKUA',
+ FAIREYBARRACUDA:'BARRACUDA',FAIREYBARRACUDAMKII:'BARRACUDA',BARRACUDAMKII:'BARRACUDA',BARRACUDAMK2:'BARRACUDA',
  MARTLETMKII:'MARTLETTMKII',MARTLETII:'MARTLETTMKII',MARTLETIV:'MARTLETTMKII',F4F4MARTLETMKIV:'MARTLETTMKII',GRUMMANMARTLETMKII:'MARTLETTMKII',
  SEAHURRICANEIB:'SEAHURRICANEMKIB',SEAHURRICANEMK1B:'SEAHURRICANEMKIB',
  SEAHURRICANEMKIB:'SEAHURRICANEMKIB',SEAHURRICANE1B:'SEAHURRICANEMKIB',
@@ -29,6 +34,14 @@ const ALIASES=Object.freeze({
 // Non usare punteggi di similarità generici: una variante storicamente diversa
 // non deve mai essere associata a una miniatura senza una regola esplicita.
 const FAMILY_MATCHES=Object.freeze([
+ [/^(?:GLOSTER)?SEAGLADIATOR/,'SEAGLADIATORMKII'],
+ [/^(?:GLOSTER)?GLADIATORSEA/,'SEAGLADIATORMKII'],
+ [/^(?:GLOSTER)?GLADIATOR/,'GLADIATORMKII'],
+ [/^(?:BLACKBURN)?SKUA/,'SKUA'],
+ [/^(?:FAIREY)?BARRACUDA/,'BARRACUDA'],
+ [/^(?:HANDLEYPAGE|HP(?:57|59)?)?HALIFAX/,'HALIFAX'],
+ [/^(?:BRISTOL(?:TYPE152)?)?BEAUFORT/,'BEAUFORT'],
+ [/^(?:BRISTOL)?BEAUFIGHTER/,'BEAUFIGHTERTFMKX'],
  [/^SEAHURRICANE/, 'SEAHURRICANEMKIB'],
  [/^(?:SEAFIRE|SEASPITFIRE).*(?:MK)?(?:III|3)(?:[^IVX]|$)/,'SEAFIREMKIII'],
  [/^(?:SEAFIRE|SEASPITFIRE)/,'SEAFIREMKIB'],
@@ -89,6 +102,6 @@ export function aircraftProfile(unit,side){
  const ref=table[key],assets=ASSETS[side],asset=Object.hasOwn(assets,ref.slug)?assets[ref.slug]:null;
  const valid=asset&&typeof asset.file==='string'&&/^[a-z0-9_-]+\.(?:webp|png)$/i.test(asset.file)&&asset.credit&&asset.license&&asset.source;
  return {key,label:ref.label,match:ref.match,page:ref.id?'https://wiki.warthunder.com/unit/'+ref.id:null,
- image:valid?'./assets/'+side+'/aircraft/'+asset.file+'?v=1.48':null,
+ image:valid?'./assets/'+side+'/aircraft/'+asset.file+'?v=1.49':null,
  credit:valid?String(asset.credit):null,license:valid?String(asset.license):null,source:valid?String(asset.source):null};
 }

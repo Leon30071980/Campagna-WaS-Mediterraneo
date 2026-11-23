@@ -36,24 +36,25 @@ for(const [alias,original] of [['BF109G','BF109G14AS'],['RE2001OR','RE2001CB']])
 
 const axisCovered=Object.keys(AXIS_AIRCRAFT).filter(k=>aircraftProfile({nome:k},'axis').image).length;
 const alliesCovered=Object.keys(ALLIES_AIRCRAFT).filter(k=>aircraftProfile({nome:k},'allies').image).length;
-assert.equal(axisCovered,19);assert.equal(alliesCovered,20);
-for(const k of ['SKUA','BARRACUDA'])assert.equal(aircraftProfile({nome:k},'allies').image,null);
-assert(aircraftProfile({nome:'BA.65 M "NIBBIO"'},'axis').image.endsWith('ba65m.webp?v=1.48'));
+assert.equal(axisCovered,19);assert.equal(alliesCovered,23);
+for(const k of ['SKUA','BARRACUDA'])assert(aircraftProfile({nome:k},'allies')?.image,'profile available '+k);
+assert(aircraftProfile({nome:'BA.65 M "NIBBIO"'},'axis').image.endsWith('ba65m.webp?v=1.49'));
 assert.equal(aircraftProfile({nome:'SUNDERLAND'},'allies').label,'Sunderland Mk V');
 assert.equal(aircraftProfile({nome:'SPITFIRE MK. V'},'allies').label,'Spitfire Mk Vb');
-assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,19);
+assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,22);
 assert.equal(Object.keys(AXIS_AIRCRAFT_ASSETS).length,17);
 
 import {SEA_AIRCRAFT,missingSeaAircraft} from '../js/allies/sea-aircraft.js';
-assert.equal(SEA_AIRCRAFT.length,2);
+assert.equal(SEA_AIRCRAFT.length,3);
 const base={navi:[],aerei:[{nome:'HURRICANE MK. IIB',pt:6},{nome:'SPITFIRE MK. V',pt:6}]};
 const newSea=missingSeaAircraft(base);
 assert.deepEqual(newSea.map(u=>[u.nome,u.anno,u.ritirato,u.base,u.tipo,u.pt]),[
  ['SEA HURRICANE MK.IB',1941,1944,'IMBARCABILE','F',6],
+ ['SEA GLADIATOR MK.II',1939,1944,'IMBARCABILE','F',6],
  ['SEAFIRE MK.IB',1942,1944,'IMBARCABILE','F',6]
 ]);
 assert.equal(missingSeaAircraft({...base,aerei:[...base.aerei,...newSea]}).length,0);
-assert.equal(missingSeaAircraft({...base,aerei:[...base.aerei,{nome:' sea hurricane mk.ib '}]}).length,1);
+assert.equal(missingSeaAircraft({...base,aerei:[...base.aerei,{nome:' sea hurricane mk.ib '}]}).length,2);
 assert.equal(base.aerei.length,2);
 for(const k of ['SEAHURRICANEMKIB','SEAFIREMKIB']){
  const p=aircraftProfile({nome:k},'allies');
@@ -62,26 +63,41 @@ for(const k of ['SEAHURRICANEMKIB','SEAFIREMKIB']){
 }
 
 import {aircraftChoices} from '../js/common/aircraft-profiles.js';
-assert(aircraftProfile({nome:'Sea Hurricane Mk.1b'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.48'));
-assert(aircraftProfile({nome:'Sea Hurricane MK.IB "Naval"'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.48'));
-assert(aircraftProfile({nome:'Seafire Mk.III'},'allies').image.endsWith('seafire-mkiii.webp?v=1.48'));
+assert(aircraftProfile({nome:'Sea Hurricane Mk.1b'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.49'));
+assert(aircraftProfile({nome:'Sea Hurricane MK.IB "Naval"'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.49'));
+assert(aircraftProfile({nome:'Seafire Mk.III'},'allies').image.endsWith('seafire-mkiii.webp?v=1.49'));
 assert.equal(aircraftProfile({nome:'Seafire Mk.IB'},'allies').match,'variant');
 assert.equal(aircraftProfile({nome:'Seafire Mk.III'},'allies').match,'exact');
-assert(aircraftProfile({nome:'Mio velivolo',profileKey:'SEAHURRICANEMKIB'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.48'));
+assert(aircraftProfile({nome:'Mio velivolo',profileKey:'SEAHURRICANEMKIB'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.49'));
 assert.equal(aircraftProfile({nome:'Mio velivolo'},'allies'),null);
 assert(aircraftProfile({nome:'Spitfire Mk.Vb'},'allies').image.includes('spitfire-mkv.webp'));
 assert(aircraftProfile({nome:'Bf 109 G-14 AS'},'axis').image.includes('bf109g14as.webp'));
 assert(aircraftProfile({nome:'Ba.65 M Nibbio'},'axis').image.includes('ba65m.webp'));
 assert(aircraftChoices('allies').some(x=>x.key==='SEAFIREMKIII'));
 assert(aircraftChoices('axis').every(x=>x.key!=='SEAFIREMKIII'));
-assert.equal(missingSeaAircraft({navi:[],aerei:[{nome:'Seafire Mk.III'},{nome:'Sea Hurricane Mk.1b'}]}).length,0,'no duplicate after name edit');
+assert.equal(missingSeaAircraft({navi:[],aerei:[{nome:'Seafire Mk.III'},{nome:'Sea Hurricane Mk.1b'}]}).length,1,'only Sea Gladiator missing after rename');
 
 const martlet=aircraftProfile({nome:'MARTLET MK.II'},'allies');
-assert(martlet?.image.endsWith('martlet-mkii.webp?v=1.48'));
+assert(martlet?.image.endsWith('martlet-mkii.webp?v=1.49'));
 assert.equal(martlet.match,'variant');
 assert.equal(martlet.label,'Martlet Mk IV');
 for(const name of ['Martlet II','F4F-4 Martlet Mk.IV','Grumman Martlet Mk.II']){
- assert(aircraftProfile({nome:name},'allies').image.endsWith('martlet-mkii.webp?v=1.48'),name);
+ assert(aircraftProfile({nome:name},'allies').image.endsWith('martlet-mkii.webp?v=1.49'),name);
 }
 assert.equal(aircraftProfile({nome:'MARTLET MK.II'},'axis'),null);
-assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,19);
+assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,22);
+
+// v1.49 — profili navali e terresti separati; rinomine e varianti coerenti.
+const landGladiator=aircraftProfile({nome:'Gloster Gladiator Mk.II'},'allies');
+const seaGladiator=aircraftProfile({nome:'Sea Gladiator Mk.II'},'allies');
+assert(landGladiator.image.endsWith('gladiator-mkii.webp?v=1.49'));
+assert(seaGladiator.image.endsWith('sea-gladiator-mkii.webp?v=1.49'));
+assert.notEqual(landGladiator.image,seaGladiator.image);
+for(const name of ['Sea Gladiator','GLOSTER SEA GLADIATOR','Sea Gladiator Mk.2']){
+ assert.equal(aircraftKey({nome:name},'allies'),'SEAGLADIATORMKII');
+ assert.equal(aircraftKey({nome:name},'axis'),null);
+}
+for(const [name,file] of [['Blackburn Skua Mk II','skua.webp'],['Fairey Barracuda Mk.II','barracuda.webp'],['Handley Page Halifax B Mk III','halifax.webp'],['Bristol Beaufort Mk VIII','beaufort.webp'],['Bristol Beaufighter TF Mk X','beaufighter-mkx.webp']]){
+ assert(aircraftProfile({nome:name},'allies').image.includes(file),name);
+}
+assert.equal(missingSeaAircraft({navi:[],aerei:[{nome:'Gloster Sea Gladiator Mk II'},{nome:'Sea Hurricane Mk.IB'},{nome:'Seafire Mk.III'}]}).length,0,'no double Sea import after edits');

@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.48 (Nhost)
+# Campagna W@S Mediterraneo — v1.49 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,13 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.49
+- Completata la copertura dei 19 aerei Allies originari con le due illustrazioni approvate **Blackburn Skua** e **Fairey Barracuda** (illustrazioni generate, ottimizzate in WebP trasparente 256×128, formato 2:1 per il catalogo).
+- Separate le due miniature **Gloster Gladiator Mk.II terrestre** e **Sea Gladiator Mk.II navale**, entrambe recuperate dallo ZIP Royal Air Force dell'utente. L'immagine navale già usata in precedenza è conservata senza ricompressione con nuovo percorso; quella terrestre usa il PNG precedentemente non importato.
+- Aggiunta la nuova unità **SEA GLADIATOR MK.II** al repertorio e al meccanismo di sincronizzazione Allies: entrata 1939, ritiro 1944 (fine impiego secondario), tipo F, base IMBARCABILE, punti ereditati dal Gladiator terrestre. La sincronizzazione avviene solo in fase modificabile, senza duplicati né alterazione del catalogo Axis.
+- Ulteriori alias per rinomine, inclusi Skua, Barracuda, Gloster/Sea Gladiator, Handley Page Halifax e Bristol Beaufort. Nessuna migrazione Nhost.
+- Il caricamento effettivo del nuovo velivolo nel database privato si completa alla prossima sessione Allies in fase modificabile, non al commit GitHub.
 
 ## Novità v1.48
 - Aggiunta la miniatura Martlet fornita dall'utente (`f4f-4_martlet_mk4.png`), ottimizzata in WebP locale trasparente a 256×128 dal PNG originale 512×256 nella cartella `assets/allies/aircraft/`, senza alterare le immagini esistenti.

@@ -22,19 +22,19 @@ export const ALLIES_AIRCRAFT = Object.freeze({
   "SKUA": {
     "slug": "skua",
     "id": null,
-    "label": "Blackburn Skua",
-    "match": "missing"
+    "label": "Blackburn Skua Mk.II — ricostruzione",
+    "match": "illustration"
   },
   "BARRACUDA": {
     "slug": "barracuda",
     "id": null,
-    "label": "Fairey Barracuda",
-    "match": "missing"
+    "label": "Fairey Barracuda Mk.II — ricostruzione",
+    "match": "illustration"
   },
   "GLADIATORMKII": {
     "slug": "gladiator-mkii",
-    "id": "gladiator_mk2_navy",
-    "label": "Gladiator Mk II navale",
+    "id": "gladiator_mk2",
+    "label": "Gloster Gladiator Mk.II (terrestre)",
     "match": "exact"
   },
   "MARTLETTMKII": {
@@ -132,6 +132,12 @@ export const ALLIES_AIRCRAFT = Object.freeze({
     "id": null,
     "label": "Seafire Mk.III",
     "match": "exact"
+  },
+  "SEAGLADIATORMKII": {
+    "slug": "sea-gladiator-mkii",
+    "id": "gladiator_mk2_navy",
+    "label": "Gloster Sea Gladiator Mk.II",
+    "match": "exact"
   }
 });
 // Aggiungere soltanto file locali verificati e autorizzati, con provenienza e licenza.
@@ -160,10 +166,10 @@ export const ALLIES_AIRCRAFT_ASSETS = Object.freeze({
   },
   "gladiator-mkii": {
     "file": "gladiator-mkii.webp",
-    "credit": "War Thunder / Gaijin — miniatura fornita dall'utente",
+    "credit": "War Thunder / Gaijin — PNG terrestre fornito dall'utente",
     "license": "Diritti di ripubblicazione non verificati indipendentemente",
-    "source": "https://wiki.warthunder.com/unit/gladiator_mk2_navy",
-    "original_filename": "gladiator_mk2_navy.png"
+    "source": "https://wiki.warthunder.com/unit/gladiator_mk2",
+    "original_filename": "gladiator_mk2.png"
   },
   "spitfire-mkv": {
     "file": "spitfire-mkv.webp",
@@ -267,5 +273,24 @@ export const ALLIES_AIRCRAFT_ASSETS = Object.freeze({
     "license": "Diritti di ripubblicazione non verificati indipendentemente",
     "source": "https://wiki.warthunder.com/unit/f4f-4_martlet_mk4",
     "original_filename": "f4f-4_martlet_mk4.png"
+  },
+  "skua": {
+    "file": "skua.webp",
+    "credit": "Ricostruzione digitale generata per Campagna W@S Mediterraneo",
+    "license": "Illustrazione generata; non fotografia d'epoca",
+    "source": "Illustrazione approvata in chat 2026-11-23"
+  },
+  "barracuda": {
+    "file": "barracuda.webp",
+    "credit": "Ricostruzione digitale generata per Campagna W@S Mediterraneo",
+    "license": "Illustrazione generata; non fotografia d'epoca",
+    "source": "Illustrazione approvata in chat 2026-11-23"
+  },
+  "sea-gladiator-mkii": {
+    "file": "sea-gladiator-mkii.webp",
+    "credit": "War Thunder / Gaijin — PNG navale fornito dall'utente",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/gladiator_mk2_navy",
+    "original_filename": "gladiator_mk2_navy.png"
   }
 });

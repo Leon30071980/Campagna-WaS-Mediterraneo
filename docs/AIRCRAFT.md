@@ -1,4 +1,4 @@
-# Profili aerei — v1.48
+# Profili aerei — v1.49
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
@@ -13,7 +13,7 @@ Sono state aggiunte 16 miniature Allies WebP 512 × 256 dallo ZIP Royal Air Forc
 Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit contain. Usare immagini uniformi, senza deformare o capovolgere i contrassegni. Per associare un file autorizzato, aggiungere la voce al registro ASSETS usando lo slug indicato e i campi file, credit, license, source. Se assente o corrotto, il catalogo non mostra icone rotte.
 
 ## Stato importazione
-Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 17/19 modelli originari coperti da 17 WebP; mancano Skua e Barracuda. Le versioni Sea, aggiunte successivamente, sono documentate a parte.
+Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 19/19 modelli originari coperti; Skua e Barracuda utilizzano illustrazioni sintetiche approvate. Sea Gladiator aggiunto come modello navale separato. Le versioni Sea, aggiunte successivamente, sono documentate a parte.
 
 ## Riferimenti identificati
 ### AXIS
@@ -93,3 +93,10 @@ L'inserimento è effettuato sulla sola fazione Allies mediante sessione autentic
 ## v1.48 — Martlet
 
 Aggiunto `martlet-mkii.webp` da `f4f-4_martlet_mk4.png`, PNG originale dell'utente 512×256, ottimizzato per la miniatura WebP a 256×128, preservando proporzioni, sfondo trasparente e orientamento. La voce **MARTLET MK.II** punta alla miniatura **Martlet Mk.IV** (`match: variant`), senza presentarla come corrispondenza storica esatta. Alias compatibili con denominazioni alternative. Asset locale in `assets/allies/aircraft/`, riutilizzo soggetto ai diritti Gaijin da verificare.
+
+## v1.49 — Skua, Barracuda, Gladiator terrestre e Sea Gladiator
+- `skua.webp` e `barracuda.webp`: ricostruzioni digitali approvate dall'utente, ottimizzate in WebP a 256×128; non sono fotografie né fonti storiche.
+- `gladiator-mkii.webp` (terrestre) da `gladiator_mk2.png` nello ZIP originario; `sea-gladiator-mkii.webp` (navale) conserva i byte dell'asset prima assegnato impropriamente a Gladiator terrestre, da `gladiator_mk2_navy.png`.
+- **SEA GLADIATOR MK.II**: tipo F, anno 1939, ritiro 1944 (ultimo impiego non operativo), base IMBARCABILE; punti ereditati dal Gladiator terrestre alla sincronizzazione, altrimenti 6. Separato da **GLADIATOR MK.II**, terrestre.
+- Fonti per l'anno: [Aeroflight, Sea Gladiators imbarcati marzo 1939](https://www.aeroflight.co.uk/aircraft/types/type-details/gloster-gladiator) e [Fleet Air Arm aircraft service, fine attività secondarie nel 1944](https://www.wings-aviation.ch/32-FAA/2-Aircraft/Gloster-Gladiator/Fighter.htm).
+- `aircraftKey` gestisce anche denominazioni estese per i modelli Halifax e Beaufort, con distinzione esplicita dal Beaufighter.

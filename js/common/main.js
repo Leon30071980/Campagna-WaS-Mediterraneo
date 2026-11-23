@@ -1,16 +1,16 @@
-import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.48';
-import { HEADER_AXIS } from '../axis/header.js?v=1.48';
-import { HEADER_ALLIES } from '../allies/header.js?v=1.48';
-import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.48';
-import { localShipProfile } from './local-ship-profiles.js?v=1.48';
-import { shipProfile } from './ship-profiles.js?v=1.48';
-import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.48';
-import { historicalClass } from './historical-classes.js?v=1.48';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.48';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.48';
-import { generateBattle } from './battle-engine.js?v=1.48';
-import { SEASONS } from './config.js?v=1.48';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.48';
+import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.49';
+import { HEADER_AXIS } from '../axis/header.js?v=1.49';
+import { HEADER_ALLIES } from '../allies/header.js?v=1.49';
+import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.49';
+import { localShipProfile } from './local-ship-profiles.js?v=1.49';
+import { shipProfile } from './ship-profiles.js?v=1.49';
+import { SHIP_TYPES, fleetOrder, unitNation } from './catalog-display.js?v=1.49';
+import { historicalClass } from './historical-classes.js?v=1.49';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.49';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.49';
+import { generateBattle } from './battle-engine.js?v=1.49';
+import { SEASONS } from './config.js?v=1.49';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.49';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -18,9 +18,9 @@ import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull
 const $ = id => document.getElementById(id);
 // Icone originali 64×64 separate per fazione; il lato proviene dalla sessione Nhost.
 const APP_FAVICON_PATHS = Object.freeze({
-  "axis": "./assets/axis/icons/favicon.png?v=1.48",
-  "allies": "./assets/allies/icons/favicon.png?v=1.48",
-  "default": "./assets/common/icons/favicon.png?v=1.48"
+  "axis": "./assets/axis/icons/favicon.png?v=1.49",
+  "allies": "./assets/allies/icons/favicon.png?v=1.49",
+  "default": "./assets/common/icons/favicon.png?v=1.49"
 });
 function setAppFavicon(side) {
   let favicon = $('app-favicon');
@@ -101,7 +101,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.48';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.49';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -242,7 +242,7 @@ async function syncAlliesSeaAircraft(m,epoch,serial){
  const missing=missingSeaAircraft(m.state);
  if(!missing.length){seaAircraftNotice='';return;}
  if(!canEdit()){
-  seaAircraftNotice='Sea Hurricane e Seafire in attesa: la campagna non permette modifiche durante una battaglia.';
+  seaAircraftNotice='Sea Hurricane, Sea Gladiator e Seafire in attesa: la campagna non permette modifiche durante una battaglia.';
   return;
  }
  const key=[m.campaign.id,m.side,m.stateRevision].join('|');
@@ -524,7 +524,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.48':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.49':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
@@ -549,7 +549,7 @@ function renderCatalog(p,tab){
  sel.setAttribute('aria-label',ships?'Tipo Nave':'Base aereo');bar.append(sel);let stateSel=null;{stateSel=make('select','btn sm');stateSel.setAttribute('aria-label',ships?'Stato nave':'Stato aereo');const stateOpts=ships?[['','Tutti gli stati'],['attiva','Operative'],['riparazione','In riparazione'],['affondata','Perse'],['costruzione','In costruzione'],['ritirata','Ritirate']]:[['','Tutti gli stati'],['attiva','Operativi'],['obsoleto','Obsoleti'],['costruzione','In costruzione']];for(const [val,label] of stateOpts){const o=make('option','',label);o.value=val;stateSel.append(o);}stateSel.value=catalogStatusFilter;bar.append(stateSel);}bar.append(search);if(ships){const reset=make('button','btn sm','Ordine predefinito');reset.type='button';reset.title='Tipo, classe più costosa, punti';reset.onclick=()=>{Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});update();};bar.append(reset);}const count=make('span','catalog-visible-count');count.setAttribute('role','status');count.setAttribute('aria-live','polite');count.setAttribute('aria-atomic','true');bar.append(count);p.append(bar);
  if(ships)text(p,'div','Una riga per scafo. Espandere il numero di configurazioni per consultare le versioni passate e future.','note');
  if(!ships&&model.side==='allies'&&missingSeaAircraft(model.state).length){
-  note(p,seaAircraftNotice||'Le due versioni Sea saranno inserite automaticamente quando il catalogo Allies sarà modificabile.');
+  note(p,seaAircraftNotice||'Le versioni navali Sea mancanti saranno inserite automaticamente quando il catalogo Allies sarà modificabile.');
   if(canEdit())appendAction(p,'Riprova inserimento Sea',async()=>{lastSeaAircraftAttempt='';try{await refresh();}catch(e){toast(e.message,true);}},false,'btn sm');
  }
  const wrap=make('div','card scroll-x catalog-table');if(ships)wrap.classList.add('axis-catalog-table');if(!ships)wrap.classList.add('air-catalog-table');p.append(wrap);
