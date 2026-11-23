@@ -260,5 +260,12 @@ export const ALLIES_AIRCRAFT_ASSETS = Object.freeze({
     "credit": "Miniatura fornita dall’utente (War Thunder/Gaijin)",
     "license": "Diritti di ripubblicazione non verificati indipendentemente",
     "source": "upload utente: seafire_mk3.png"
+  },
+  "martlet-mkii": {
+    "file": "martlet-mkii.webp",
+    "credit": "War Thunder / Gaijin — miniatura Martlet Mk.IV fornita dall'utente",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/f4f-4_martlet_mk4",
+    "original_filename": "f4f-4_martlet_mk4.png"
   }
 });

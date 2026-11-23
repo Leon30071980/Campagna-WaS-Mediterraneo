@@ -2,13 +2,13 @@
 body[data-side="axis"] nav.tabs{gap:8px;}
 body[data-side="axis"] nav.tabs button{gap:10px;min-height:58px;padding:9px 8px;border-radius:7px;color:var(--ink);font-weight:700;}
 body[data-side="axis"] nav.tabs button .command-tab-icon{display:block;flex:none;background-color:currentColor;width:calc(var(--icon-w)*var(--icon-scale));height:calc(var(--icon-h)*var(--icon-scale));--icon-scale:.72px;mask-image:var(--icon-mask);mask-repeat:no-repeat;mask-position:center;mask-size:contain;-webkit-mask-image:var(--icon-mask);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:contain;}
-body[data-side="axis"] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../../assets/common/menu/porto.png?v=1.47');}
-body[data-side="axis"] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../../assets/common/menu/battaglia.png?v=1.47');}
-body[data-side="axis"] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../../assets/common/menu/navi.png?v=1.47');}
-body[data-side="axis"] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../../assets/common/menu/aerei.png?v=1.47');}
-body[data-side="axis"] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../../assets/common/menu/storico.png?v=1.47');}
-body[data-side="axis"] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../../assets/common/menu/gestione.png?v=1.47');}
-body[data-side="axis"] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../../assets/common/menu/regole.png?v=1.47');}
+body[data-side="axis"] nav.tabs .command-tab-icon-porto{--icon-w:46;--icon-h:48;--icon-mask:url('../../assets/common/menu/porto.png?v=1.48');}
+body[data-side="axis"] nav.tabs .command-tab-icon-battaglia{--icon-w:44;--icon-h:42;--icon-mask:url('../../assets/common/menu/battaglia.png?v=1.48');}
+body[data-side="axis"] nav.tabs .command-tab-icon-navi{--icon-w:77;--icon-h:26;--icon-mask:url('../../assets/common/menu/navi.png?v=1.48');}
+body[data-side="axis"] nav.tabs .command-tab-icon-aerei{--icon-w:66;--icon-h:48;--icon-mask:url('../../assets/common/menu/aerei.png?v=1.48');}
+body[data-side="axis"] nav.tabs .command-tab-icon-storico{--icon-w:50;--icon-h:39;--icon-mask:url('../../assets/common/menu/storico.png?v=1.48');}
+body[data-side="axis"] nav.tabs .command-tab-icon-gestione{--icon-w:47;--icon-h:47;--icon-mask:url('../../assets/common/menu/gestione.png?v=1.48');}
+body[data-side="axis"] nav.tabs .command-tab-icon-regole{--icon-w:42;--icon-h:47;--icon-mask:url('../../assets/common/menu/regole.png?v=1.48');}
 body[data-side="axis"] nav.tabs button[aria-selected="true"]{color:#11242e;}
 @media(min-width:1151px) and (max-width:1380px){body[data-side="axis"] nav.tabs button{gap:6px;padding-inline:5px;font-size:13px;}body[data-side="axis"] nav.tabs button .command-tab-icon{--icon-scale:.54px;}}
 @media(max-width:620px){body[data-side="axis"] nav.tabs button{min-height:48px;gap:7px;padding:7px 5px;}body[data-side="axis"] nav.tabs button .command-tab-icon{--icon-scale:.53px;}}

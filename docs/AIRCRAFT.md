@@ -1,4 +1,4 @@
-# Profili aerei — v1.47
+# Profili aerei — v1.48
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
@@ -13,7 +13,7 @@ Sono state aggiunte 16 miniature Allies WebP 512 × 256 dallo ZIP Royal Air Forc
 Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit contain. Usare immagini uniformi, senza deformare o capovolgere i contrassegni. Per associare un file autorizzato, aggiungere la voce al registro ASSETS usando lo slug indicato e i campi file, credit, license, source. Se assente o corrotto, il catalogo non mostra icone rotte.
 
 ## Stato importazione
-Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 16/19 modelli coperti da 16 WebP; mancano Skua, Barracuda e Martlet Mk.II.
+Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 17/19 modelli originari coperti da 17 WebP; mancano Skua e Barracuda. Le versioni Sea, aggiunte successivamente, sono documentate a parte.
 
 ## Riferimenti identificati
 ### AXIS
@@ -89,3 +89,7 @@ L'inserimento è effettuato sulla sola fazione Allies mediante sessione autentic
 - Le varianti vengono risolte da `aircraftKey(unit,side)`; usa, in ordine, `profileKey` esplicito, nome esatto, alias controllati e fallback per famiglia. Non si usano distanze ortografiche arbitrarie.
 - Il form Aerei include **Profilo immagine**: Automatico sceglie la variante riconosciuta, mentre una scelta esplicita persiste con `profileKey`. Se un nome è totalmente personalizzato, la prima rinomina conserva il profilo originario.
 - La sincronizzazione Nhost v1.46 non duplica la configurazione Seafire Mk.IB se una versione Seafire Mk.III è stata già rinominata/aggiunta. Nessun intervento retroattivo sulle anagrafiche private.
+
+## v1.48 — Martlet
+
+Aggiunto `martlet-mkii.webp` da `f4f-4_martlet_mk4.png`, PNG originale dell'utente 512×256, ottimizzato per la miniatura WebP a 256×128, preservando proporzioni, sfondo trasparente e orientamento. La voce **MARTLET MK.II** punta alla miniatura **Martlet Mk.IV** (`match: variant`), senza presentarla come corrispondenza storica esatta. Alias compatibili con denominazioni alternative. Asset locale in `assets/allies/aircraft/`, riutilizzo soggetto ai diritti Gaijin da verificare.

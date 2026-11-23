@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.47 (Nhost)
+# Campagna W@S Mediterraneo — v1.48 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.48
+- Aggiunta la miniatura Martlet fornita dall'utente (`f4f-4_martlet_mk4.png`), ottimizzata in WebP locale trasparente a 256×128 dal PNG originale 512×256 nella cartella `assets/allies/aircraft/`, senza alterare le immagini esistenti.
+- Associata alla voce **MARTLET MK.II**. La miniatura riproduce il **Martlet Mk.IV**, variante storicamente diversa: nell'app la distinzione resta esplicita. Alias inclusi per rinomine comuni F4F-4 Martlet/Grumman Martlet.
+- Copertura dei 19 modelli Allies originari: **17/19**; restano senza immagine soltanto Blackburn Skua e Fairey Barracuda. Il motore, Axis, i dati Nhost e i salvataggi non vengono modificati.
 
 ## Novità v1.47
 - Importate due nuove immagini Sea fornite dall'utente: Sea Hurricane Mk.IB e Seafire Mk.III in formato WebP trasparente 512×256, nella cartella allies/aircraft. Il Seafire Mk.IB già a catalogo usa la miniatura Mk.III, dichiarata come variante di riferimento; nessuna modifica delle date dei velivoli.

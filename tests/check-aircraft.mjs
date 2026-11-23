@@ -19,9 +19,9 @@ for(const [side,refs,assets] of [['axis',AXIS_AIRCRAFT,AXIS_AIRCRAFT_ASSETS],['a
  }
  for(const [slug,a] of Object.entries(assets)){assert(slugs.has(slug),slug);assert(a.credit&&a.license&&a.source,slug);assert(/^[a-z0-9_-]+\.(?:webp|png)$/i.test(a.file),slug);assert(existsSync(resolve(root,'assets',side,'aircraft',a.file)),slug);}
 }
-assert.equal(aircraftKey({nome:'M.C. 202 "FOLGORE"'}),'MC202');
-assert.equal(aircraftKey({nome:'JU 87 R2 "PICCHIATELLO"'}),'JU87R2');
-assert.equal(aircraftKey({nome:'MARTLET MK. II'}),'MARTLETTMKII');
+assert.equal(aircraftKey({nome:'M.C. 202 "FOLGORE"'},'axis'),'MC202');
+assert.equal(aircraftKey({nome:'JU 87 R2 "PICCHIATELLO"'},'axis'),'JU87R2');
+assert.equal(aircraftKey({nome:'MARTLET MK. II'},'allies'),'MARTLETTMKII');
 assert.equal(aircraftProfile({nome:'SWORDFISH MK.I'},'axis'),null);
 assert.equal(aircraftProfile({nome:'MC202'},'allies'),null);
 assert.equal(aircraftProfile({nome:'MC202'},'unknown'),null);
@@ -36,12 +36,12 @@ for(const [alias,original] of [['BF109G','BF109G14AS'],['RE2001OR','RE2001CB']])
 
 const axisCovered=Object.keys(AXIS_AIRCRAFT).filter(k=>aircraftProfile({nome:k},'axis').image).length;
 const alliesCovered=Object.keys(ALLIES_AIRCRAFT).filter(k=>aircraftProfile({nome:k},'allies').image).length;
-assert.equal(axisCovered,19);assert.equal(alliesCovered,19);
-for(const k of ['SKUA','BARRACUDA','MARTLETTMKII'])assert.equal(aircraftProfile({nome:k},'allies').image,null);
-assert(aircraftProfile({nome:'BA.65 M "NIBBIO"'},'axis').image.endsWith('ba65m.webp?v=1.47'));
+assert.equal(axisCovered,19);assert.equal(alliesCovered,20);
+for(const k of ['SKUA','BARRACUDA'])assert.equal(aircraftProfile({nome:k},'allies').image,null);
+assert(aircraftProfile({nome:'BA.65 M "NIBBIO"'},'axis').image.endsWith('ba65m.webp?v=1.48'));
 assert.equal(aircraftProfile({nome:'SUNDERLAND'},'allies').label,'Sunderland Mk V');
 assert.equal(aircraftProfile({nome:'SPITFIRE MK. V'},'allies').label,'Spitfire Mk Vb');
-assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,18);
+assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,19);
 assert.equal(Object.keys(AXIS_AIRCRAFT_ASSETS).length,17);
 
 import {SEA_AIRCRAFT,missingSeaAircraft} from '../js/allies/sea-aircraft.js';
@@ -62,12 +62,12 @@ for(const k of ['SEAHURRICANEMKIB','SEAFIREMKIB']){
 }
 
 import {aircraftChoices} from '../js/common/aircraft-profiles.js';
-assert(aircraftProfile({nome:'Sea Hurricane Mk.1b'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.47'));
-assert(aircraftProfile({nome:'Sea Hurricane MK.IB "Naval"'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.47'));
-assert(aircraftProfile({nome:'Seafire Mk.III'},'allies').image.endsWith('seafire-mkiii.webp?v=1.47'));
+assert(aircraftProfile({nome:'Sea Hurricane Mk.1b'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.48'));
+assert(aircraftProfile({nome:'Sea Hurricane MK.IB "Naval"'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.48'));
+assert(aircraftProfile({nome:'Seafire Mk.III'},'allies').image.endsWith('seafire-mkiii.webp?v=1.48'));
 assert.equal(aircraftProfile({nome:'Seafire Mk.IB'},'allies').match,'variant');
 assert.equal(aircraftProfile({nome:'Seafire Mk.III'},'allies').match,'exact');
-assert(aircraftProfile({nome:'Mio velivolo',profileKey:'SEAHURRICANEMKIB'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.47'));
+assert(aircraftProfile({nome:'Mio velivolo',profileKey:'SEAHURRICANEMKIB'},'allies').image.endsWith('sea-hurricane-mkib.webp?v=1.48'));
 assert.equal(aircraftProfile({nome:'Mio velivolo'},'allies'),null);
 assert(aircraftProfile({nome:'Spitfire Mk.Vb'},'allies').image.includes('spitfire-mkv.webp'));
 assert(aircraftProfile({nome:'Bf 109 G-14 AS'},'axis').image.includes('bf109g14as.webp'));
@@ -75,3 +75,13 @@ assert(aircraftProfile({nome:'Ba.65 M Nibbio'},'axis').image.includes('ba65m.web
 assert(aircraftChoices('allies').some(x=>x.key==='SEAFIREMKIII'));
 assert(aircraftChoices('axis').every(x=>x.key!=='SEAFIREMKIII'));
 assert.equal(missingSeaAircraft({navi:[],aerei:[{nome:'Seafire Mk.III'},{nome:'Sea Hurricane Mk.1b'}]}).length,0,'no duplicate after name edit');
+
+const martlet=aircraftProfile({nome:'MARTLET MK.II'},'allies');
+assert(martlet?.image.endsWith('martlet-mkii.webp?v=1.48'));
+assert.equal(martlet.match,'variant');
+assert.equal(martlet.label,'Martlet Mk IV');
+for(const name of ['Martlet II','F4F-4 Martlet Mk.IV','Grumman Martlet Mk.II']){
+ assert(aircraftProfile({nome:name},'allies').image.endsWith('martlet-mkii.webp?v=1.48'),name);
+}
+assert.equal(aircraftProfile({nome:'MARTLET MK.II'},'axis'),null);
+assert.equal(Object.keys(ALLIES_AIRCRAFT_ASSETS).length,19);
