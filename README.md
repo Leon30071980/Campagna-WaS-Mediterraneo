@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.49 (Nhost)
+# Campagna W@S Mediterraneo — v1.50 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.50
+- Completata la copertura grafica dell'**Asse: 20/20 modelli** con la miniatura sintetica approvata del **CANT Z.506 Airone**, in WebP trasparente 320×160 ottimizzato, nella cartella `assets/axis/aircraft/z506.webp`.
+- Aggiunto il collegamento `Z506` nel registro Axis e alias per `CANT Z.506 "AIRONE"`, `CANT Z506B`, `CRDA CANT Z.506`, `Z.506 Airone`, `Airone`; espressamente distinta la famiglia Z.1007. Conservata la scelta manuale `profileKey`.
+- Verifica di integrità del WebP e test di associazione senza interventi su Nhost, valori o cronologia della campagna. L'immagine è una ricostruzione digitale approvata, non fotografia storica.
 
 ## Novità v1.49
 - Completata la copertura dei 19 aerei Allies originari con le due illustrazioni approvate **Blackburn Skua** e **Fairey Barracuda** (illustrazioni generate, ottimizzate in WebP trasparente 256×128, formato 2:1 per il catalogo).

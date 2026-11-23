@@ -106,8 +106,8 @@ export const AXIS_AIRCRAFT = Object.freeze({
   "Z506": {
     "slug": "z506",
     "id": null,
-    "label": "CANT Z.506",
-    "match": "missing"
+    "label": "CANT Z.506 Airone — ricostruzione grafica",
+    "match": "illustration"
   },
   "Z1007": {
     "slug": "z1007",
@@ -125,7 +125,13 @@ export const AXIS_AIRCRAFT = Object.freeze({
 // Aggiungere soltanto file locali verificati e autorizzati, con provenienza e licenza.
 // Esempio di struttura della voce: slug: {file:'slug.webp',credit:'Autore',license:'Licenza o permesso',source:'URL della fonte'}.
 export const AXIS_AIRCRAFT_ASSETS = Object.freeze({
-  "ba65m": {"file":"ba65m.webp","credit":"War Thunder / Gaijin — miniatura Ba.65 fornita dall'utente","license":"Diritti di ripubblicazione non verificati indipendentemente","source":"https://wiki.warthunder.com/unit/ba_65_k14_l","original_filename":"ba_65_k14_l.png"},
+  "ba65m": {
+    "file": "ba65m.webp",
+    "credit": "War Thunder / Gaijin — miniatura Ba.65 fornita dall'utente",
+    "license": "Diritti di ripubblicazione non verificati indipendentemente",
+    "source": "https://wiki.warthunder.com/unit/ba_65_k14_l",
+    "original_filename": "ba_65_k14_l.png"
+  },
   "ju87r2": {
     "file": "ju87r2.webp",
     "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
@@ -221,5 +227,11 @@ export const AXIS_AIRCRAFT_ASSETS = Object.freeze({
     "credit": "War Thunder / Gaijin — miniatura fornita dal giocatore",
     "license": "Diritti di ripubblicazione non verificati indipendentemente",
     "source": "https://wiki.warthunder.com/unit/sm_79_1941_italy"
+  },
+  "z506": {
+    "file": "z506.webp",
+    "credit": "Illustrazione digitale del CANT Z.506 Airone approvata dall'utente",
+    "license": "Immagine generata per Campagna W@S Mediterraneo; non fotografia storica",
+    "source": "Illustrazione approvata in questa conversazione, 23 novembre 2026"
   }
 });

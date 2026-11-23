@@ -1,5 +1,5 @@
-import {AXIS_AIRCRAFT,AXIS_AIRCRAFT_ASSETS} from '../axis/aircraft-profiles.js?v=1.49';
-import {ALLIES_AIRCRAFT,ALLIES_AIRCRAFT_ASSETS} from '../allies/aircraft-profiles.js?v=1.49';
+import {AXIS_AIRCRAFT,AXIS_AIRCRAFT_ASSETS} from '../axis/aircraft-profiles.js?v=1.50';
+import {ALLIES_AIRCRAFT,ALLIES_AIRCRAFT_ASSETS} from '../allies/aircraft-profiles.js?v=1.50';
 const REFERENCES={axis:AXIS_AIRCRAFT,allies:ALLIES_AIRCRAFT};
 const ASSETS={axis:AXIS_AIRCRAFT_ASSETS,allies:ALLIES_AIRCRAFT_ASSETS};
 export function normalizeAircraftText(value){
@@ -26,6 +26,8 @@ const ALIASES=Object.freeze({
  C205:'MC205',MACCHIC205:'MC205',
  BF109G14AS:'BF109G14AS',ME109G:'BF109G',BF109GUSTAV:'BF109G',
  RE2001:'RE2001CB',RE2001FALCOII:'RE2001CB',
+ CANTZ506:'Z506',CANTZ506B:'Z506',CANTZ506AIRONE:'Z506',CANTZ506BAIRONE:'Z506',
+ Z506AIRONE:'Z506',Z506B:'Z506',Z506BAIRONE:'Z506',CRDACANTZ506:'Z506',CRDACANTZ506B:'Z506',AIRONE:'Z506',
  SM79SPARVIERO:'SM79',SAVOIAMARCHETTISM79:'SM79',
  PBY5:'PBY5CATALINA',PBY5CATALINA:'PBY5CATALINA',
  B25J:'B25JMITCHELL',B25MITCHELL:'B25JMITCHELL',
@@ -69,6 +71,8 @@ const FAMILY_MATCHES=Object.freeze([
  [/^SM79/,'SM79'],
  [/^BA65/,'BA65M'],
  [/^BR20/,'BR20'],
+ [/^(?:CRDA)?CANTZ506/,'Z506'],
+ [/^Z506/,'Z506'],
  [/^Z1007/,'Z1007']
 ]);
 function resolveName(text,side){
@@ -102,6 +106,6 @@ export function aircraftProfile(unit,side){
  const ref=table[key],assets=ASSETS[side],asset=Object.hasOwn(assets,ref.slug)?assets[ref.slug]:null;
  const valid=asset&&typeof asset.file==='string'&&/^[a-z0-9_-]+\.(?:webp|png)$/i.test(asset.file)&&asset.credit&&asset.license&&asset.source;
  return {key,label:ref.label,match:ref.match,page:ref.id?'https://wiki.warthunder.com/unit/'+ref.id:null,
- image:valid?'./assets/'+side+'/aircraft/'+asset.file+'?v=1.49':null,
+ image:valid?'./assets/'+side+'/aircraft/'+asset.file+'?v=1.50':null,
  credit:valid?String(asset.credit):null,license:valid?String(asset.license):null,source:valid?String(asset.source):null};
 }

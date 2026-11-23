@@ -1,4 +1,4 @@
-# Profili aerei — v1.49
+# Profili aerei — v1.50
 
 I registri pubblici indicizzano modelli storici, non assegnazioni, quantità, perdite o punti della partita. Il resolver usa la fazione autenticata e le chiavi normalizzate.
 
@@ -13,7 +13,7 @@ Sono state aggiunte 16 miniature Allies WebP 512 × 256 dallo ZIP Royal Air Forc
 Dimensioni visuali: 160 × 80 desktop, 124 × 64 tablet/mobile, con object-fit contain. Usare immagini uniformi, senza deformare o capovolgere i contrassegni. Per associare un file autorizzato, aggiungere la voce al registro ASSETS usando lo slug indicato e i campi file, credit, license, source. Se assente o corrotto, il catalogo non mostra icone rotte.
 
 ## Stato importazione
-Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 19/19 modelli originari coperti; Skua e Barracuda utilizzano illustrazioni sintetiche approvate. Sea Gladiator aggiunto come modello navale separato. Le versioni Sea, aggiunte successivamente, sono documentate a parte.
+Axis: 20/20 modelli coperti (18 WebP distinti, inclusa l'illustrazione del CANT Z.506). Allies: 19/19 modelli originari coperti; Skua e Barracuda utilizzano illustrazioni sintetiche approvate. Sea Gladiator aggiunto come modello navale separato. Le versioni Sea, aggiunte successivamente, sono documentate a parte.
 
 ## Riferimenti identificati
 ### AXIS
@@ -37,7 +37,7 @@ Axis: 19/20 modelli coperti da 17 WebP; manca CANT Z.506. Allies: 19/19 modelli 
 | BR20 | br20.webp | [B.R.20M M1](https://wiki.warthunder.com/unit/br_20m_m1) | family |
 | HE111H6 | he111h6.webp | [He 111 H-6](https://wiki.warthunder.com/unit/he-111h-6) | exact |
 | JU88A4 | ju88a4.webp | [Ju 88 A-4](https://wiki.warthunder.com/unit/ju-88a-4) | exact |
-| Z506 | z506.webp | Da reperire | missing |
+| Z506 | z506.webp | [Illustrazione generata per il progetto](../assets/axis/aircraft/z506.webp) | illustration |
 | Z1007 | z1007.webp | [Z.1007 bis serie 3](https://wiki.warthunder.com/unit/z_1007_bis_serie3) | family |
 | SM79 | sm79.webp | [S.M.79 AS](https://wiki.warthunder.com/unit/sm_79_1941_italy) | family |
 
@@ -100,3 +100,10 @@ Aggiunto `martlet-mkii.webp` da `f4f-4_martlet_mk4.png`, PNG originale dell'uten
 - **SEA GLADIATOR MK.II**: tipo F, anno 1939, ritiro 1944 (ultimo impiego non operativo), base IMBARCABILE; punti ereditati dal Gladiator terrestre alla sincronizzazione, altrimenti 6. Separato da **GLADIATOR MK.II**, terrestre.
 - Fonti per l'anno: [Aeroflight, Sea Gladiators imbarcati marzo 1939](https://www.aeroflight.co.uk/aircraft/types/type-details/gloster-gladiator) e [Fleet Air Arm aircraft service, fine attività secondarie nel 1944](https://www.wings-aviation.ch/32-FAA/2-Aircraft/Gloster-Gladiator/Fighter.htm).
 - `aircraftKey` gestisce anche denominazioni estese per i modelli Halifax e Beaufort, con distinzione esplicita dal Beaufighter.
+
+## v1.50 — CANT Z.506 Airone
+
+- `assets/axis/aircraft/z506.webp` è la conversione WebP della revisione **CANT_Z506_Airone_corretto.png** approvata in chat; 320×160 pixel, canale alfa, nessuna deformazione delle proporzioni. È un'illustrazione generata, non una fotografia di velivolo reale.
+- La voce `Z506` usa `match: illustration` e non dipende da Cybermodeler né da War Thunder.
+- Alias espliciti coprono `CANT Z506`, `CANT Z506B`, `CANT Z.506 Airone`, `Z.506 Airone`, `CRDA CANT Z506` e `Airone`; la voce Z.1007 resta separata.
+- Il catalogo Axis ora dispone di immagini per tutte le 20 voci originali, comprese le due che condividono una miniatura di variante. Nessun valore di gioco o registro privato è stato modificato.
