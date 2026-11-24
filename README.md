@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.57 (Nhost)
+# Campagna W@S Mediterraneo — v1.58 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.58
+- Stato del naviglio: dettaglio per tipologia sotto i quattro totali esistenti, con micro-badge e sagome di riferimento dei cataloghi Axis/Allies. Incluse tutte le categorie, BC e eventuali tipi aggiuntivi; valori nulli attenuati.
+- Conteggi derivati dagli stessi scafi univoci già classificati dal riepilogo; nessun doppio conteggio degli ammodernamenti, nessun intervento sul database.
+- Riquadro responsivo, con due o tre colonne di badge in base allo spazio disponibile; totali originali e controlli di sessione preservati.
 
 ## Novità v1.57
 - Corretto il blocco di accesso causato da URL JavaScript diversi per il modulo di autenticazione tra interfaccia e API. I due moduli ora condividono la stessa sessione.

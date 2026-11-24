@@ -47,3 +47,17 @@ export function unitNation(u,side,ships){
  if(/^(JU|BF|FW|HE|DO|ME|HS|AR)\d/.test(compact))return 'de-air';
  return '';
 }
+
+// v1.58 — dettaglio per tipo degli scafi già classificati per stato.
+// Le categorie fuori catalogo restano visibili, così la somma coincide sempre col totale.
+export function fleetTypeBreakdown(fleets){
+ const types=new Set(SHIP_TYPES);
+ const typeOf=u=>typeCode(u)||'ALTRO';
+ for(const units of Object.values(fleets))for(const u of units)types.add(typeOf(u));
+ const order=[...SHIP_TYPES,...[...types].filter(t=>!SHIP_TYPES.includes(t)).sort((a,b)=>a.localeCompare(b,'it'))];
+ return Object.fromEntries(Object.entries(fleets).map(([status,units])=>{
+  const counts=new Map(order.map(t=>[t,0]));
+  for(const u of units){const type=typeOf(u);counts.set(type,counts.get(type)+1);}
+  return [status,order.map(type=>({type,count:counts.get(type)}))];
+ }));
+}

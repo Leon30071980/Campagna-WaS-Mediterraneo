@@ -53,3 +53,32 @@ assert.equal(authImport(mainSource),authImport(apiSource),'UI e API devono condi
 assert.equal(configImport(authSource),configImport(apiSource),'configurazione Nhost coerente');
 assert.equal(configImport(mainSource),configImport(apiSource),'configurazione UI/API coerente');
 for(const p of ['js/common/auth.js','js/common/config.js','js/common/port-visual.js'])execFileSync(process.execPath,['--check',join(root,p)],{stdio:'pipe'});
+
+
+// v1.58: il dettaglio per tipo deve riconciliare esattamente i totali per scafo.
+import {fleetTypeBreakdown,SHIP_TYPES} from '../js/common/catalog-display.js';
+import {fleetStatusTotals} from '../js/common/fleet-rules.js';
+const testFleet=[
+ {nome:'A (I)',tipo:'BB',anno:1940,ritirato:1942},
+ {nome:'A (II)',tipo:'BB',anno:1942},
+ {nome:'B',tipo:'BC',anno:1940},
+ {nome:'C',tipo:'DD',anno:1940},
+ {nome:'D',tipo:'CV',anno:1943},
+ {nome:'E',tipo:'SUB',anno:1940},
+ {nome:'F',tipo:'X',anno:1940},
+ {nome:'G',tipo:'',anno:1940}
+];
+const classified=fleetStatusTotals(testFleet,{B:{stato:'danneggiata',turno:0},C:{stato:'affondata',turno:0}},0);
+const breakdown=fleetTypeBreakdown(classified);
+assert.equal(classified.attiva.length,4,'ammodernamento futuro non conta come scafo aggiuntivo');
+for(const [status,units] of Object.entries(classified)){
+ assert.equal(breakdown[status].reduce((sum,row)=>sum+row.count,0),units.length,'dettaglio e totale '+status);
+ assert.deepEqual(breakdown[status].slice(0,SHIP_TYPES.length).map(row=>row.type),SHIP_TYPES);
+}
+assert.equal(breakdown.attiva.find(row=>row.type==='BB').count,1);
+assert.equal(breakdown.riparazione.find(row=>row.type==='BC').count,1);
+assert.equal(breakdown.affondata.find(row=>row.type==='DD').count,1);
+assert.equal(breakdown.costruzione.find(row=>row.type==='CV').count,1);
+assert.equal(breakdown.attiva.find(row=>row.type==='X').count,1);
+assert.equal(breakdown.attiva.find(row=>row.type==='ALTRO').count,1);
+assert(mainSource.includes('appendFleetTypeBreakdown(d,typeBreakdown[key])'),'dettaglio visibile sotto ogni stato');

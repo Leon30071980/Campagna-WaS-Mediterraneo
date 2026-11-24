@@ -401,3 +401,53 @@ body[data-side] .battle-unit-caption{
  body[data-side] .battle-unit-visual{width:52px;min-width:52px;flex-basis:52px;}
  body[data-side] .battle-unit-trigger{width:52px;height:30px;min-height:30px;}
 }
+
+/* v1.58 — dettaglio del naviglio per tipologia: proposta 1.
+   Icone di riferimento, non rappresentazioni delle singole unità. */
+body[data-side] .naval-four-states .naval-total{container-type:inline-size;}
+body[data-side] .naval-four-states .naval-total.building{color:#68bff1;}
+:root[data-theme="light"] body[data-side] .naval-four-states .naval-total.building{color:#216da1;}
+@media(prefers-color-scheme:light){:root:not([data-theme]) body[data-side] .naval-four-states .naval-total.building{color:#216da1;}}
+body[data-side] .naval-four-states .fleet-type-breakdown{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;
+ margin:9px 0 0;padding-top:7px;border-top:1px solid var(--line-soft);
+}
+body[data-side] .fleet-type-chip{
+ display:flex;align-items:center;justify-content:center;gap:3px;min-width:0;
+ border:1px solid currentColor;border-radius:10px;padding:3px 3px;
+ background:color-mix(in srgb,currentColor 8%,var(--surface));
+ font:600 11px/1.2 "Barlow Semi Condensed","Segoe UI",sans-serif;
+}
+body[data-side] .fleet-type-chip.is-zero{color:var(--ink-faint);border-color:var(--line);background:var(--surface);}
+body[data-side] .fleet-type-code{color:var(--ink-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+body[data-side] .fleet-type-count{color:var(--ink);font-weight:700;white-space:nowrap;}
+body[data-side] .fleet-type-chip.is-zero .fleet-type-count{color:var(--ink-faint);}
+body[data-side] .fleet-type-icon{
+ display:block;width:18px;height:11px;flex:0 0 18px;background:currentColor;
+ mask-image:var(--fleet-type-image,none);mask-size:contain;mask-position:center;mask-repeat:no-repeat;
+ -webkit-mask-image:var(--fleet-type-image,none);-webkit-mask-size:contain;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;
+}
+body[data-side] .fleet-type-chip:not([data-type="BB"],[data-type="BC"],[data-type="CV"],[data-type="CA"],[data-type="CL"],[data-type="DD"],[data-type="SUB"]) .fleet-type-icon{width:5px;height:5px;flex-basis:5px;border-radius:50%;}
+body[data-side] .fleet-type-chip[data-type="BB"]{--fleet-type-image:url('../../assets/axis/profiles/bb_littorio.webp');}
+body[data-side] .fleet-type-chip[data-type="BC"]{--fleet-type-image:url('../../assets/allies/profiles/bc_admiral.webp');}
+body[data-side] .fleet-type-chip[data-type="CV"]{--fleet-type-image:url('../../assets/axis/profiles/cv_aquila.webp');}
+body[data-side] .fleet-type-chip[data-type="CA"]{--fleet-type-image:url('../../assets/axis/profiles/ca_zara.webp');}
+body[data-side] .fleet-type-chip[data-type="CL"]{--fleet-type-image:url('../../assets/axis/profiles/cl_giussano.webp');}
+body[data-side] .fleet-type-chip[data-type="DD"]{--fleet-type-image:url('../../assets/axis/profiles/dd_maestrale.webp');}
+body[data-side] .fleet-type-chip[data-type="SUB"]{--fleet-type-image:url('../../assets/axis/profiles/sub_marconi.webp');}
+body[data-side="allies"] .fleet-type-chip[data-type="BB"]{--fleet-type-image:url('../../assets/allies/profiles/bb_queen_elizabeth.webp');}
+body[data-side="allies"] .fleet-type-chip[data-type="CV"]{--fleet-type-image:url('../../assets/allies/profiles/cv_ark_royal.webp');}
+body[data-side="allies"] .fleet-type-chip[data-type="CA"]{--fleet-type-image:url('../../assets/allies/profiles/ca_county.webp');}
+body[data-side="allies"] .fleet-type-chip[data-type="CL"]{--fleet-type-image:url('../../assets/allies/profiles/cl_leander.webp');}
+body[data-side="allies"] .fleet-type-chip[data-type="DD"]{--fleet-type-image:url('../../assets/allies/profiles/dd_tribal.webp');}
+body[data-side="allies"] .fleet-type-chip[data-type="SUB"]{--fleet-type-image:url('../../assets/allies/profiles/sub_t.webp');}
+@container (min-width:205px){
+ body[data-side] .naval-four-states .fleet-type-breakdown{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@container (max-width:130px){
+ body[data-side] .fleet-type-chip{padding:3px 2px;gap:2px;font-size:10px;}
+ body[data-side] .fleet-type-icon{width:13px;flex-basis:13px;}
+}
+@container (max-width:105px){
+ body[data-side] .naval-four-states .fleet-type-breakdown{grid-template-columns:minmax(0,1fr);}
+}
