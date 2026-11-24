@@ -437,5 +437,3 @@ body[data-side] .fleet-type-entry.is-zero .fleet-type-count{color:var(--ink-fain
  body[data-side] .fleet-type-entry:nth-child(3n+1)::before{content:none;}
 }
 
-/* v1.60 — bandiere allineate alla targa abbassata del nuovo banner. */
-body[data-side="allies"] .royal-banner-mirror.royal-banner-v160 .royal-side-flag{top:87.3%;}

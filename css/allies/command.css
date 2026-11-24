@@ -78,6 +78,6 @@ body[data-side="allies"] .pennant .fleet-summary-cell{grid-column:auto;grid-row:
 @media(max-width:620px){body[data-side="allies"] .pennant{width:calc(100% - 16px);}body[data-side="allies"] .naval-total-top .naval-icon{width:52px;height:26px;}body[data-side="allies"] .naval-total-top .naval-sunk-icon{width:45px;height:36px;}body[data-side="allies"] .naval-total-top .v{font-size:20px;}body[data-side="allies"] .naval-four-states .naval-total-label{font-size:12px;}body[data-side="allies"] .axis-fleet-cell .nhost-summary{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
 
-/* v1.60 — banner Allies 16:9, immagine non deformata e targa abbassata. */
-body[data-side="allies"] .royal-banner.royal-banner-v160{aspect-ratio:1916/1078;}
-body[data-side="allies"] .royal-banner-v160 .royal-banner-composition{aspect-ratio:1916/1078;}
+/* v1.61 — proporzioni identiche alla testata Axis. */
+body[data-side="allies"] .royal-banner.royal-banner-v161{aspect-ratio:1916/821;}
+body[data-side="allies"] .royal-banner-v161 .royal-banner-composition{aspect-ratio:1916/821;}
