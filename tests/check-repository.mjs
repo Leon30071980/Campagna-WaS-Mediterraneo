@@ -82,3 +82,10 @@ assert.equal(breakdown.costruzione.find(row=>row.type==='CV').count,1);
 assert.equal(breakdown.attiva.find(row=>row.type==='X').count,1);
 assert.equal(breakdown.attiva.find(row=>row.type==='ALTRO').count,1);
 assert(mainSource.includes('appendFleetTypeBreakdown(d,typeBreakdown[key])'),'dettaglio visibile sotto ogni stato');
+
+// v1.59: riepilogo lineare senza icone ripetute, totali invariati.
+assert(mainSource.includes("'fleet-type-entry'"),'voci lineari del riepilogo');
+assert(!mainSource.includes('fleet-type-icon'),'nessuna miniatura per tipo nella testata');
+assert(mainSource.includes("text(top,'span',fleets[key].length,'v num')"),'totale originale conservato');
+const fleetCss=readFileSync(join(root,'css/common/responsive.css'),'utf8');
+assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet-type-image'),'stile lineare senza vecchie sagome');
