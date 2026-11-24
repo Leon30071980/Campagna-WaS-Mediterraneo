@@ -89,3 +89,12 @@ assert(!mainSource.includes('fleet-type-icon'),'nessuna miniatura per tipo nella
 assert(mainSource.includes("text(top,'span',fleets[key].length,'v num')"),'totale originale conservato');
 const fleetCss=readFileSync(join(root,'css/common/responsive.css'),'utf8');
 assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet-type-image'),'stile lineare senza vecchie sagome');
+
+// v1.60 — testata Allies: nuovo banner, archivio e stemma fuori dalle unità.
+const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
+assert(royalHeaderSource.includes('assets/allies/header/banner.webp?v=1.60'),'nuovo banner Allies');
+assert(!royalHeaderSource.includes('swordfish-torpedoes.webp'),'siluri già presenti nel banner');
+assert(royalHeaderSource.includes('royal-banner-v160'),'layout nuovo banner');
+assert(existsSync(join(root,'assets/allies/header/old-banner/banner.png')),'banner originale archiviato');
+assert(existsSync(join(root,'assets/allies/header/old-banner/swordfish-torpedoes.webp')),'livello siluri originale archiviato');
+assert(royalHeaderSource.includes('translate(0 257)'),'targa abbassata');
