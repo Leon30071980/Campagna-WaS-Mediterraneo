@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.61 (Nhost)
+# Campagna W@S Mediterraneo — v1.62 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,10 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.62
+- Corretto il residuo della corona Axis sul bordo superiore della testata Allies: ricostruito localmente il bordo con un tratto pulito della cornice originale.
+- Stemma Royal Navy sempre centrato, abbassato di 15 pixel nel riferimento 1916 × 821 per evitare il contatto con il bordo. Banner, navi, aerei e testata Axis invariati.
 
 ## Novità v1.61
 - Testata Allies con dimensioni 1916 × 821, identiche ad Axis, e stemma centrato sull’asse x=958.
