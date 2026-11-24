@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.55 (Nhost)
+# Campagna W@S Mediterraneo — v1.56 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.56
+- **Battaglia / Forza in mare**: miniature delle navi e degli aerei realmente estratti, nelle squadre della prima ondata e dei rinforzi. Il profilo viene risolto dal catalogo privato della fazione e riutilizza le immagini già presenti nel Porto.
+- **Rapporto post-battaglia e Storico**: le miniature sono visibili per entrambe le flotte **solo dopo la conclusione di entrambe le fazioni**, esclusivamente con i dati pubblicati nel rapporto. Restano invariati i permessi Hasura e il divieto di leggere formazioni nemiche in anticipo.
+- **Interazione**: miniature opache su fondo scuro, ingrandimento con mouse o clic/tocco, chiusura toccando altrove o con Esc. Se un profilo manca o la fonte fallisce, il nome resta leggibile senza immagini inventate.
+- Nessuna modifica a estrazione, danni, punteggi, dati Nhost o logica di gioco. Esteso il test di regressione di Porto/Battaglia e corretto un controllo immagine con parametro cache obsoleto.
 
 ## Novità v1.55
 - Corretto l'errore di sintassi JavaScript introdotto nella v1.54 che impediva l'inizializzazione dell'app e il funzionamento del pulsante Accedi.

@@ -347,3 +347,57 @@ body[data-side] #p-porto .port-preview-caption{
   width:52px;min-width:0;height:21px;
  }
 }
+
+/* v1.56 — miniature delle unità estratte, Battaglia e rapporti Storico.
+   Stessi profili del Porto, leggibili su fondi scuri, senza cambiare i controlli. */
+body[data-side] .battle-unit-visual{
+ position:relative;display:inline-flex;align-items:center;justify-content:center;
+ flex:0 0 64px;width:64px;min-width:64px;z-index:1;
+}
+body[data-side] .battle-unit-visual.is-open,
+body[data-side] .battle-unit-visual:hover{z-index:55;}
+body[data-side] .battle-unit-trigger{
+ appearance:none;-webkit-appearance:none;display:flex;align-items:center;justify-content:center;
+ width:64px;height:34px;min-height:34px;box-sizing:border-box;padding:2px;
+ border:1px solid #799caf;border-radius:4px;background:#0d2432;
+ cursor:zoom-in;overflow:hidden;
+}
+body[data-side] .battle-unit-visual--ship .battle-unit-trigger{
+ background:#091a26;border-color:#8aaabb;
+}
+body[data-side] .battle-unit-trigger:focus-visible{
+ outline:2px solid var(--sea);outline-offset:2px;
+}
+body[data-side] .battle-unit-thumb{
+ display:block;width:100%;height:100%;object-fit:contain;object-position:center;
+ opacity:1;pointer-events:none;
+}
+body[data-side] .battle-unit-visual--ship .battle-unit-thumb{filter:contrast(1.25);}
+body[data-side] .battle-unit-preview{
+ display:none;position:absolute;left:0;top:calc(100% + 6px);
+ width:min(350px,78vw);height:180px;box-sizing:border-box;
+ flex-direction:column;align-items:center;justify-content:center;gap:5px;
+ padding:8px;border:1px solid #b5d8e9;border-radius:6px;
+ background:#0d2432;box-shadow:0 7px 22px rgba(0,0,0,.65);
+ pointer-events:none;z-index:60;
+}
+@media(hover:hover){
+ body[data-side] .battle-unit-visual:hover .battle-unit-preview{display:flex;}
+}
+body[data-side] .battle-unit-visual.is-open .battle-unit-preview{display:flex;}
+body[data-side] .battle-unit-enlarged{
+ display:block;width:100%;min-height:0;flex:1;object-fit:contain;
+}
+body[data-side] .battle-unit-caption{
+ flex:0 0 auto;max-width:100%;color:#f2f7fa;font-size:12px;font-weight:700;
+ text-align:center;overflow-wrap:anywhere;
+}
+@media(max-width:720px){
+ body[data-side] .unit.has-battle-visual{
+  grid-template-columns:auto 52px minmax(0,1fr) auto;
+ }
+ body[data-side] .unit.has-battle-visual .seg,
+ body[data-side] .unit.has-battle-visual .st{grid-column:3/-1;}
+ body[data-side] .battle-unit-visual{width:52px;min-width:52px;flex-basis:52px;}
+ body[data-side] .battle-unit-trigger{width:52px;height:30px;min-height:30px;}
+}
