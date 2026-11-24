@@ -92,7 +92,7 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 
 // v1.60 — testata Allies: nuovo banner, archivio e stemma fuori dalle unità.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
-assert(royalHeaderSource.includes('assets/allies/header/banner-panorama.webp?v=1.62'),'banner panoramico Allies');
+assert(royalHeaderSource.includes('assets/allies/header/banner-v163.webp?v=1.63'),'banner panoramico Allies');
 assert(existsSync(join(root,'assets/allies/header/banner.webp')),'immagine approvata v1.60 conservata');
 assert(existsSync(join(root,'assets/allies/header/banner-panorama.webp')),'fondale panoramico disponibile');
 assert(!royalHeaderSource.includes('swordfish-torpedoes.webp'),'siluri già presenti nel banner');
@@ -101,7 +101,8 @@ assert(existsSync(join(root,'assets/allies/header/old-banner/banner.png')),'bann
 assert(existsSync(join(root,'assets/allies/header/old-banner/swordfish-torpedoes.webp')),'livello siluri originale archiviato');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'proporzioni uguali ad Axis');
-assert(royalMarkup.includes('x="858" y="30" width="200" height="267"'),'stemma centrato esattamente a x=958');
+assert(!royalMarkup.includes('/crest.webp'),'stemma integrato nel fondale, nessuna sovrapposizione');
+assert(existsSync(join(root,'assets/allies/header/banner-v163.webp')),'nuovo banner disponibile');
 assert(!royalMarkup.includes('translate(0 257)'),'targa riportata nella posizione Axis');
 
 // v1.62 — riparazione locale della cornice Allies, senza modificare la scena.
