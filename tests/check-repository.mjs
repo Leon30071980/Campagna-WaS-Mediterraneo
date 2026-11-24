@@ -93,7 +93,7 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 // v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.72'),'fondale ridimensionato');
+assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.73'),'fondale ridimensionato');
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
 assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
@@ -196,3 +196,8 @@ for(const p of ['js/axis/header.js','js/allies/header.js'])assert(readFileSync(j
 // v1.72 — qualifica CL4 e documentazione delle caselle miste.
 assert.equal(SQUAD_ROLES.CL4,'Gruppo speciale incrociatori');
 assert(mainSource.includes('2 CA/CL + 4 CA/CL o DD'));
+
+// v1.73 — documentazione del punteggio e attivazione esplicita lato Nhost.
+assert(mainSource.includes('Formula C (v1.73)'));
+assert(mainSource.includes('C = 1 + 0,5 × (C₀ − 1)'));
+assert(mainSource.includes('La sola pubblicazione v1.73 non modifica il calcolo del server'));
