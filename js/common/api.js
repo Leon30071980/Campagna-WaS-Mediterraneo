@@ -1,7 +1,7 @@
-import { aircraftBase } from './aircraft-bases.js?v=1.69';
+import { aircraftBase } from './aircraft-bases.js?v=1.70';
 // Campagna W@S Mediterraneo v1.2
-import { NHOST } from './config.js?v=1.69';
-import { getAccessToken, refreshAccessToken } from './auth.js?v=1.69';
+import { NHOST } from './config.js?v=1.70';
+import { getAccessToken, refreshAccessToken } from './auth.js?v=1.70';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }

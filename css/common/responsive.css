@@ -444,3 +444,6 @@ body[data-side] .opponent-presence[data-presence="online"] .presence-dot{backgro
 body[data-side] .opponent-presence[data-presence="offline"] .presence-dot{background:#ef5656;box-shadow:0 0 5px #ef5656;}
 body[data-side] .presence-label{font-weight:600;}
 @media(max-width:620px){body[data-side] .header-right{flex-wrap:wrap;gap:4px;}body[data-side] .opponent-presence{font-size:11px;gap:4px;padding:3px 5px;}}
+
+/* v1.70 — interruttore audio presenza. */
+body[data-side] .presence-sound-btn{min-width:28px;line-height:1.2;padding:3px 6px;}

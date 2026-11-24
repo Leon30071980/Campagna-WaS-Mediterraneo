@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.69 (Nhost)
+# Campagna W@S Mediterraneo — v1.70 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,10 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.70
+- Presenza: controllo ogni 3 secondi dopo la risposta Nhost, con rallentamento automatico in caso di errori. Suono ascendente al passaggio Offline → Online e discendente al passaggio Online → Offline; nessun suono alla prima rilevazione, per segnali ripetuti o stato sconosciuto. Pulsante audio nella testata, preferenza locale persistente. Nei browser è richiesta una prima interazione per abilitare l'audio.
+- La scadenza server in caso di chiusura improvvisa resta 45 secondi fino all'applicazione dello script privato facoltativo che la riduce a 20 secondi. Nessun cambiamento ai dati o alle regole della campagna.
 
 ## Novità v1.69
 - Indicatore presenza avversaria in entrambe le testate: verde Online, rosso Offline, grigio Sconosciuto. Segnale ogni 15 secondi, scadenza 45 secondi sul server, ultimo contatto nel tooltip; più schede gestite separatamente.
