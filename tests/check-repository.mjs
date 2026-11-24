@@ -93,7 +93,7 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 // v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.70'),'fondale ridimensionato');
+assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.71'),'fondale ridimensionato');
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
 assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
@@ -137,8 +137,9 @@ assert(royalMarkup.includes('x="888" y="0" width="140" height="25"'),'ritaglio c
  assert.equal(aircraftAllowedInSlot(dual,'CV1',1,false,null),true);
  assert.equal(selectedCarrier({navi:[cv],porto:{CV1:[cv.nome]}},()=>true),cv);
  assert.equal(selectedCarrier({navi:[cv],porto:{CV1:[cv.nome]}},()=>false),null);
- const aircraftSquads=['BB1','BB2','BB3','CA1','CL1','SUB','CV1','AIR','CA2','CA3','CL2','CL3','CL4'].map(id=>({id,nome:id,forma:id==='AIR'?'riserva':id==='CV1'?'portaerei':'mista',nucleo:{n:id==='AIR'?3:id==='CV1'?1:0,cls:[]},scorta:{n:id==='CV1'?2:0,cls:[]}}));
- const airFixture={navi:[cv],aerei:[land,dual,embarked],perdite:{},ui_squadre:aircraftSquads,porto:{CV1:[cv.nome,embarked.nome,land.nome],AIR:[embarked.nome,land.nome,dual.nome]}};
+ const aircraftSquads=['BB1','BB2','BB3','CA1','CL1','SUB','CV1','AIR','CA2','CA3','CL2','CL3','CL4'].map(id=>({id,nome:id,forma:id==='AIR'?'riserva':id==='CV1'?'portaerei':'mista',nucleo:{n:id==='AIR'?3:id==='CV1'?1:0,cls:[]},scorta:{n:id==='CV1'||id==='CA1'?2:0,cls:[]}}));
+ const escortDD={nome:'ESCORT DD',cls:'DD',tipo:'DD',anno:1940,pt:5};
+ const airFixture={navi:[cv,escortDD],aerei:[land,dual,embarked],perdite:{},ui_squadre:aircraftSquads,porto:{CA1:[escortDD.nome],CV1:[cv.nome,embarked.nome,land.nome],AIR:[embarked.nome,land.nome,dual.nome]}};
  const aircraftBattle=generateAircraftTestBattle(airFixture,0,42);
  const cvGroup=aircraftBattle.gruppi.find(g=>g.id==='CV1'||g.id==='IFCV1');
  assert(cvGroup&&cvGroup.unita.some(u=>u.nome===embarked.nome),'imbarcato estratto insieme a CV');
@@ -169,3 +170,25 @@ assert.equal(presenceTransition('online','online'),null);
 assert.equal(presenceTransition('online','unknown'),null);
 assert.equal(presenceTransition('unknown','offline'),null);
 for(const p of ['js/axis/header.js','js/allies/header.js'])assert(readFileSync(join(root,p),'utf8').includes('btn-presence-sound'));
+
+ // v1.71 — verifica fattori, determinismo, scorta effettiva e fallback.
+ import {reinforcementFactor,hasRequiredEscort,SQUAD_ROLES,LIGHT_WAVE_HEAVY_FACTOR} from '../js/common/battle-engine.js';
+ assert.deepEqual([0,149,150,199,200,239,240,259,260,279,280,350].map(reinforcementFactor),[1,1,.85,.85,.65,.65,.4,.4,.2,.2,0,0]);
+ assert.equal(LIGHT_WAVE_HEAVY_FACTOR,.35);
+ assert.equal(SQUAD_ROLES.BB1,'Corazzate · Primaria');
+ assert(hasRequiredEscort([{unita:[{tipo:'BB'},{tipo:'DD'}]}]));
+ assert(!hasRequiredEscort([{unita:[{tipo:'BB'}]}]));
+ assert(!hasRequiredEscort([{unita:[{tipo:'CV'}]}]));
+ assert(hasRequiredEscort([{unita:[{tipo:'CL'}]}]));
+ assert.deepEqual(generateAircraftTestBattle(airFixture,0,42),aircraftBattle);
+ for(let i=0;i<32;i++){
+  const b=generateAircraftTestBattle(airFixture,0,(i*2654435761)>>>0);
+  assert(hasRequiredEscort(b.gruppi));
+  assert(hasRequiredEscort(b.gruppi.filter(g=>!g.rinforzo)));
+  assert(b.totale>=150&&b.totale<=280);
+ }
+ const onlyDD={...airFixture,navi:[escortDD],aerei:[],porto:{CA1:[escortDD.nome]}};
+ const small=generateAircraftTestBattle(onlyDD,0,42);
+ assert.equal(small.totale,5);assert.equal(small.fuoriRange,true);assert.equal(small.tentativi,500);
+ assert.throws(()=>generateAircraftTestBattle({...onlyDD,porto:{}},0,42),/Nessuna formazione valida/);
+ assert.throws(()=>generateAircraftTestBattle({...airFixture,navi:[cv],aerei:[],porto:{CV1:[cv.nome]}},0,42),/Nessuna formazione valida/);

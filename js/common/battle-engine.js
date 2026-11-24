@@ -1,5 +1,24 @@
-import { canUseCarrier, aircraftAllowedInSlot, selectedCarrier } from './aircraft-bases.js?v=1.68';
-import { isAvailable, duplicateHull, pendingPortModernizations } from './fleet-rules.js?v=1.53';
+import { canUseCarrier, aircraftAllowedInSlot, selectedCarrier } from './aircraft-bases.js?v=1.71';
+import { isAvailable, duplicateHull, pendingPortModernizations } from './fleet-rules.js?v=1.71';
+// v1.71 — regolamento C: tiri effettivi, scorte indirette e rinforzi progressivi.
+export const BATTLE_LIMITS=Object.freeze({min:150,max:280,attempts:500});
+export const REINFORCEMENT_BANDS=Object.freeze([[0,149,100],[150,199,85],[200,239,65],[240,259,40],[260,279,20],[280,Infinity,0]].map(Object.freeze));
+export function reinforcementFactor(points){
+ return REINFORCEMENT_BANDS.find(([,max])=>points<max+1)?.[2]/100||0;
+}
+// Con prima ondata senza unità maggiori: si mantiene il 35% della probabilità dei rinforzi BB/CV.
+export const LIGHT_WAVE_HEAVY_FACTOR=.35;
+export const SQUAD_ROLES=Object.freeze({
+ BB1:'Corazzate · Primaria',BB2:'Corazzate · Secondaria',BB3:'Corazzate · Riserva',
+ CA1:'Incrociatori · Scorta primaria',CL1:'Incrociatori · Scorta secondaria',
+ SUB:'Supporto sommergibili',CV1:'Gruppo portaerei / supporto extra',AIR:'Supporto aereo',
+ CA2:'Incrociatori · Rinforzo prioritario',CA3:'Incrociatori · Rinforzo',
+ CL2:'Incrociatori · Rinforzo I',CL3:'Incrociatori · Rinforzo II',CL4:'Incrociatori · Rinforzo III'
+});
+export function hasRequiredEscort(groups){
+ const units=groups.flatMap(g=>g.unita||[]);
+ return !units.some(u=>['BB','BC','CV'].includes(u.tipo))||units.some(u=>u.tipo==='DD');
+}
 // Motore di estrazione della campagna, derivato dal codice originale Regia Marina 27 / Royal Navy 28.
 // Il catalogo e i nomi delle squadre arrivano dallo stato privato Nhost: non sono inclusi qui.
 export function generateBattle(state, turnIndex, seed) {
@@ -15,11 +34,12 @@ export function generateBattle(state, turnIndex, seed) {
   const SQ=Object.fromEntries((S.ui_squadre||[]).map(s=>[s.id,s]));
   const required=['BB1','BB2','BB3','CA1','CL1','SUB','CV1','AIR','CA2','CA3','CL2','CL3','CL4'];
   if(!required.every(id=>SQ[id]))throw Error('Configurazione squadre Nhost incompleta.');
-  const TETTO=280,MIN_FLOTTA=150,MAX_FLOTTA=280;
+  const {min:MIN_FLOTTA,max:MAX_FLOTTA,attempts:MAX_TENTATIVI}=BATTLE_LIMITS,TETTO=MAX_FLOTTA;
 
 function info(nome) { return CATALOGO.get(nome) || null; }
 function punti(nome) { const c=info(nome); return c?Number(c.pt):0; }
-function disponibile(nome) { return isAvailable(info(nome), S, turnIndex); }
+const disponibilita=new Map();
+function disponibile(nome) {if(!disponibilita.has(nome))disponibilita.set(nome,isAvailable(info(nome),S,turnIndex));return disponibilita.get(nome);}
 function getHangar(nome) {return Number(info(nome)?.hangar ?? 3);}
 
 const ORDINE = [
@@ -116,33 +136,44 @@ function caselle(sid) {
 }
 
 function estraiConSeed(seed) {
-  for (let tentativo = 1; tentativo <= 500; tentativo++) {
-    rng = mulberry32((seed + tentativo * 7919) >>> 0);
-    const r = unPassaggio();
-    if (r.totale >= MIN_FLOTTA && r.totale <= MAX_FLOTTA) {
-      r.seed = seed; r.tentativi = tentativo;
-      return r;
-    }
+
+  let best=null,distance=Infinity;
+  for (let tentativo=1;tentativo<=MAX_TENTATIVI;tentativo++){
+    rng=mulberry32((seed+tentativo*7919)>>>0);
+    const r=unPassaggio();
+    // Nessuna BB/BC/CV senza DD, né nella prima ondata né nella forza finale.
+    if(!r.gruppi.length||!hasRequiredEscort(r.gruppi)||!hasRequiredEscort(r.gruppi.filter(g=>!g.rinforzo)))continue;
+    const d=Math.max(MIN_FLOTTA-r.totale,r.totale-MAX_FLOTTA,0);
+    r.seed=seed;r.tentativi=tentativo;
+    if(d===0)return r;
+    if(d<distance){best=r;distance=d;}
   }
-  rng = mulberry32(seed);
-  const r = unPassaggio();
-  r.seed = seed; r.tentativi = 500; r.fuoriRange = true;
-  return r;
+  if(!best)throw Error('Nessuna formazione valida: verificare le unità operative e la scorta DD nelle squadre di incrociatori.');
+  best.tentativi=MAX_TENTATIVI;best.fuoriRange=true;return best;
 }
 
 function unPassaggio() {
-  const tiri = {}, gruppi = [], log = [];
+  const tiri = {}, effettivi = {}, gruppi = [], log = [];
   let totale = 0, primaOndata = 0;
   const usate = new Set();
 
   ORDINE.forEach((step, idx) => {
     if (idx === 8) primaOndata = totale;
     const s = SQ[step.su];
-    const v = step.tiro(tiri, totale);
-    tiri[step.id] = v;
-    const esito = leggiTiro(s.forma, v);
-    const nomeSq = nomeSquadra(step.su);
-    const riga = { id:step.id, squadra:nomeSq, tiro:v, esito:esito.et, unita:[] };
+
+    const c=caselle(step.su);
+    const mista=s.forma==='mista'&&step.su!=='CV1';
+    const needsEscort=!hasRequiredEscort(gruppi);
+    const hasAvailableDD=[...c.nucleo,...c.scorta].some(n=>info(n)?.tipo==='DD'&&disponibile(n));
+    const forcedCA2=step.id==='CA2'&&['IFBB1','IFBB2','IFBB3'].some(k=>effettivi[k]>=6);
+    // CL1 deve poter supplire a CA1 se la scorta non è realmente uscita.
+    const forcedCL1=step.id==='CL1'&&!gruppi.some(g=>g.unita.some(u=>u.tipo==='DD'));
+    const urgent=!!step.rinforzo&&totale<TETTO&&!usate.has(step.su)&&mista&&needsEscort&&hasAvailableDD;
+    const v=(forcedCL1||urgent)?rb(6,8):step.tiro(effettivi,totale);
+    tiri[step.id]=v;effettivi[step.id]=-1;
+    const esito=leggiTiro(s.forma,v);
+    const nomeSq=nomeSquadra(step.su);
+    const riga={id:step.id,squadra:nomeSq,tiro:v,esito:esito.et,unita:[]};
 
     if (esito.modo === "assente" || esito.modo === "regola" || usate.has(step.su)) {
       if (usate.has(step.su) && esito.modo !== "assente" && esito.modo !== "regola")
@@ -151,7 +182,12 @@ function unPassaggio() {
       return;
     }
 
-    const c = caselle(step.su);
+    const heavyReinforcement=step.rinforzo&&(s.forma==='corazzate'||step.su==='CV1'&&portaereiDisponibili());
+    const lightFirst=!gruppi.some(g=>!g.rinforzo&&g.unita.some(u=>['BB','BC','CV'].includes(u.tipo)));
+    const factor=step.rinforzo&&!urgent&&!forcedCA2?reinforcementFactor(totale)*(heavyReinforcement&&lightFirst?LIGHT_WAVE_HEAVY_FACTOR:1):1;
+    if(factor<1&&rng()>=factor){
+      riga.esito='rinforzo non disponibile (fattore '+Math.round(factor*100)+'%)';log.push(riga);return;
+    }
     const attive = x => x.filter(n => disponibile(n));
     let scelte = [];
 
@@ -167,6 +203,13 @@ function unPassaggio() {
     if (!scelte.length) { riga.esito = "nessuna unità disponibile"; log.push(riga); return; }
 
     usate.add(step.su);
+    // Il tiro originale resta nel registro. Per le dipendenze vale il risultato reale.
+    if(s.forma==='corazzate'){
+      const n=scelte.filter(x=>['BB','BC'].includes(info(x)?.tipo)).length;
+      effettivi[step.id]=n>=2?8:n===1?6:-1;
+    }else{
+      effettivi[step.id]=v;
+    }
     const unita = scelte.map(n => ({ nome:n, cls:info(n).cls, tipo:info(n).tipo, pt:punti(n), esito:"illesa" }));
     const pt = unita.reduce((a, u) => a + u.pt, 0);
     totale += pt;
@@ -175,7 +218,7 @@ function unPassaggio() {
     log.push(riga);
   });
 
-  return { gruppi, log, tiri, totale, primaOndata: primaOndata || totale };
+  return { gruppi, log, tiri, totale, primaOndata: primaOndata || totale, engineVersion:'1.71' };
 }
 
 

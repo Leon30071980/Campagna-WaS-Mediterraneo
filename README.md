@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.70 (Nhost)
+# Campagna W@S Mediterraneo — v1.71 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.71
+- Motore battaglie C: dipendenze basate sulle unità realmente estratte, scorta indiretta DD verificata nella prima ondata e nella formazione definitiva, rinforzi facoltativi modulati al 100/85/65/40/20/0% della probabilità originale in base ai punti già in mare. I soli rinforzi BB/CV, quando la prima ondata è leggera, conservano il 35% della probabilità già modulata; il supporto extra senza CV resta escluso dalla penalizzazione.
+- Limite 150–280 invariato; dopo 500 tentativi conserva la formazione valida più vicina al limite. Non accetta formazioni vuote o prive di DD se contengono BB/BC/CV. Se non esistono candidati validi, chiede di verificare il porto.
+- Sezione Regole con tiri, percentuali condizionate, ordine e ruolo delle squadre. Qualifiche visive nel Porto, nomi e ID Nhost invariati. I semi dipendono dalla versione del motore, le formazioni già salvate non sono rigenerate. Formula punteggio e compatibilità del campo primaOndata con Nhost conservate.
 
 ## Novità v1.70
 - Presenza: controllo ogni 3 secondi dopo la risposta Nhost, con rallentamento automatico in caso di errori. Suono ascendente al passaggio Offline → Online e discendente al passaggio Online → Offline; nessun suono alla prima rilevazione, per segnali ripetuti o stato sconosciuto. Pulsante audio nella testata, preferenza locale persistente. Nei browser è richiesta una prima interazione per abilitare l'audio.
