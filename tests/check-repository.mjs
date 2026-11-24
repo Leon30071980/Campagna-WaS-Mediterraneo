@@ -93,14 +93,16 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 // v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v164.webp?v=1.66'),'fondale approvato invariato');
+assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.67'),'fondale ridimensionato');
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
 assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-knot-clip)"'),'nodo originale');
 assert(royalMarkup.includes('x="958" y="710"'),'posizione titolo originale');
 assert(!royalMarkup.includes('royal-title-strip')&&!royalMarkup.includes('royal-complete-banner')&&!royalMarkup.includes('/crest.webp'),'nessuna fascia separata o duplicazione stemma');
-for(const p of ['banner.webp','banner-panorama.webp','banner-v163.webp','banner-v164.webp','old-banner/banner.png','old-banner/swordfish-torpedoes.webp'])assert(existsSync(join(root,'assets/allies/header',p)),p);
+for(const p of ['banner.webp','banner-panorama.webp','banner-v163.webp','banner-v164.webp','banner-v167.webp','old-banner/banner.png','old-banner/swordfish-torpedoes.webp'])assert(existsSync(join(root,'assets/allies/header',p)),p);
 const royalLayoutCss=readFileSync(join(root,'css/allies/command.css'),'utf8');
-assert(royalLayoutCss.includes('.royal-banner.royal-banner-v166{aspect-ratio:1916/821;}'),'rapporto Axis');
+assert(royalLayoutCss.includes('.royal-banner.royal-banner-v167{aspect-ratio:1916/821;}'),'rapporto Axis');
 assert(!royalLayoutCss.includes('royal-title-strip')&&!royalLayoutCss.includes('royal-complete-banner'),'rimossi layout separati');
+
+assert(royalMarkup.includes('x="888" y="0" width="140" height="25"'),'ritaglio cornice originale senza residui');
