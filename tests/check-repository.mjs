@@ -24,3 +24,14 @@ console.log(refs+' riferimenti statici e '+profiles+' associazioni profilo verif
 // Verifica anche il registro delle miniature aeree.
 import '../tests/check-aircraft.mjs';
 import '../tests/check-port-visual.mjs';
+
+// v1.54: un solo comando manuale per fazione e aggiornamento automatico preservato.
+const mainSource=readFileSync(join(root,'js/common/main.js'),'utf8');
+assert(!mainSource.includes("appendAction(toolbar,'Aggiorna dati'"),'Pulsante duplicato in Battaglia');
+assert(mainSource.includes("Rapporto in elaborazione: il controllo degli aggiornamenti è automatico."),'Avviso di sincronizzazione automatica mancante');
+assert(mainSource.includes("watchCampaign({"),'Sottoscrizione Nhost mancante');
+for (const header of ['js/axis/header.js','js/allies/header.js']) {
+ const source=readFileSync(join(root,header),'utf8');
+ assert.equal((source.match(/>Ricarica<\/button>/g)||[]).length,1,header+' deve avere un solo pulsante Ricarica');
+ assert(!source.includes('>Aggiorna dati</button>'),header+' mantiene la vecchia etichetta');
+}
