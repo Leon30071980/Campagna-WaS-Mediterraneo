@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.67 (Nhost)
+# Campagna W@S Mediterraneo — v1.68 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.68
+- Catalogo aerei: Terrestre (LAND BASED), Idrovolante (IDRO), Imbarcabile (terra e portaerei) e Imbarcato (solo portaerei). Etichette, filtri e ordinamento aggiornati per entrambe le fazioni.
+- Porto, compilazione casuale e generazione delle battaglie verificano la compatibilità operativa; l'impiego esclusivo imbarcato richiede una portaerei operativa assegnata. Gli slot di supporto senza CV escludono gli aerei Imbarcato. Le assegnazioni incompatibili con una modifica della base devono essere liberate prima del salvataggio. Gli idrovolanti conservano le regole precedenti.
+- Compatibilità con Nhost: Imbarcato è rappresentato da base IMBARCABILE e carrierOnly:true nel JSON del catalogo. Il client verifica la categoria restituita dal salvataggio. Nessuna riclassificazione automatica del catalogo esistente. Il collaudo della persistenza sul Nhost attivo e l'applicazione del vincolo direttamente lato server restano da verificare; non sono state cambiate le funzioni SQL o le autorizzazioni.
 
 ## Novità v1.67
 - Testata Allies: scena approvata ridimensionata uniformemente (circa 71%) e rialzata, mantenendo scafo, aerei e stemma sopra la targa. Estensione del paesaggio periferico con un nuovo fondale marino, senza specchiature. Cornice, targa, nodo, posizione delle bandiere e ingombro 1916 × 821 invariati rispetto alla geometria Axis. Banner precedenti conservati.

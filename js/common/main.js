@@ -1,17 +1,18 @@
-import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.67';
-import { portUnitImage, battleUnitImage } from './port-visual.js?v=1.67';
-import { HEADER_AXIS } from '../axis/header.js?v=1.67';
-import { HEADER_ALLIES } from '../allies/header.js?v=1.67';
-import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.67';
-import { localShipProfile } from './local-ship-profiles.js?v=1.67';
-import { shipProfile } from './ship-profiles.js?v=1.67';
-import { SHIP_TYPES, fleetOrder, unitNation, fleetTypeBreakdown } from './catalog-display.js?v=1.67';
-import { historicalClass } from './historical-classes.js?v=1.67';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.67';
-import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.67';
-import { generateBattle } from './battle-engine.js?v=1.67';
-import { SEASONS } from './config.js?v=1.67';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.67';
+import { AIR_BASE_OPTIONS, aircraftBase, aircraftBaseLabel, setAircraftBase, selectedCarrier, aircraftAllowedInSlot } from './aircraft-bases.js?v=1.68';
+import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.68';
+import { portUnitImage, battleUnitImage } from './port-visual.js?v=1.68';
+import { HEADER_AXIS } from '../axis/header.js?v=1.68';
+import { HEADER_ALLIES } from '../allies/header.js?v=1.68';
+import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.68';
+import { localShipProfile } from './local-ship-profiles.js?v=1.68';
+import { shipProfile } from './ship-profiles.js?v=1.68';
+import { SHIP_TYPES, fleetOrder, unitNation, fleetTypeBreakdown } from './catalog-display.js?v=1.68';
+import { historicalClass } from './historical-classes.js?v=1.68';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.68';
+import { loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.68';
+import { generateBattle } from './battle-engine.js?v=1.68';
+import { SEASONS } from './config.js?v=1.68';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.68';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -19,9 +20,9 @@ import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull
 const $ = id => document.getElementById(id);
 // Icone originali 64×64 separate per fazione; il lato proviene dalla sessione Nhost.
 const APP_FAVICON_PATHS = Object.freeze({
-  "axis": "./assets/axis/icons/favicon.png?v=1.67",
-  "allies": "./assets/allies/icons/favicon.png?v=1.67",
-  "default": "./assets/common/icons/favicon.png?v=1.67"
+  "axis": "./assets/axis/icons/favicon.png?v=1.68",
+  "allies": "./assets/allies/icons/favicon.png?v=1.68",
+  "default": "./assets/common/icons/favicon.png?v=1.68"
 });
 function setAppFavicon(side) {
   let favicon = $('app-favicon');
@@ -102,7 +103,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.67';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.68';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -182,18 +183,20 @@ function optionPool(squad,index,current,state=model.state){
   const nucleus=squad.nucleo||{},escort=squad.scorta||{};
   const slotClass=Array.isArray(nucleus.clsPerSlot)?nucleus.clsPerSlot[index]:undefined;
   let accepted,allowed;
+  const carrierAvailable=hasCarrier(state),carrier=selectedCarrier(state,u=>available(u,state));
+  const aircraftPool=cat.filter(u=>!isShip(u)&&aircraftAllowedInSlot(u,squad.id,index,carrierAvailable,carrier));
   if(squad.id==='AIR'){
-    accepted=cat.filter(u=>!isShip(u));
+    accepted=aircraftPool;
     // Il database controlla il TIPO esatto per ogni slot AIR.
     allowed=slotClass?[slotClass]:[];
   }else if(squad.id==='CV1'){
-    if(!hasCarrier(state)){
-      accepted=cat.filter(u=>!isShip(u));
+    if(!carrierAvailable){
+      accepted=aircraftPool;
       allowed=[index===0?'TB':'DB'];
     }else if(index===0){
       accepted=cat.filter(isShip);allowed=['CV'];
     }else{
-      accepted=cat.filter(u=>!isShip(u)&&u.base==='IMBARCABILE');
+      accepted=aircraftPool;
       allowed=['AEREO_IMB'];
     }
   }else{
@@ -205,7 +208,7 @@ function optionPool(squad,index,current,state=model.state){
     if(!available(u,state))return false;
     if(isShip(u)&&used.has(shipBase(u.nome)))return false;
     if(squad.id==='AIR')return !allowed.length||allowed.includes(u.tipo);
-    if(squad.id==='CV1'&&allowed.includes('AEREO_IMB'))return u.base==='IMBARCABILE';
+    if(squad.id==='CV1'&&allowed.includes('AEREO_IMB'))return true;
     return matchClass(u,allowed);
   });
   // NON reinserire versioni ritirate tra le opzioni selezionabili.
@@ -372,7 +375,11 @@ function slotCard(container,s,names){
     sel.onchange=async()=>{
       const draft=cloneState();const arr=Array.isArray(draft.porto[id])?[...draft.porto[id]]:[];
       arr[i]=sel.value;
-      if(id==='CV1'&&i===0){const c=catalogMap(draft).get(sel.value);const capacity=c?.cls==='CV'?Number(c.hangar??3):3;arr.length=Math.min(arr.length,1+capacity);}
+      if(id==='CV1'&&i===0&&hasCarrier(draft)){
+        const c=catalogMap(draft).get(sel.value),capacity=c?.cls==='CV'?Number(c.hangar??3):0;
+        if(arr.slice(1+capacity).some(Boolean)){toast('Liberare prima le caselle degli aerei che non possono restare nella nuova portaerei.',true);sel.value=name;return;}
+        arr.length=Math.min(arr.length,1+capacity);
+       }
       draft.porto[id]=arr;
       try{await persistDraft(draft);}catch{render();}
     };
@@ -484,7 +491,7 @@ function dialogUnit(kind,source){
   const anno=controlField(form,'Anno entrata in servizio',original?.anno??campaignYear(),'number');
   const ritirato=controlField(form,'Anno ritiro (vuoto = nessuno)',original?.ritirato||'','number');
   const points=controlField(form,'Punti',original?.pt??0,'number');
-  const extra=isNave?controlField(form,'Hangar (solo portaerei)',original?.hangar??'','number'):controlField(form,'Base',original?.base||'LAND BASED','select',[['LAND BASED','Terrestre'],['IDRO','Idrovolante'],['IMBARCABILE','Imbarcabile']]);
+  const extra=isNave?controlField(form,'Hangar (solo portaerei)',original?.hangar??'','number'):controlField(form,'Base',aircraftBase(original)||'LAND BASED','select',AIR_BASE_OPTIONS);
    const profileChoice=isNave?null:controlField(form,'Profilo immagine',original?.profileKey||'','select',
     [['','Automatico (nome e variante)'],...aircraftChoices(model.side).map(x=>[x.key,x.label+' · '+x.key])]);
    if(profileChoice)note(form,'Automatico riconosce nomi e varianti più comuni. Per un nome personalizzato selezioni un profilo esplicito: rimarrà associato anche dopo una rinomina.');
@@ -500,7 +507,7 @@ function dialogUnit(kind,source){
     Object.assign(value,{nome:newName,tipo:tipo.value.trim(),anno:year,pt:score,ritirato:retired});
     if(isNave){value.cls=cls.value;value.stato=value.stato||'';if(cls.value==='CV')value.hangar=extra.value===''?3:Number(extra.value);else delete value.hangar;}
     else {
-      value.base=extra.value;
+      setAircraftBase(value,extra.value);
       const choice=profileChoice?.value||'';
       if(choice)value.profileKey=choice;
       else {
@@ -521,6 +528,11 @@ function dialogUnit(kind,source){
      const problem=validateHullSchedule(versions);if(problem){toast(problem,true);return;}
     }
     if(prevName&&prevName!==newName)for(const slots of Object.values(draft.porto||{}))for(let i=0;i<slots.length;i++)if(slots[i]===prevName)slots[i]=newName;
+    if(!isNave){
+      const carrierAvailable=hasCarrier(draft),carrier=selectedCarrier(draft,u=>available(u,draft));
+      const incompatible=Object.entries(draft.porto||{}).flatMap(([id,slots])=>slots.flatMap((n,i)=>n===newName&&!aircraftAllowedInSlot(value,id,i,carrierAvailable,carrier)?[id+' / '+(i+1)]:[]));
+      if(incompatible.length){toast('Base incompatibile con le assegnazioni '+incompatible.join(', ')+'. Liberare prima queste caselle nel Porto.',true);return;}
+    }
     save.disabled=true;
     try{await persistDraft(draft);dialog.close();}catch{save.disabled=false;}
   };
@@ -579,7 +591,7 @@ async function removeUnit(kind,item){
 }
 // Ordinamento locale e stabile. Non modifica il catalogo salvato su Nhost.
 function compareCatalogUnits(a,b,key,direction,ships=true){
- const get=u=>key==='stato'?(ships?NAVAL_STATUS:AIR_STATUS)[catalogStatus(u,ships)][0]:key==='historicalClass'?historicalClass(u):u[key];
+ const get=u=>key==='stato'?(ships?NAVAL_STATUS:AIR_STATUS)[catalogStatus(u,ships)][0]:key==='historicalClass'?historicalClass(u):!ships&&key==='base'?aircraftBaseLabel(u):u[key];
  const av=get(a),bv=get(b),aEmpty=av===null||av===undefined||av==='',bEmpty=bv===null||bv===undefined||bv==='';
  if(aEmpty||bEmpty){if(aEmpty&&bEmpty)return 0;return aEmpty?1:-1;}
  if(['pt','anno','ritirato'].includes(key))return (Number(av)-Number(bv))*direction;
@@ -593,7 +605,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.67':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.68':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
@@ -612,7 +624,7 @@ function renderCatalog(p,tab){
  const bar=make('div','nhost-actions catalog-filter-bar');const sel=make('select','btn sm');
  const typeCodes=SHIP_TYPES;
  const types=[...new Set([...typeCodes,...source.map(u=>String(u.tipo||'').trim().toUpperCase()).filter(Boolean)])];
- const opts=ships?[['','Tipo Nave'],...types.map(code=>[code,code])]:[['','Tutte le basi'],['LAND BASED','Terrestri'],['IDRO','Idrovolanti'],['IMBARCABILE','Imbarcati']];
+ const opts=ships?[['','Tipo Nave'],...types.map(code=>[code,code])]:[['','Tutte le basi'],...AIR_BASE_OPTIONS];
  for(const [value,label] of opts){const o=make('option','',label);o.value=value;sel.append(o);}sel.value=catalogFilter;
  const search=make('input','btn sm nhost-search');search.type='search';search.placeholder=ships?'Cerca nome o classe':'Cerca un nome';search.value=term;search.setAttribute('aria-label','Cerca unità');
  sel.setAttribute('aria-label',ships?'Tipo Nave':'Base aereo');bar.append(sel);let stateSel=null;{stateSel=make('select','btn sm');stateSel.setAttribute('aria-label',ships?'Stato nave':'Stato aereo');const stateOpts=ships?[['','Tutti gli stati'],['attiva','Operative'],['riparazione','In riparazione'],['affondata','Perse'],['costruzione','In costruzione'],['ritirata','Ritirate']]:[['','Tutti gli stati'],['attiva','Operativi'],['obsoleto','Obsoleti'],['costruzione','In costruzione']];for(const [val,label] of stateOpts){const o=make('option','',label);o.value=val;stateSel.append(o);}stateSel.value=catalogStatusFilter;bar.append(stateSel);}bar.append(search);if(ships){const reset=make('button','btn sm','Ordine predefinito');reset.type='button';reset.title='Tipo, classe più costosa, punti';reset.onclick=()=>{Object.assign(catalogSort.navi,{key:'fleetDefault',direction:1});update();};bar.append(reset);}const count=make('span','catalog-visible-count');count.setAttribute('role','status');count.setAttribute('aria-live','polite');count.setAttribute('aria-atomic','true');bar.append(count);p.append(bar);
@@ -625,7 +637,7 @@ function renderCatalog(p,tab){
  const fields=ships?[['Nome','nome'],['Classe','historicalClass'],['Tipo','tipo'],['Punti','pt'],['Anno','anno'],['Ritiro','ritirato'],['Stato','stato'],['Azioni',null]]:
   [['Nome','nome'],['Tipo','tipo'],['Punti','pt'],['Anno','anno'],['Ritiro','ritirato'],['Base','base'],['Stato','stato'],['Azioni',null]];
  const update=()=>{
-  const filtered=source.filter(x=>{const c=!catalogFilter||(ships?String(x.tipo||'').trim().toUpperCase()===catalogFilter:x.base===catalogFilter);return c&&(!catalogStatusFilter||catalogStatus(x,ships)===catalogStatusFilter)&&(String(x.nome||'')+' '+String(x.tipo||'')+(ships?' '+historicalClass(x)+' '+(groups.get(shipBase(x.nome))||[]).map(u=>u.nome).join(' '):'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));});
+  const filtered=source.filter(x=>{const c=!catalogFilter||(ships?String(x.tipo||'').trim().toUpperCase()===catalogFilter:aircraftBase(x)===catalogFilter);return c&&(!catalogStatusFilter||catalogStatus(x,ships)===catalogStatusFilter)&&(String(x.nome||'')+' '+String(x.tipo||'')+(ships?' '+historicalClass(x)+' '+(groups.get(shipBase(x.nome))||[]).map(u=>u.nome).join(' '):'')).toLocaleLowerCase('it').includes(term.toLocaleLowerCase('it'));});
   count.textContent=filtered.length+' di '+source.length+(ships?' scafi visibili':' aerei visibili');
   const order=catalogSort[tab];
   const defaultCompare=ships&&order.key==='fleetDefault'?fleetOrder(source,historicalClass):null;
@@ -657,7 +669,7 @@ function renderCatalog(p,tab){
   }
   function renderRow(u,child=false){
    const base=shipBase(u.nome),versions=ships?(groups.get(base)||[u]):[u];
-   const row=make('tr',child?'hull-version-row':'');row.setAttribute('role','row');const values=ships?[u.nome,historicalClass(u)||'—',u.tipo,u.pt,u.anno,u.ritirato??'—',catalogStatus(u)]:[u.nome,u.tipo,u.pt,u.anno,u.ritirato??'—',u.base||'—',catalogStatus(u,false)];
+   const row=make('tr',child?'hull-version-row':'');row.setAttribute('role','row');const values=ships?[u.nome,historicalClass(u)||'—',u.tipo,u.pt,u.anno,u.ritirato??'—',catalogStatus(u)]:[u.nome,u.tipo,u.pt,u.anno,u.ritirato??'—',aircraftBaseLabel(u),catalogStatus(u,false)];
    values.forEach((v,i)=>{const key=fields[i][1];const td=make('td',key==='pt'?'num':'');td.setAttribute('role','cell');td.dataset.label=fields[i][0];if(key==='historicalClass'){td.classList.add('ship-historical-class');td.textContent=v;}else if(key==='nome'){td.classList.add('unit-name-cell');if(ships)td.classList.add('axis-ship-name');if(ships&&!child&&versions.length>1){const button=make('button','btn sm hull-toggle',(expandedHulls.has(base)?'▾':'▸')+' '+versions.length);button.type='button';button.setAttribute('aria-expanded',String(expandedHulls.has(base)));button.setAttribute('aria-label','Versioni di '+base);button.onclick=()=>{if(expandedHulls.has(base))expandedHulls.delete(base);else expandedHulls.add(base);update();};td.append(button);}if(ships){appendUnitFlag(td,u,true);const shown=hullDisplayName(u,versions);text(td,'span',shown??'—','axis-name');if(child)text(td,'span','↳ Configurazione '+(['','I','II','III'][hullVersionNumber(u.nome)]||''),'hull-version-tag');appendHistoricalProfile(td,u);}else appendAircraftProfile(td,u);}else if(key==='tipo'){const t=make('span','catalog-type'+(ships?' axis-type':''),v??'—');t.dataset.type=String(u.tipo||'').trim().toUpperCase();td.append(t);}else if(key==='stato'){if(!ships)td.append(aircraftStatusBadge(v));else if(child)text(td,'span',versionLabel(u,versions),'hull-version-tag');else td.append(navalStatusBadge(v));}else{td.textContent=v??'—';if(key==='tipo'&&COLORS[u.tipo])td.style.color=COLORS[u.tipo];}if(key==='pt')td.style.textAlign='center';row.append(td);});
    const action=make('td','nhost-catalog-actions');action.setAttribute('role','cell');const edit=make('button','btn sm','Modifica');edit.disabled=!canEdit();edit.onclick=()=>dialogUnit(tab,u);
    action.append(edit);
@@ -1181,7 +1193,7 @@ function renderManagement(p) {
 }
 
 function renderRules(p){const row=make('div','row');
- for(const [title,entries]of [['Regole della campagna',['Un’unica campagna e un unico turno condivisi fra Axis e Allies.','I cataloghi, i porti e le formazioni in corso restano privati; dopo entrambe le conclusioni il rapporto mostra le unità impegnate da entrambe le fazioni.','Navi affondate: perdita definitiva. Navi danneggiate: riparazione secondo le regole originali.','Aerei distrutti: contano come danno nella battaglia ma non vengono radiati permanentemente.']],['Chiusura e sincronizzazione',['Ogni giocatore registra esclusivamente i danni subiti dalla propria flotta.','«Concludi battaglia» congela la formazione e i danni del giocatore.','Dopo entrambe le conclusioni il server calcola automaticamente i tre valori del nemico e i punteggi.','Il turno avanza soltanto quando entrambi premono «Pronto per il prossimo turno».']]]){
+ for(const [title,entries]of [['Regole della campagna',['Un’unica campagna e un unico turno condivisi fra Axis e Allies.','I cataloghi, i porti e le formazioni in corso restano privati; dopo entrambe le conclusioni il rapporto mostra le unità impegnate da entrambe le fazioni.','Navi affondate: perdita definitiva. Navi danneggiate: riparazione secondo le regole originali.','Aerei distrutti: contano come danno nella battaglia ma non vengono radiati permanentemente.','Base aerei: Terrestre solo da terra; Imbarcabile da terra o portaerei; Imbarcato solo su una portaerei operativa assegnata; Idrovolante mantiene gli impieghi originali. Gli slot di supporto senza portaerei escludono gli aerei Imbarcato.']],['Chiusura e sincronizzazione',['Ogni giocatore registra esclusivamente i danni subiti dalla propria flotta.','«Concludi battaglia» congela la formazione e i danni del giocatore.','Dopo entrambe le conclusioni il server calcola automaticamente i tre valori del nemico e i punteggi.','Il turno avanza soltanto quando entrambi premono «Pronto per il prossimo turno».']]]){
   const c=card(title);c.style.flex='1 1 420px';const content=make('div','nhost-card-body');const ol=make('ol');for(const entry of entries)text(ol,'li',entry);content.append(ol);c.append(content);row.append(c);
  }
  p.append(row);note(p,'Il motore condiviso applica le regole di estrazione e rinforzo delle versioni HTML originali. La v1.0 uniforma i controlli di disponibilità degli scafi.');

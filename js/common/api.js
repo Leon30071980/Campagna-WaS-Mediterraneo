@@ -1,6 +1,7 @@
+import { aircraftBase } from './aircraft-bases.js?v=1.68';
 // Campagna W@S Mediterraneo v1.2
-import { NHOST } from './config.js?v=1.67';
-import { getAccessToken, refreshAccessToken } from './auth.js?v=1.67';
+import { NHOST } from './config.js?v=1.68';
+import { getAccessToken, refreshAccessToken } from './auth.js?v=1.68';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }
@@ -115,8 +116,14 @@ export async function saveLogistics(state, expectedRevision) {
   let result=await exec(token);
   if(result.expired)result=await exec(await refreshAccessToken(token));
   if (result.expired) throw new Error('Sessione scaduta.');
-  return {state:typeof result.state==='string'?JSON.parse(result.state):result.state,
-    revision:Number(result.revision),updatedAt:result.updated_at};
+  const returnedState=typeof result.state==='string'?JSON.parse(result.state):result.state;
+  const savedAircraft=new Map((returnedState?.aerei||[]).map(u=>[u.nome,u]));
+  for(const u of state.aerei||[]){
+    const stored=savedAircraft.get(u.nome);
+    if((aircraftBase(u)==='IMBARCATO'||aircraftBase(stored)==='IMBARCATO')&&aircraftBase(stored)!==aircraftBase(u))
+      throw new Error('Nhost ha risposto al salvataggio, ma non ha conservato la base esclusiva di '+u.nome+'. Ricaricare la revisione e verificare il catalogo.');
+  }
+  return {state:returnedState,revision:Number(result.revision),updatedAt:result.updated_at};
 }
 
 // Campagna v0.4: mutation controllate (non permettono accesso ai dati avversari).

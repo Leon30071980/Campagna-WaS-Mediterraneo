@@ -93,7 +93,7 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 // v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.67'),'fondale ridimensionato');
+assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.68'),'fondale ridimensionato');
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
 assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
@@ -106,3 +106,46 @@ assert(royalLayoutCss.includes('.royal-banner.royal-banner-v167{aspect-ratio:191
 assert(!royalLayoutCss.includes('royal-title-strip')&&!royalLayoutCss.includes('royal-complete-banner'),'rimossi layout separati');
 
 assert(royalMarkup.includes('x="888" y="0" width="140" height="25"'),'ritaglio cornice originale senza residui');
+
+ // v1.68 — basi aeree e compatibilità delle caselle
+ import {AIR_BASE_OPTIONS,aircraftBase,aircraftBaseLabel,setAircraftBase,canUseShore,canUseCarrier,selectedCarrier,aircraftAllowedInSlot} from '../js/common/aircraft-bases.js';
+ import {generateBattle as generateAircraftTestBattle} from '../js/common/battle-engine.js';
+ assert.equal(AIR_BASE_OPTIONS.length,4);
+ const land={nome:'LAND TEST',base:'LAND BASED',tipo:'TB',anno:1940,pt:20};
+ const dual={nome:'DUAL TEST',base:'IMBARCABILE',tipo:'DB',anno:1940,pt:20};
+ const embarked=setAircraftBase({nome:'SEA TEST',tipo:'TB',anno:1940,pt:20},'IMBARCATO');
+ const floatplane={nome:'FLOAT TEST',base:'IDRO',tipo:'PB',anno:1940,pt:20};
+ const cv={nome:'CV TEST',cls:'CV',tipo:'CV',anno:1940,pt:170,hangar:2};
+ assert.equal(aircraftBaseLabel(land),'Terrestre');
+ assert.equal(aircraftBaseLabel(dual),'Imbarcabile');
+ assert.equal(aircraftBaseLabel(embarked),'Imbarcato');
+ assert.equal(embarked.base,'IMBARCABILE');assert.equal(embarked.carrierOnly,true);
+ assert.equal(aircraftBase(JSON.parse(JSON.stringify(embarked))),'IMBARCATO');
+ assert.equal(aircraftBase(setAircraftBase({...embarked},'IMBARCABILE')),'IMBARCABILE');
+ assert.equal(canUseShore(land),true);assert.equal(canUseCarrier(land),false);
+ assert.equal(canUseShore(dual),true);assert.equal(canUseCarrier(dual),true);
+ assert.equal(canUseShore(embarked),false);assert.equal(canUseCarrier(embarked),true);
+ assert.equal(canUseShore(floatplane),true);assert.equal(canUseCarrier(floatplane),false);
+ for(const [u,shore,sea] of [[land,true,false],[dual,true,true],[embarked,false,true],[floatplane,true,false]]){
+  assert.equal(aircraftAllowedInSlot(u,'AIR',0,true,cv),shore);
+  assert.equal(aircraftAllowedInSlot(u,'CV1',1,true,cv),sea);
+  assert.equal(aircraftAllowedInSlot(u,'CV1',1,true,null),false);
+  assert.equal(aircraftAllowedInSlot(u,'CV1',3,true,cv),false);
+ }
+ assert.equal(aircraftAllowedInSlot(embarked,'CV1',0,false,null),false);
+ assert.equal(aircraftAllowedInSlot(land,'CV1',0,false,null),true);
+ assert.equal(aircraftAllowedInSlot(dual,'CV1',1,false,null),true);
+ assert.equal(selectedCarrier({navi:[cv],porto:{CV1:[cv.nome]}},()=>true),cv);
+ assert.equal(selectedCarrier({navi:[cv],porto:{CV1:[cv.nome]}},()=>false),null);
+ const aircraftSquads=['BB1','BB2','BB3','CA1','CL1','SUB','CV1','AIR','CA2','CA3','CL2','CL3','CL4'].map(id=>({id,nome:id,forma:id==='AIR'?'riserva':id==='CV1'?'portaerei':'mista',nucleo:{n:id==='AIR'?3:id==='CV1'?1:0,cls:[]},scorta:{n:id==='CV1'?2:0,cls:[]}}));
+ const airFixture={navi:[cv],aerei:[land,dual,embarked],perdite:{},ui_squadre:aircraftSquads,porto:{CV1:[cv.nome,embarked.nome,land.nome],AIR:[embarked.nome,land.nome,dual.nome]}};
+ const aircraftBattle=generateAircraftTestBattle(airFixture,0,42);
+ const cvGroup=aircraftBattle.gruppi.find(g=>g.id==='CV1'||g.id==='IFCV1');
+ assert(cvGroup&&cvGroup.unita.some(u=>u.nome===embarked.nome),'imbarcato estratto insieme a CV');
+ assert(!cvGroup.unita.some(u=>u.nome===land.nome),'terrestre escluso dalla CV');
+ for(const g of aircraftBattle.gruppi.filter(g=>g.id==='AIR'||g.id==='IFAIR'))assert(!g.unita.some(u=>u.nome===embarked.nome),'imbarcato escluso da AIR');
+ const noCV={...airFixture,navi:[],porto:{CV1:[embarked.nome,dual.nome],AIR:[embarked.nome,land.nome,dual.nome]}};
+ const noCVBattle=generateAircraftTestBattle(noCV,0,42);
+ assert(!noCVBattle.gruppi.flatMap(g=>g.unita).some(u=>u.nome===embarked.nome),'imbarcato escluso senza CV');
+ const unassigned={...airFixture,porto:{CV1:['',embarked.nome,dual.nome],AIR:[embarked.nome,land.nome,dual.nome]}};
+ assert(!generateAircraftTestBattle(unassigned,0,42).gruppi.flatMap(g=>g.unita).some(u=>u.nome===embarked.nome),'imbarcato escluso senza CV assegnata');

@@ -1,3 +1,4 @@
+import { canUseCarrier, aircraftAllowedInSlot, selectedCarrier } from './aircraft-bases.js?v=1.68';
 import { isAvailable, duplicateHull, pendingPortModernizations } from './fleet-rules.js?v=1.53';
 // Motore di estrazione della campagna, derivato dal codice originale Regia Marina 27 / Royal Navy 28.
 // Il catalogo e i nomi delle squadre arrivano dallo stato privato Nhost: non sono inclusi qui.
@@ -10,7 +11,7 @@ export function generateBattle(state, turnIndex, seed) {
   if(duplicate)throw Error('Scafo assegnato piu volte: '+duplicate+'. Correggere il porto prima della battaglia.');
   const CATALOGO=new Map();
   for(const n of S.navi||[])CATALOGO.set(n.nome,{...n,kind:'nave'});
-  for(const a of S.aerei||[])if(!CATALOGO.has(a.nome))CATALOGO.set(a.nome,{...a,kind:'aereo',cls:a.base==='IMBARCABILE'?'AEREO_IMB':'AEREO_TERRA'});
+  for(const a of S.aerei||[])if(!CATALOGO.has(a.nome))CATALOGO.set(a.nome,{...a,kind:'aereo',cls:canUseCarrier(a)?'AEREO_IMB':'AEREO_TERRA'});
   const SQ=Object.fromEntries((S.ui_squadre||[]).map(s=>[s.id,s]));
   const required=['BB1','BB2','BB3','CA1','CL1','SUB','CV1','AIR','CA2','CA3','CL2','CL3','CL4'];
   if(!required.every(id=>SQ[id]))throw Error('Configurazione squadre Nhost incompleta.');
@@ -103,12 +104,14 @@ function caselle(sid) {
 
   if (sid === "CV1") {
       if (!portaereiDisponibili()) {
-          return { nucleo: [], scorta: arr.slice(0, 2).filter(Boolean) };
+          return { nucleo: [], scorta: arr.slice(0,2).filter((n,i)=>info(n)?.kind==='aereo'&&aircraftAllowedInSlot(info(n),sid,i,false,null)) };
       }
-      let cvName = arr[0];
-      const isCv = cvName && info(cvName) && info(cvName).cls === "CV";
-      nS = isCv ? getHangar(cvName) : 3;
+      const cv=selectedCarrier(S,u=>disponibile(u.nome));
+      if(!cv)return {nucleo:[],scorta:[]};
+      nS=getHangar(cv.nome);
+      return {nucleo:[cv.nome],scorta:arr.slice(1,1+nS).filter((n,i)=>info(n)?.kind==='aereo'&&aircraftAllowedInSlot(info(n),sid,i+1,true,cv))};
   }
+  if(sid==='AIR')return {nucleo:arr.slice(0,nN).filter((n,i)=>info(n)?.kind==='aereo'&&aircraftAllowedInSlot(info(n),sid,i,false,null)),scorta:[]};
   return { nucleo: arr.slice(0, nN).filter(Boolean), scorta: arr.slice(nN, nN + nS).filter(Boolean) };
 }
 
