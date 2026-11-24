@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.50 (Nhost)
+# Campagna W@S Mediterraneo — v1.51 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.51
+- Nel Porto le caselle occupate mostrano una sagoma navale o una miniatura aerea tratta dai rispettivi cataloghi Axis/Allies. Vengono riutilizzati i profili esistenti: locali con priorità, Navypedia come riserva per le navi, soltanto miniature locali per gli aerei.
+- Immagini decorative a bassa opacità e posizionamento assoluto, dietro nomi e controlli, senza alterare spaziatura, larghezza, altezza, margini, gap o colonne delle squadre. L'errore di caricamento rimuove l'immagine senza lasciare elementi rotti.
+- Invariate selezione, modifiche e salvataggi Nhost; non cambiano le assegnazioni, le navi, gli aerei o le regole della campagna. Test aggiunti in `tests/check-port-visual.mjs`.
 
 ## Novità v1.50
 - Completata la copertura grafica dell'**Asse: 20/20 modelli** con la miniatura sintetica approvata del **CANT Z.506 Airone**, in WebP trasparente 320×160 ottimizzato, nella cartella `assets/axis/aircraft/z506.webp`.

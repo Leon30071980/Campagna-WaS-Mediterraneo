@@ -23,3 +23,4 @@ console.log(refs+' riferimenti statici e '+profiles+' associazioni profilo verif
 
 // Verifica anche il registro delle miniature aeree.
 import '../tests/check-aircraft.mjs';
+import '../tests/check-port-visual.mjs';
