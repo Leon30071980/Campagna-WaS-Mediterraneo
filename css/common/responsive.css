@@ -292,16 +292,51 @@ body[data-side] .aircraft-profile-source{text-decoration:underline;text-underlin
 }
 @media(max-width:380px){body[data-side] .aircraft-thumbnail{width:104px;height:56px;flex-basis:104px;}}
 
-/* v1.51 — decorazione fuori dal flusso: nessun cambiamento al layout Porto. */
-body[data-side] #p-porto .slot.nhost-slot-readonly{position:relative;isolation:isolate;}
-body[data-side] #p-porto .port-slot-visual{
- position:absolute;left:43px;top:0;bottom:0;width:calc(100% - 85px);height:100%;
- object-fit:contain;object-position:center;display:block;
- pointer-events:none;user-select:none;-webkit-user-select:none;z-index:0;opacity:.27;
+/* v1.52 — miniature nitide e ingrandimento su richiesta, mai dietro al nome.
+   Le caselle, le colonne e gli spazi fra le squadre restano invariati. */
+body[data-side] #p-porto .slot.nhost-slot-readonly{position:relative;overflow:visible;}
+body[data-side] #p-porto .slot.nhost-slot-readonly:has(.port-preview-trigger:hover),
+body[data-side] #p-porto .slot.nhost-slot-readonly:has(.port-preview-trigger:focus-visible),
+body[data-side] #p-porto .slot.nhost-slot-readonly.port-preview-open{z-index:20;}
+body[data-side] #p-porto .port-preview-trigger{
+ appearance:none;-webkit-appearance:none;
+ flex:0 0 46px;width:46px;min-width:46px;height:23px;
+ display:flex;align-items:center;justify-content:center;
+ border:1px solid rgba(255,255,255,.4);border-radius:3px;
+ background:#aebdc7;cursor:zoom-in;overflow:hidden;
+ padding:1px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);
 }
-body[data-side] #p-porto .port-slot-visual--ship{opacity:.30;filter:grayscale(1) brightness(0) invert(1);}
-body[data-side] #p-porto .port-slot-visual--aircraft{opacity:.29;filter:saturate(.9) contrast(1.1);}
-body[data-side] #p-porto .port-slot-visual--remote{opacity:.16;filter:grayscale(1) contrast(1.15);}
-body[data-side] #p-porto .slot.nhost-slot-readonly>:not(.port-slot-visual){position:relative;z-index:1;}
-body[data-side] #p-porto .slot.has-port-slot-visual select{text-shadow:0 1px 2px rgba(0,0,0,.75);}
-@media(max-width:560px){body[data-side] #p-porto .port-slot-visual{left:36px;width:calc(100% - 76px);}}
+body[data-side] #p-porto .port-preview-trigger:hover,
+body[data-side] #p-porto .port-preview-trigger:focus-visible{
+ border-color:#fff;outline:2px solid #fff;outline-offset:1px;
+}
+body[data-side] #p-porto .port-preview-thumb{
+ width:100%;height:100%;display:block;object-fit:contain;object-position:center;
+ opacity:1;filter:none;pointer-events:none;
+}
+body[data-side] #p-porto .port-preview-panel{
+ display:none;position:absolute;bottom:calc(100% + 6px);
+ left:50%;transform:translateX(-50%);
+ width:min(260px,80vw);height:136px;z-index:50;box-sizing:border-box;
+ padding:7px 9px;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+ border:1px solid #738693;border-radius:6px;background:#d8e1e8;
+ box-shadow:0 7px 22px rgba(0,0,0,.65);pointer-events:none;
+}
+body[data-side] #p-porto .port-preview-trigger:hover~.port-preview-panel,
+body[data-side] #p-porto .port-preview-trigger:focus-visible~.port-preview-panel,
+body[data-side] #p-porto .slot.port-preview-open .port-preview-panel{display:flex;}
+body[data-side] #p-porto .port-preview-full{
+ display:block;width:100%;min-height:0;flex:1;object-fit:contain;
+ opacity:1;filter:none;
+}
+body[data-side] #p-porto .port-preview-caption{
+ color:#172b38;font-size:11px;line-height:1.2;font-weight:700;
+ text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ max-width:100%;flex:0 0 auto;
+}
+@media(max-width:560px){
+ body[data-side] #p-porto .port-preview-trigger{
+  grid-column:3;grid-row:1;justify-self:end;
+  width:46px;min-width:0;height:21px;
+ }
+}

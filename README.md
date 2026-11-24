@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.51 (Nhost)
+# Campagna W@S Mediterraneo — v1.52 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,12 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.52
+- Corretto il difetto visivo della v1.51: rimosse le miniature semitrasparenti dietro al testo e ai menu, che rendevano irriconoscibili sagome e aerei.
+- Ogni casella occupata con un profilo disponibile mostra una **miniatura opaca e nitida** in una piccola area distinta dalla selezione; passando il mouse, usando il focus da tastiera oppure toccandola compare un'anteprima ampliata (senza spostare le caselle).
+- Clic o tocco sull'anteprima per aprire/chiudere, clic altrove o Esc per chiudere; nessuna miniatura sulle caselle libere, nessun segnaposto generico.
+- Griglia del Porto, margini, distanze fra squadre e altezza delle righe invariati. Solo il menu di selezione diventa leggermente più stretto per ospitare la miniatura. Nessuna modifica ai dati Nhost o alle regole di gioco.
 
 ## Novità v1.51
 - Nel Porto le caselle occupate mostrano una sagoma navale o una miniatura aerea tratta dai rispettivi cataloghi Axis/Allies. Vengono riutilizzati i profili esistenti: locali con priorità, Navypedia come riserva per le navi, soltanto miniature locali per gli aerei.

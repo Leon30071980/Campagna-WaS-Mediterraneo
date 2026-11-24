@@ -1,4 +1,4 @@
-import { aircraftKey } from '../common/aircraft-profiles.js?v=1.51';
+import { aircraftKey } from '../common/aircraft-profiles.js?v=1.52';
 // Modelli storici aggiunti soltanto allo stato privato Allies tramite Nhost.
 // Ritiro 1944: oltre l'ultimo anno giocabile (1943).
 export const SEA_AIRCRAFT = Object.freeze([
