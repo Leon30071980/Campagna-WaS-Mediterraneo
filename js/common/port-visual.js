@@ -1,8 +1,8 @@
 // v1.51 — riferimenti di sola lettura; il database non viene modificato.
-import { historicalClass } from './historical-classes.js?v=1.52';
-import { localShipProfile } from './local-ship-profiles.js?v=1.52';
-import { shipProfile } from './ship-profiles.js?v=1.52';
-import { aircraftProfile } from './aircraft-profiles.js?v=1.52';
+import { historicalClass } from './historical-classes.js?v=1.53';
+import { localShipProfile } from './local-ship-profiles.js?v=1.53';
+import { shipProfile } from './ship-profiles.js?v=1.53';
+import { aircraftProfile } from './aircraft-profiles.js?v=1.53';
 
 // Profili già associati al catalogo; nessuna sagoma generica per gli assenti.
 export function portUnitImage(unit,side){

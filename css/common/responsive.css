@@ -292,7 +292,7 @@ body[data-side] .aircraft-profile-source{text-decoration:underline;text-underlin
 }
 @media(max-width:380px){body[data-side] .aircraft-thumbnail{width:104px;height:56px;flex-basis:104px;}}
 
-/* v1.52 — miniature nitide e ingrandimento su richiesta, mai dietro al nome.
+/* v1.53 — profili navali a contrasto elevato, più leggibili a colpo d'occhio.
    Le caselle, le colonne e gli spazi fra le squadre restano invariati. */
 body[data-side] #p-porto .slot.nhost-slot-readonly{position:relative;overflow:visible;}
 body[data-side] #p-porto .slot.nhost-slot-readonly:has(.port-preview-trigger:hover),
@@ -300,11 +300,18 @@ body[data-side] #p-porto .slot.nhost-slot-readonly:has(.port-preview-trigger:foc
 body[data-side] #p-porto .slot.nhost-slot-readonly.port-preview-open{z-index:20;}
 body[data-side] #p-porto .port-preview-trigger{
  appearance:none;-webkit-appearance:none;
- flex:0 0 46px;width:46px;min-width:46px;height:23px;
+ flex:0 0 64px;width:64px;min-width:64px;height:23px;
  display:flex;align-items:center;justify-content:center;
  border:1px solid rgba(255,255,255,.4);border-radius:3px;
- background:#aebdc7;cursor:zoom-in;overflow:hidden;
+ background:#0d2432;cursor:zoom-in;overflow:hidden;
  padding:1px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);
+}
+/* Le tavole navali sono spesso quasi bianche: fondo scuro per il contrasto. */
+body[data-side] #p-porto .port-preview-trigger--ship{
+ background:#091a26;border-color:#8aaabb;
+}
+body[data-side] #p-porto .port-preview-trigger--ship .port-preview-thumb{
+ filter:contrast(1.35);
 }
 body[data-side] #p-porto .port-preview-trigger:hover,
 body[data-side] #p-porto .port-preview-trigger:focus-visible{
@@ -317,9 +324,9 @@ body[data-side] #p-porto .port-preview-thumb{
 body[data-side] #p-porto .port-preview-panel{
  display:none;position:absolute;bottom:calc(100% + 6px);
  left:50%;transform:translateX(-50%);
- width:min(260px,80vw);height:136px;z-index:50;box-sizing:border-box;
+ width:min(360px,88vw);height:176px;z-index:50;box-sizing:border-box;
  padding:7px 9px;flex-direction:column;align-items:center;justify-content:center;gap:4px;
- border:1px solid #738693;border-radius:6px;background:#d8e1e8;
+ border:1px solid #b5d8e9;border-radius:6px;background:#0d2432;
  box-shadow:0 7px 22px rgba(0,0,0,.65);pointer-events:none;
 }
 body[data-side] #p-porto .port-preview-trigger:hover~.port-preview-panel,
@@ -330,13 +337,13 @@ body[data-side] #p-porto .port-preview-full{
  opacity:1;filter:none;
 }
 body[data-side] #p-porto .port-preview-caption{
- color:#172b38;font-size:11px;line-height:1.2;font-weight:700;
+ color:#f2f7fa;font-size:11px;line-height:1.2;font-weight:700;
  text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
  max-width:100%;flex:0 0 auto;
 }
 @media(max-width:560px){
  body[data-side] #p-porto .port-preview-trigger{
   grid-column:3;grid-row:1;justify-self:end;
-  width:46px;min-width:0;height:21px;
+  width:52px;min-width:0;height:21px;
  }
 }
