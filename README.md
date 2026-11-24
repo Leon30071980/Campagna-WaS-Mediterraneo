@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.56 (Nhost)
+# Campagna W@S Mediterraneo — v1.57 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.57
+- Corretto il blocco di accesso causato da URL JavaScript diversi per il modulo di autenticazione tra interfaccia e API. I due moduli ora condividono la stessa sessione.
+- Aggiunto controllo di regressione sul riferimento unico al modulo di autenticazione; nessun cambiamento alle credenziali, ai permessi o ai dati Nhost.
+- Conservate tutte le miniature e le anteprime di Battaglia e Storico introdotte nella v1.56.
 
 ## Novità v1.56
 - **Battaglia / Forza in mare**: miniature delle navi e degli aerei realmente estratti, nelle squadre della prima ondata e dei rinforzi. Il profilo viene risolto dal catalogo privato della fazione e riutilizza le immagini già presenti nel Porto.

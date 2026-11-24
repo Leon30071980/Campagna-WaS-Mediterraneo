@@ -41,3 +41,15 @@ import {execFileSync} from 'node:child_process';
 for(const modulePath of ['js/common/main.js','js/common/api.js','js/axis/header.js','js/allies/header.js']) {
  execFileSync(process.execPath,['--check',join(root,modulePath)],{stdio:'pipe'});
 }
+
+
+// v1.57: i parametri query fanno parte dell'identità dei moduli ES nel browser.
+const apiSource=readFileSync(join(root,'js/common/api.js'),'utf8');
+const authSource=readFileSync(join(root,'js/common/auth.js'),'utf8');
+const authImport=s=>s.match(/from\s+['"](\.\/auth\.js[^'"]*)['"]/)?.[1];
+const configImport=s=>s.match(/from\s+['"](\.\/config\.js[^'"]*)['"]/)?.[1];
+assert(authImport(mainSource),'import autenticazione UI mancante');
+assert.equal(authImport(mainSource),authImport(apiSource),'UI e API devono condividere la stessa istanza auth, inclusa la query string');
+assert.equal(configImport(authSource),configImport(apiSource),'configurazione Nhost coerente');
+assert.equal(configImport(mainSource),configImport(apiSource),'configurazione UI/API coerente');
+for(const p of ['js/common/auth.js','js/common/config.js','js/common/port-visual.js'])execFileSync(process.execPath,['--check',join(root,p)],{stdio:'pipe'});
