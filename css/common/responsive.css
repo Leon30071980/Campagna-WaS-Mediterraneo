@@ -437,3 +437,7 @@ body[data-side] .fleet-type-entry.is-zero .fleet-type-count{color:var(--ink-fain
  body[data-side] .fleet-type-entry:nth-child(3n+1)::before{content:none;}
 }
 
+
+/* v1.64 — bandiere laterali nella targa, non sul disegno. */
+body[data-side="allies"] .royal-title-strip .royal-side-flag{top:56%;width:8.5%;height:auto;z-index:3;object-fit:contain;transform:translateY(-50%);}
+body[data-side="allies"] .royal-title-strip .royal-side-flag.right{transform:translateY(-50%) scaleX(-1);}

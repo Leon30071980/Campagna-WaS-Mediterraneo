@@ -90,22 +90,12 @@ assert(mainSource.includes("text(top,'span',fleets[key].length,'v num')"),'total
 const fleetCss=readFileSync(join(root,'css/common/responsive.css'),'utf8');
 assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet-type-image'),'stile lineare senza vecchie sagome');
 
-// v1.60 — testata Allies: nuovo banner, archivio e stemma fuori dalle unità.
+// v1.64 — artwork approvato integrale, senza rielaborazioni o sovrapposizioni.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
-assert(royalHeaderSource.includes('assets/allies/header/banner-v163.webp?v=1.63'),'banner panoramico Allies');
-assert(existsSync(join(root,'assets/allies/header/banner.webp')),'immagine approvata v1.60 conservata');
-assert(existsSync(join(root,'assets/allies/header/banner-panorama.webp')),'fondale panoramico disponibile');
-assert(!royalHeaderSource.includes('swordfish-torpedoes.webp'),'siluri già presenti nel banner');
-assert(royalHeaderSource.includes('royal-banner-v161'),'layout panoramico');
-assert(existsSync(join(root,'assets/allies/header/old-banner/banner.png')),'banner originale archiviato');
-assert(existsSync(join(root,'assets/allies/header/old-banner/swordfish-torpedoes.webp')),'livello siluri originale archiviato');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'proporzioni uguali ad Axis');
-assert(!royalMarkup.includes('/crest.webp'),'stemma integrato nel fondale, nessuna sovrapposizione');
-assert(existsSync(join(root,'assets/allies/header/banner-v163.webp')),'nuovo banner disponibile');
-assert(!royalMarkup.includes('translate(0 257)'),'targa riportata nella posizione Axis');
-
-// v1.62 — riparazione locale della cornice Allies, senza modificare la scena.
-assert(royalMarkup.includes('id="royal-clean-frame-top"><rect x="888" y="0" width="140" height="25"/>'),'ritaglio pulito del bordo superiore');
-assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'riparazione del bordo applicata');
-assert(royalMarkup.includes('x="200" width="1916" height="821"'),'campione di cornice lontano dalla corona Axis');
+assert(royalMarkup.includes('assets/allies/header/banner-v164.webp?v=1.64'),'banner approvato integrale');
+assert(royalMarkup.includes('width="1915" height="821"'),'dimensioni native artwork');
+assert(royalMarkup.includes('royal-banner-v164'),'layout proporzionale');
+assert(royalMarkup.includes('</div>\n    <div class="royal-title-strip">'),'targa separata dal disegno');
+assert(!royalMarkup.includes('/crest.webp')&&!royalMarkup.includes('royal-frame-clip')&&!royalMarkup.includes('royal-clean-frame-top'),'nessuna sovrapposizione sul banner');
+for(const p of ['banner.webp','banner-panorama.webp','banner-v163.webp','banner-v164.webp','old-banner/banner.png','old-banner/swordfish-torpedoes.webp'])assert(existsSync(join(root,'assets/allies/header',p)),p);
