@@ -90,19 +90,17 @@ assert(mainSource.includes("text(top,'span',fleets[key].length,'v num')"),'total
 const fleetCss=readFileSync(join(root,'css/common/responsive.css'),'utf8');
 assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet-type-image'),'stile lineare senza vecchie sagome');
 
-// v1.64 — artwork approvato integrale, senza rielaborazioni o sovrapposizioni.
+// v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v164.webp?v=1.65'),'banner approvato integrale');
-assert(royalMarkup.includes('width="1915" height="821"'),'dimensioni native artwork');
-assert(royalMarkup.includes('royal-banner-v165'),'layout proporzionale');
-assert(royalMarkup.includes('</div>\n    <div class="royal-title-strip">'),'targa separata dal disegno');
-assert(!royalMarkup.includes('/crest.webp')&&!royalMarkup.includes('royal-frame-clip')&&!royalMarkup.includes('royal-clean-frame-top'),'nessuna sovrapposizione sul banner');
+assert(royalMarkup.includes('assets/allies/header/banner-v164.webp?v=1.66'),'fondale approvato invariato');
+assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
+assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
+assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
+assert(royalMarkup.includes('clip-path="url(#royal-knot-clip)"'),'nodo originale');
+assert(royalMarkup.includes('x="958" y="710"'),'posizione titolo originale');
+assert(!royalMarkup.includes('royal-title-strip')&&!royalMarkup.includes('royal-complete-banner')&&!royalMarkup.includes('/crest.webp'),'nessuna fascia separata o duplicazione stemma');
 for(const p of ['banner.webp','banner-panorama.webp','banner-v163.webp','banner-v164.webp','old-banner/banner.png','old-banner/swordfish-torpedoes.webp'])assert(existsSync(join(root,'assets/allies/header',p)),p);
-
-// v1.65 — la targa deve rientrare nel rapporto di forma complessivo, non aggiungersi all'immagine.
-assert(royalMarkup.includes('<div class="royal-complete-banner">'),'contenitore unico per disegno e targa');
 const royalLayoutCss=readFileSync(join(root,'css/allies/command.css'),'utf8');
-assert(royalLayoutCss.includes('grid-template-rows:minmax(0,665fr) minmax(0,156fr)'),'ripartizione interna del riquadro');
-assert(royalLayoutCss.includes('width:100%;aspect-ratio:1916/821;overflow:hidden'),'dimensioni complessive Axis');
-assert(royalLayoutCss.includes('height:100%;object-fit:contain;object-position:center'),'immagine integra senza deformazioni');
+assert(royalLayoutCss.includes('.royal-banner.royal-banner-v166{aspect-ratio:1916/821;}'),'rapporto Axis');
+assert(!royalLayoutCss.includes('royal-title-strip')&&!royalLayoutCss.includes('royal-complete-banner'),'rimossi layout separati');

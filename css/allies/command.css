@@ -77,21 +77,7 @@ body[data-side="allies"] .pennant .fleet-summary-cell{grid-column:auto;grid-row:
 @media(max-width:720px){body[data-side="allies"] .pennant{grid-template-columns:repeat(2,minmax(0,1fr));}body[data-side="allies"] .pennant>.fleet-summary-cell{grid-row:2;}}
 @media(max-width:620px){body[data-side="allies"] .pennant{width:calc(100% - 16px);}body[data-side="allies"] .naval-total-top .naval-icon{width:52px;height:26px;}body[data-side="allies"] .naval-total-top .naval-sunk-icon{width:45px;height:36px;}body[data-side="allies"] .naval-total-top .v{font-size:20px;}body[data-side="allies"] .naval-four-states .naval-total-label{font-size:12px;}body[data-side="allies"] .axis-fleet-cell .nhost-summary{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
-
-/* v1.61 — proporzioni identiche alla testata Axis. */
-body[data-side="allies"] .royal-banner.royal-banner-v161{aspect-ratio:1916/821;}
-body[data-side="allies"] .royal-banner-v161 .royal-banner-composition{aspect-ratio:1916/821;}
-
-/* v1.64 — disegno originale integrale, targa separata. */
-body[data-side="allies"] .royal-banner.royal-banner-v164{aspect-ratio:1916/821;}
-body[data-side="allies"] .royal-approved-art{display:block;width:100%;height:100%;object-fit:contain;}
-body[data-side="allies"] .royal-title-strip{position:relative;line-height:0;background:#0a1929;}
-body[data-side="allies"] .royal-title-strip-composition{display:block;width:100%;height:auto;aspect-ratio:1916/240;}
-
-/* v1.65 — immagine e targa nello stesso ingombro complessivo di Axis. */
-body[data-side="allies"] .royal-complete-banner{display:grid;grid-template-rows:minmax(0,665fr) minmax(0,156fr);width:100%;aspect-ratio:1916/821;overflow:hidden;background:#0a1929;}
-body[data-side="allies"] .royal-complete-banner .royal-banner.royal-banner-v165{width:100%;height:100%;min-height:0;aspect-ratio:auto;background:#0a1929;}
-body[data-side="allies"] .royal-complete-banner .royal-approved-art{display:block;width:100%;height:100%;object-fit:contain;object-position:center;}
-body[data-side="allies"] .royal-complete-banner .royal-title-strip{min-height:0;height:100%;overflow:hidden;}
-body[data-side="allies"] .royal-complete-banner .royal-title-strip-composition{display:block;width:100%;height:100%;aspect-ratio:auto;}
+/* v1.66 — cornice e targa condivise con Axis, unico riquadro. */
+body[data-side="allies"] .royal-banner.royal-banner-v166{aspect-ratio:1916/821;}
+body[data-side="allies"] .royal-banner-v166 .royal-banner-composition{aspect-ratio:1916/821;}
 @media(max-width:620px){body[data-side="allies"] .royal-hero{margin-top:8px;}}
