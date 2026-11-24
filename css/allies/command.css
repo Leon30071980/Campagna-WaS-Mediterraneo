@@ -87,3 +87,11 @@ body[data-side="allies"] .royal-banner.royal-banner-v164{aspect-ratio:1916/821;}
 body[data-side="allies"] .royal-approved-art{display:block;width:100%;height:100%;object-fit:contain;}
 body[data-side="allies"] .royal-title-strip{position:relative;line-height:0;background:#0a1929;}
 body[data-side="allies"] .royal-title-strip-composition{display:block;width:100%;height:auto;aspect-ratio:1916/240;}
+
+/* v1.65 — immagine e targa nello stesso ingombro complessivo di Axis. */
+body[data-side="allies"] .royal-complete-banner{display:grid;grid-template-rows:minmax(0,665fr) minmax(0,156fr);width:100%;aspect-ratio:1916/821;overflow:hidden;background:#0a1929;}
+body[data-side="allies"] .royal-complete-banner .royal-banner.royal-banner-v165{width:100%;height:100%;min-height:0;aspect-ratio:auto;background:#0a1929;}
+body[data-side="allies"] .royal-complete-banner .royal-approved-art{display:block;width:100%;height:100%;object-fit:contain;object-position:center;}
+body[data-side="allies"] .royal-complete-banner .royal-title-strip{min-height:0;height:100%;overflow:hidden;}
+body[data-side="allies"] .royal-complete-banner .royal-title-strip-composition{display:block;width:100%;height:100%;aspect-ratio:auto;}
+@media(max-width:620px){body[data-side="allies"] .royal-hero{margin-top:8px;}}
