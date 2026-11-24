@@ -1,19 +1,19 @@
-import { createPresenceMonitor, createPresenceSound } from './presence.js?v=1.71';
-import { AIR_BASE_OPTIONS, aircraftBase, aircraftBaseLabel, setAircraftBase, selectedCarrier, aircraftAllowedInSlot } from './aircraft-bases.js?v=1.71';
-import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.71';
-import { portUnitImage, battleUnitImage } from './port-visual.js?v=1.71';
-import { HEADER_AXIS } from '../axis/header.js?v=1.71';
-import { HEADER_ALLIES } from '../allies/header.js?v=1.71';
-import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.71';
-import { localShipProfile } from './local-ship-profiles.js?v=1.71';
-import { shipProfile } from './ship-profiles.js?v=1.71';
-import { SHIP_TYPES, fleetOrder, unitNation, fleetTypeBreakdown } from './catalog-display.js?v=1.71';
-import { historicalClass } from './historical-classes.js?v=1.71';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.71';
-import { presencePing, loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.71';
-import { generateBattle, SQUAD_ROLES, REINFORCEMENT_BANDS, BATTLE_LIMITS, LIGHT_WAVE_HEAVY_FACTOR } from './battle-engine.js?v=1.71';
-import { SEASONS } from './config.js?v=1.71';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.71';
+import { createPresenceMonitor, createPresenceSound } from './presence.js?v=1.72';
+import { AIR_BASE_OPTIONS, aircraftBase, aircraftBaseLabel, setAircraftBase, selectedCarrier, aircraftAllowedInSlot } from './aircraft-bases.js?v=1.72';
+import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.72';
+import { portUnitImage, battleUnitImage } from './port-visual.js?v=1.72';
+import { HEADER_AXIS } from '../axis/header.js?v=1.72';
+import { HEADER_ALLIES } from '../allies/header.js?v=1.72';
+import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.72';
+import { localShipProfile } from './local-ship-profiles.js?v=1.72';
+import { shipProfile } from './ship-profiles.js?v=1.72';
+import { SHIP_TYPES, fleetOrder, unitNation, fleetTypeBreakdown } from './catalog-display.js?v=1.72';
+import { historicalClass } from './historical-classes.js?v=1.72';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.72';
+import { presencePing, loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.72';
+import { generateBattle, SQUAD_ROLES, REINFORCEMENT_BANDS, BATTLE_LIMITS, LIGHT_WAVE_HEAVY_FACTOR } from './battle-engine.js?v=1.72';
+import { SEASONS } from './config.js?v=1.72';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.72';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -21,9 +21,9 @@ import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull
 const $ = id => document.getElementById(id);
 // Icone originali 64×64 separate per fazione; il lato proviene dalla sessione Nhost.
 const APP_FAVICON_PATHS = Object.freeze({
-  "axis": "./assets/axis/icons/favicon.png?v=1.71",
-  "allies": "./assets/allies/icons/favicon.png?v=1.71",
-  "default": "./assets/common/icons/favicon.png?v=1.71"
+  "axis": "./assets/axis/icons/favicon.png?v=1.72",
+  "allies": "./assets/allies/icons/favicon.png?v=1.72",
+  "default": "./assets/common/icons/favicon.png?v=1.72"
 });
 function setAppFavicon(side) {
   let favicon = $('app-favicon');
@@ -131,7 +131,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.71';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.72';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -388,6 +388,7 @@ function slotCard(container,s,names){
   const sq=card(s.nome,`${id} · ${pts} pt`);sq.dataset.id=id;sq.classList.add('nhost-squadcard');
   const qualification=id==='CV1'?(hasCarrier()?'Gruppo portaerei':'Supporto extra senza CV'):SQUAD_ROLES[id];
   if(qualification)text(sq,'div',qualification,'squad-qualification');
+  if(id==='CL4')text(sq,'div','2 CA/CL + 4 CA/CL o DD','squad-qualification');
   const {nN,len}=squadSlots(s,names);
   for(let i=0;i<len;i++){
     const name=names[i]||'',u=cat.get(name)||{},type=u.tipo||'';
@@ -635,7 +636,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.71':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.72':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
@@ -1263,7 +1264,8 @@ function renderRules(p){const row=make('div','row');
    ['6','IFCV1 (gruppo non uscito)','33,3%'],
    ['7','IFAIR (supporto non uscito)','60%'],
    ['8','CA2 (rinforzo prioritario)','33,3%; 100% se BB di rinforzo estratte'],
-   ['9–12','CA3, CL2, CL3, CL4','33,3% ciascuna']
+   ['9–11','CA3, CL2, CL3','33,3% ciascuna'],
+   ['12','CL4 (gruppo speciale incrociatori)','33,3%']
   ]);
   table(body,['Punti già in mare','Fattore mantenuto','Miste/BB/CV (base 33,3%)','AIR (base 60%)'],REINFORCEMENT_BANDS.map(([min,max,pct])=>[Number.isFinite(max)?min+'–'+max:'280 o più',pct+'%',(pct/3).toFixed(1).replace('.',',')+'%',(pct*.6).toFixed(1).replace('.',',')+'%']));
   note(body,'Vincoli BB di rinforzo: IFBB1 può uscire se BB1 è assente, BB2 non è completa e non sono già uscite sia BB2 sia BB3; IFBB2 se BB2 è assente, BB1 e BB3 non sono complete e non sono entrambe uscite; IFBB3 se BB1, BB2, BB3, IFBB1 e IFBB2 non sono uscite. Il sistema conserva le combinazioni eccezionali del regolamento originale; non impone un limite assoluto di due BB alla forza definitiva.');
@@ -1272,8 +1274,9 @@ function renderRules(p){const row=make('div','row');
   note(body,'Viene accettata la prima formazione non vuota con scorta valida e totale fra '+BATTLE_LIMITS.min+' e '+BATTLE_LIMITS.max+' pt. Dopo '+BATTLE_LIMITS.attempts+' tentativi, se nessuna rientra nel limite, viene conservata la formazione valida più vicina all’intervallo. Se non esiste una formazione valida, occorre controllare il porto. Il seme riproduce una formazione a parità di versione del motore, turno e porto. Le formazioni già salvate non vengono rigenerate; i semi delle versioni precedenti possono produrre risultati diversi.');
  });
  add('Organizzazione delle squadre in porto',body=>{
+  note(body,'CL4 è il gruppo speciale incrociatori (Legnani per Axis, Moore per Allies). Diversamente dalle altre squadre miste, le 4 caselle aggiuntive ammettono sia incrociatori CA/CL sia DD. Con tiro 6–7 esce fino a 1 unità del nucleo più 2 delle caselle aggiuntive; con 8 possono uscire tutte e 6 le unità operative. Probabilità base 22,2% parziale e 11,1% completa (33,3% complessiva), prima dei fattori di rinforzo, delle disponibilità e del filtro punti. Se CL4 è necessaria come scorta di BB/BC/CV, vale comunque il controllo DD effettivo previsto dal motore.');
   note(body,'Le qualifiche operative affiancano il nome dell’ammiraglio. Primaria indica la squadra a maggiore priorità, non un obbligo di assegnare le unità più costose. Una squadra troppo forte può essere penalizzata dal limite totale: distribuire la forza tra le squadre è una scelta strategica.');
-  table(body,['Sigla','Ruolo','Indicazione'],Object.entries(SQUAD_ROLES).map(([id,role])=>[id,role,id==='BB1'?'Corazzate migliori / di punta':id==='CA1'?'Incrociatori affidabili e DD operativi':id==='CL1'?'Scorta alternativa da mantenere operativa':id==='BB2'?'Seconda linea di corazzate':id==='BB3'?'Riserva corazzate':id==='CA2'?'Scorta dei rinforzi pesanti':'Secondo disponibilità e strategia']));
+  table(body,['Sigla','Ruolo','Indicazione'],Object.entries(SQUAD_ROLES).map(([id,role])=>[id,role,id==='BB1'?'Corazzate migliori / di punta':id==='CA1'?'Incrociatori affidabili e DD operativi':id==='CL1'?'Scorta alternativa da mantenere operativa':id==='BB2'?'Seconda linea di corazzate':id==='BB3'?'Riserva corazzate':id==='CA2'?'Scorta dei rinforzi pesanti':id==='CL4'?'2 incrociatori nel nucleo; 4 caselle aggiuntive per CA/CL o DD. Fino a 6 incrociatori.':'Secondo disponibilità e strategia']));
  });
 
 }

@@ -1,5 +1,5 @@
-import { canUseCarrier, aircraftAllowedInSlot, selectedCarrier } from './aircraft-bases.js?v=1.71';
-import { isAvailable, duplicateHull, pendingPortModernizations } from './fleet-rules.js?v=1.71';
+import { canUseCarrier, aircraftAllowedInSlot, selectedCarrier } from './aircraft-bases.js?v=1.72';
+import { isAvailable, duplicateHull, pendingPortModernizations } from './fleet-rules.js?v=1.72';
 // v1.71 — regolamento C: tiri effettivi, scorte indirette e rinforzi progressivi.
 export const BATTLE_LIMITS=Object.freeze({min:150,max:280,attempts:500});
 export const REINFORCEMENT_BANDS=Object.freeze([[0,149,100],[150,199,85],[200,239,65],[240,259,40],[260,279,20],[280,Infinity,0]].map(Object.freeze));
@@ -13,7 +13,7 @@ export const SQUAD_ROLES=Object.freeze({
  CA1:'Incrociatori · Scorta primaria',CL1:'Incrociatori · Scorta secondaria',
  SUB:'Supporto sommergibili',CV1:'Gruppo portaerei / supporto extra',AIR:'Supporto aereo',
  CA2:'Incrociatori · Rinforzo prioritario',CA3:'Incrociatori · Rinforzo',
- CL2:'Incrociatori · Rinforzo I',CL3:'Incrociatori · Rinforzo II',CL4:'Incrociatori · Rinforzo III'
+ CL2:'Incrociatori · Rinforzo I',CL3:'Incrociatori · Rinforzo II',CL4:'Gruppo speciale incrociatori'
 });
 export function hasRequiredEscort(groups){
  const units=groups.flatMap(g=>g.unita||[]);

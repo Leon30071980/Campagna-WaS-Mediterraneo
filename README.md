@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.71 (Nhost)
+# Campagna W@S Mediterraneo — v1.72 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,9 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.72
+- CL4: qualifica «Gruppo speciale incrociatori», con indicazione della composizione 2 CA/CL + 4 CA/CL o DD nel Porto e nelle Regole. Nomi degli ammiragli, composizione esistente, probabilità e motore di estrazione v1.71 invariati.
 
 ## Novità v1.71
 - Motore battaglie C: dipendenze basate sulle unità realmente estratte, scorta indiretta DD verificata nella prima ondata e nella formazione definitiva, rinforzi facoltativi modulati al 100/85/65/40/20/0% della probabilità originale in base ai punti già in mare. I soli rinforzi BB/CV, quando la prima ondata è leggera, conservano il 35% della probabilità già modulata; il supporto extra senza CV resta escluso dalla penalizzazione.
