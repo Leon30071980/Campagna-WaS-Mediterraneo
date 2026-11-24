@@ -35,3 +35,9 @@ for (const header of ['js/axis/header.js','js/allies/header.js']) {
  assert.equal((source.match(/>Ricarica<\/button>/g)||[]).length,1,header+' deve avere un solo pulsante Ricarica');
  assert(!source.includes('>Aggiorna dati</button>'),header+' mantiene la vecchia etichetta');
 }
+
+// v1.55: regressione login: verifica la sintassi dei moduli che avviano la UI.
+import {execFileSync} from 'node:child_process';
+for(const modulePath of ['js/common/main.js','js/common/api.js','js/axis/header.js','js/allies/header.js']) {
+ execFileSync(process.execPath,['--check',join(root,modulePath)],{stdio:'pipe'});
+}

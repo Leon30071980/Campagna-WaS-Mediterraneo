@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.54 (Nhost)
+# Campagna W@S Mediterraneo — v1.55 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,11 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.55
+- Corretto l'errore di sintassi JavaScript introdotto nella v1.54 che impediva l'inizializzazione dell'app e il funzionamento del pulsante Accedi.
+- Aggiornato il versionamento delle risorse JavaScript a v1.55, evitando che il browser riutilizzi la precedente copia difettosa in cache.
+- Conservate le semplificazioni dell'interfaccia della v1.54 e la sincronizzazione Nhost, senza alterare dati, autorizzazioni e regole di gioco.
 
 ## Novità v1.54
 - Nelle testate Axis e Allies «Aggiorna dati» è stato rinominato «Ricarica», mantenendo la ricarica manuale da Nhost come funzione di riserva.
