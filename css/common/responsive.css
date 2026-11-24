@@ -436,3 +436,11 @@ body[data-side] .fleet-type-entry.is-zero .fleet-type-count{color:var(--ink-fain
  body[data-side] .fleet-type-entry:nth-child(4n+1)::before{content:'';position:absolute;left:0;top:20%;bottom:20%;border-left:1px solid var(--line-soft);}
  body[data-side] .fleet-type-entry:nth-child(3n+1)::before{content:none;}
 }
+
+/* v1.69 — presenza avversaria indipendente dalla testata illustrata. */
+body[data-side] .opponent-presence{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:3px 7px;border:1px solid var(--line);border-radius:5px;font-size:12px;line-height:1.2;color:var(--ink);background:var(--surface);}
+body[data-side] .presence-dot{width:10px;height:10px;flex:0 0 10px;border-radius:50%;background:#9aa4ae;box-shadow:0 0 0 1px rgba(128,128,128,.35);}
+body[data-side] .opponent-presence[data-presence="online"] .presence-dot{background:#35d477;box-shadow:0 0 6px #35d477;}
+body[data-side] .opponent-presence[data-presence="offline"] .presence-dot{background:#ef5656;box-shadow:0 0 5px #ef5656;}
+body[data-side] .presence-label{font-weight:600;}
+@media(max-width:620px){body[data-side] .header-right{flex-wrap:wrap;gap:4px;}body[data-side] .opponent-presence{font-size:11px;gap:4px;padding:3px 5px;}}

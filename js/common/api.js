@@ -1,7 +1,7 @@
-import { aircraftBase } from './aircraft-bases.js?v=1.68';
+import { aircraftBase } from './aircraft-bases.js?v=1.69';
 // Campagna W@S Mediterraneo v1.2
-import { NHOST } from './config.js?v=1.68';
-import { getAccessToken, refreshAccessToken } from './auth.js?v=1.68';
+import { NHOST } from './config.js?v=1.69';
+import { getAccessToken, refreshAccessToken } from './auth.js?v=1.69';
 
 const STATE_QUERY = `query MyCampaignData {
   campaign_profiles { user_id side }
@@ -26,9 +26,9 @@ const STATE_QUERY = `query MyCampaignData {
 }`;
 
 // Timeout esplicito; non ripetere mutazioni dopo errori di rete dall'esito incerto.
-async function graphPost(token, body, mutation=false) {
+async function graphPost(token, body, mutation=false, timeoutMs=25000) {
   if(!token)throw new Error('Sessione non valida. Accedere nuovamente.');
-  const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),25000);
+  const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),timeoutMs);
   try {
     const response=await fetch(NHOST.graphUrl,{method:'POST',signal:controller.signal,
       headers:{'content-type':'application/json',authorization:'Bearer '+token},body});
@@ -338,4 +338,19 @@ export function watchCampaign({ campaign, ownRevision, onChange, onStatus }) {
     document.removeEventListener('visibilitychange', visibilityChanged);
     if (socket) { const ws = socket; socket = null; ws.onclose = null; ws.close(); }
   };
+}
+
+// v1.69 — canale presenza indipendente dalla sincronizzazione dei dati di gioco.
+export async function presencePing(sessionId,offline=false){
+ const token=await getAccessToken();
+ if(!token)throw Error('Sessione non disponibile');
+ const body=JSON.stringify({query:`mutation Presence($id:uuid!,$offline:Boolean!){
+  campaign_presence_ping(args:{p_session_id:$id,p_offline:$offline}){side online last_seen}
+ }`,variables:{id:sessionId,offline}});
+ let response=await graphPost(token,body,true,4000);
+ if(response.expired&&!offline)response=await graphPost(await refreshAccessToken(token),body,true,4000);
+ if(response.expired)throw Error('Sessione presenza scaduta');
+ const rows=response.data?.campaign_presence_ping;
+ if(!Array.isArray(rows)||rows.length!==1)throw Error('Presenza non disponibile');
+ return rows[0];
 }

@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.68 (Nhost)
+# Campagna W@S Mediterraneo — v1.69 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,10 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.69
+- Indicatore presenza avversaria in entrambe le testate: verde Online, rosso Offline, grigio Sconosciuto. Segnale ogni 15 secondi, scadenza 45 secondi sul server, ultimo contatto nel tooltip; più schede gestite separatamente.
+- Canale presenza indipendente dalla sincronizzazione della campagna, dal login e dalle revisioni di gioco. In caso di errore o migrazione mancante l'indicatore resta grigio. Richiede attivazione privata SQL e metadati Hasura della funzione `campaign_presence_ping`; nessuna credenziale nel repository. Nessun cambiamento alle regole o ai dati della campagna.
 
 ## Novità v1.68
 - Catalogo aerei: Terrestre (LAND BASED), Idrovolante (IDRO), Imbarcabile (terra e portaerei) e Imbarcato (solo portaerei). Etichette, filtri e ordinamento aggiornati per entrambe le fazioni.

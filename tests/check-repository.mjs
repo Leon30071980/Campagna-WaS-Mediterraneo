@@ -93,7 +93,7 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 // v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.68'),'fondale ridimensionato');
+assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.69'),'fondale ridimensionato');
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
 assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
@@ -149,3 +149,14 @@ assert(royalMarkup.includes('x="888" y="0" width="140" height="25"'),'ritaglio c
  assert(!noCVBattle.gruppi.flatMap(g=>g.unita).some(u=>u.nome===embarked.nome),'imbarcato escluso senza CV');
  const unassigned={...airFixture,porto:{CV1:['',embarked.nome,dual.nome],AIR:[embarked.nome,land.nome,dual.nome]}};
  assert(!generateAircraftTestBattle(unassigned,0,42).gruppi.flatMap(g=>g.unita).some(u=>u.nome===embarked.nome),'imbarcato escluso senza CV assegnata');
+
+// v1.69 — presenza isolata, condivisa fra entrambe le interfacce.
+import {presenceStatus,PRESENCE_INTERVAL_MS,PRESENCE_EXPIRY_MS} from '../js/common/presence.js';
+assert.equal(PRESENCE_INTERVAL_MS,15000);assert.equal(PRESENCE_EXPIRY_MS,45000);
+assert.deepEqual(presenceStatus({side:'allies',online:true,last_seen:'2026-11-24T12:00:00Z'},'axis'),{state:'online',lastSeen:'2026-11-24T12:00:00Z'});
+assert.equal(presenceStatus({side:'axis',online:false,last_seen:null},'allies').state,'offline');
+assert.equal(presenceStatus({side:'axis',online:true},'axis').state,'unknown');
+assert.equal(presenceStatus(null,'axis').state,'unknown');
+for(const p of ['js/axis/header.js','js/allies/header.js'])assert(readFileSync(join(root,p),'utf8').includes('opponent-presence'));
+assert(mainSource.includes('presence.start(model.side)')&&mainSource.includes('presence.stop({notify:true})'));
+assert(apiSource.includes('campaign_presence_ping')&&apiSource.includes('graphPost(token,body,true,4000)'));
