@@ -469,3 +469,20 @@ body[data-side] .battle-rules-result{font-size:24px;line-height:1.15;font-weight
 body[data-side] .battle-rules-table th{background:var(--surface2,var(--surface));}
 body[data-side] .battle-rules-table tbody tr:nth-child(even){background:var(--surface);}
 @media(max-width:520px){body[data-side] .battle-rules-flow,body[data-side] .battle-rules-examples{grid-template-columns:1fr;}body[data-side] .battle-rules-table{min-width:440px;}}
+
+/* v1.75 — Regolamento: tipografia leggibile, limitata alla scheda Regole. */
+body[data-side] #p-regole .nhost-card-body,
+body[data-side] #p-regole .note,
+body[data-side] #p-regole .battle-rules-paragraph,
+body[data-side] #p-regole .battle-rules-list,
+body[data-side] #p-regole .battle-rules-step,
+body[data-side] #p-regole .battle-rules-example{font-size:17px;line-height:1.65;}
+body[data-side] #p-regole .card>h3{font-size:20px;line-height:1.4;}
+body[data-side] #p-regole .battle-rules-heading{font-size:19px;line-height:1.4;}
+body[data-side] #p-regole .battle-rules-table{font-size:16px;line-height:1.5;}
+body[data-side] #p-regole .battle-rules-table th,body[data-side] #p-regole .battle-rules-table td{padding:9px 11px;}
+body[data-side] #p-regole .battle-rules-result{font-size:28px;line-height:1.2;}
+body[data-side] #p-regole .battle-rules-number{width:30px;height:30px;}
+body[data-side] #p-regole .nhost-card-body>ol{padding-inline-start:25px;}
+body[data-side] #p-regole .nhost-card-body>ol li+li{margin-top:7px;}
+@media(max-width:520px){body[data-side] #p-regole .battle-rules-table{min-width:520px;}}
