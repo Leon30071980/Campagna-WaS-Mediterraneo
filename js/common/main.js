@@ -1,19 +1,19 @@
-import { createPresenceMonitor, createPresenceSound } from './presence.js?v=1.73';
-import { AIR_BASE_OPTIONS, aircraftBase, aircraftBaseLabel, setAircraftBase, selectedCarrier, aircraftAllowedInSlot } from './aircraft-bases.js?v=1.73';
-import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.73';
-import { portUnitImage, battleUnitImage } from './port-visual.js?v=1.73';
-import { HEADER_AXIS } from '../axis/header.js?v=1.73';
-import { HEADER_ALLIES } from '../allies/header.js?v=1.73';
-import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.73';
-import { localShipProfile } from './local-ship-profiles.js?v=1.73';
-import { shipProfile } from './ship-profiles.js?v=1.73';
-import { SHIP_TYPES, fleetOrder, unitNation, fleetTypeBreakdown } from './catalog-display.js?v=1.73';
-import { historicalClass } from './historical-classes.js?v=1.73';
-import { signIn, signOut, resumeSession } from './auth.js?v=1.73';
-import { presencePing, loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.73';
-import { generateBattle, SQUAD_ROLES, REINFORCEMENT_BANDS, BATTLE_LIMITS, LIGHT_WAVE_HEAVY_FACTOR } from './battle-engine.js?v=1.73';
-import { SEASONS } from './config.js?v=1.73';
-import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.73';
+import { createPresenceMonitor, createPresenceSound } from './presence.js?v=1.74';
+import { AIR_BASE_OPTIONS, aircraftBase, aircraftBaseLabel, setAircraftBase, selectedCarrier, aircraftAllowedInSlot } from './aircraft-bases.js?v=1.74';
+import { aircraftProfile, aircraftKey, aircraftChoices } from './aircraft-profiles.js?v=1.74';
+import { portUnitImage, battleUnitImage } from './port-visual.js?v=1.74';
+import { HEADER_AXIS } from '../axis/header.js?v=1.74';
+import { HEADER_ALLIES } from '../allies/header.js?v=1.74';
+import { missingSeaAircraft } from '../allies/sea-aircraft.js?v=1.74';
+import { localShipProfile } from './local-ship-profiles.js?v=1.74';
+import { shipProfile } from './ship-profiles.js?v=1.74';
+import { SHIP_TYPES, fleetOrder, unitNation, fleetTypeBreakdown } from './catalog-display.js?v=1.74';
+import { historicalClass } from './historical-classes.js?v=1.74';
+import { signIn, signOut, resumeSession } from './auth.js?v=1.74';
+import { presencePing, loadCampaign, saveLogistics, saveBattle, concludeBattle, markReady, watchCampaign, createCampaignSave, renameCampaignSave, deleteCampaignSave, requestCampaignLoad, requestCampaignReset, setScenarioScore, resolveCampaignRequest } from './api.js?v=1.74';
+import { generateBattle, SQUAD_ROLES, REINFORCEMENT_BANDS, BATTLE_LIMITS, LIGHT_WAVE_HEAVY_FACTOR } from './battle-engine.js?v=1.74';
+import { SEASONS } from './config.js?v=1.74';
+import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull, catalogShipStatus, fleetStatusTotals, catalogAircraftStatus, hullGroups, hullVersionNumber, visibleHullVersion, currentHullVersion, pendingPortModernizations, shipStatus, validateHullSchedule, planCancelModernization, hullDisplayName } from './fleet-rules.js?v=1.74';
 
 // v1.4: proposta grafica A (Ammiragliato italiano); logica e dati privati invariati.
 // Sicurezza: repertorio storico pubblico separato dai cataloghi e dallo stato della partita, che restano privati.
@@ -21,9 +21,9 @@ import { CAMPAIGN_YEARS, shipBase, isAvailable, assignedHullBases, duplicateHull
 const $ = id => document.getElementById(id);
 // Icone originali 64×64 separate per fazione; il lato proviene dalla sessione Nhost.
 const APP_FAVICON_PATHS = Object.freeze({
-  "axis": "./assets/axis/icons/favicon.png?v=1.73",
-  "allies": "./assets/allies/icons/favicon.png?v=1.73",
-  "default": "./assets/common/icons/favicon.png?v=1.73"
+  "axis": "./assets/axis/icons/favicon.png?v=1.74",
+  "allies": "./assets/allies/icons/favicon.png?v=1.74",
+  "default": "./assets/common/icons/favicon.png?v=1.74"
 });
 function setAppFavicon(side) {
   let favicon = $('app-favicon');
@@ -131,7 +131,7 @@ function tabIcon(id){
 const NAVAL_STATUS=Object.freeze({attiva:['Operativa','operational','ok'],riparazione:['In riparazione','repair','ripara'],affondata:['Persa','sunk','sunk'],costruzione:['In costruzione','construction','building'],ritirata:['Ritirata',null,'retired']});
 const AIR_STATUS=Object.freeze({attiva:['Operativo','ok'],obsoleto:['Obsoleto','obsolete'],costruzione:['In costruzione','building']});
 function aircraftStatusBadge(status){const [label,cls]=AIR_STATUS[status];const node=make('span','air-status '+cls);text(node,'span',label);return node;}
-function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.73';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
+function navalIcon(file){const img=make('img','naval-icon');const assets={operational:'operational.png',repair:'repair.png',sunk:'sunk.webp',construction:'construction.svg'};img.src='./assets/common/status/'+assets[file]+'?v=1.74';if(file==='sunk')img.classList.add('naval-sunk-icon');if(file==='construction')img.classList.add('naval-construction-icon');img.alt='';img.setAttribute('aria-hidden','true');return img;}
 function navalStatusBadge(status){const [label,file,cls]=NAVAL_STATUS[status]||NAVAL_STATUS.attiva;const node=make('span','naval-state '+cls);if(file)node.append(navalIcon(file));text(node,'span',label);return node;}
 function appendHistoricalProfile(td,u){
  const cls=historicalClass(u);const local=localShipProfile(u,cls);const remote=shipProfile(u,cls);const profile=local?{...local,page:remote?.page||null}:remote;if(!profile)return;
@@ -636,7 +636,7 @@ function appendUnitFlag(parent,unit,ships){
  if(!nation)return;
  const flag=make('span','unit-flag');flag.dataset.nation=nation;
  flag.title=NATION_LABELS[nation];flag.setAttribute('role','img');flag.setAttribute('aria-label',flag.title);
- const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.73':HISTORICAL_FLAG_URLS[nation];
+ const url=(model.side==='allies'&&['gb-navy','gb-air','au','nz','ca','fr','us'].includes(nation))?'./assets/allies/flags/'+(nation==='us'?'us-flag.webp':nation==='fr'?'free-france.webp':'white-ensign.webp')+'?v=1.74':HISTORICAL_FLAG_URLS[nation];
  if(url){
   const img=make('img','historical-unit-flag');img.alt='';img.setAttribute('aria-hidden','true');img.referrerPolicy='no-referrer';img.hidden=true;
   img.addEventListener('load',()=>{img.hidden=false;flag.classList.add('historical-flag-loaded');},{once:true});
@@ -1234,44 +1234,106 @@ function renderRules(p){const row=make('div','row');
   for(const h of headers)text(tr,'th',h);head.append(tr);t.append(head);
   const tbody=make('tbody');for(const row of rows){const tr=make('tr');for(const val of row)text(tr,'td',val);tbody.append(tr);}t.append(tbody);wrap.append(t);body.append(wrap);
  };
- add('Estrazione delle battaglie — v1.71',body=>{
-  note(body,'Prima ondata: BB1 → BB2 → BB3 → CA1 → CL1 → SUB → CV1 → AIR. Poi rinforzi nell’ordine riportato sotto. Vengono impiegate solo unità disponibili assegnate al porto. I tiri interi sono equiprobabili; i numeri sotto sono probabilità teoriche per il singolo tiro, condizionate alle squadre già uscite, prima del filtro punti e delle disponibilità. Non rappresentano le frequenze finali delle formazioni.');
-  table(body,['Squadra','Condizione','Tiro','Probabilità di uscita'],[
-   ['BB1','Sempre','3–8','50% (33,3% una BB; 16,7% due)'],
-   ['BB2','BB1 assente','2–8','42,9% (28,6% una; 14,3% due)'],
-   ['BB2','BB1 una nave','1–7','28,6% (una)'],
-   ['BB2','BB1 due navi','—','0%'],
-   ['BB3','BB1 e BB2 assenti','1–8','37,5% (25% una; 12,5% due)'],
-   ['BB3','Solo una BB tra BB1 e BB2','0–7','25% (una)'],
-   ['BB3','Già due BB','—','0%'],
-   ['CA1','Almeno una BB/BC effettiva','6–8','100% (66,7% parziale; 33,3% completa)'],
-   ['CA1','Nessuna BB/BC','3–8','50% (33,3% parziale; 16,7% completa)'],
-   ['CL1','Nessuna DD ancora uscita','6–8','100% (66,7% parziale; 33,3% completa)'],
-   ['CL1','DD già presente','3–8','50%'],
-   ['SUB','Sempre','1–8','62,5% (37,5% una unità; 25% due)'],
-   ['CV1','Sempre','1–8','37,5% (gruppo completo o supporto extra)'],
-   ['AIR','CV1 non estratta con tiro 8','0–9','60% (30% una unità; 20% due; 10% tre)'],
-   ['AIR','CV1 effettivamente estratta con tiro 8','—','0% nella prima ondata']
-  ]);
-  note(body,'BB: 6–7 = una nave, 8 = squadra completa. Squadra mista: 6–7 = un incrociatore e fino a due scorte, 8 = squadra completa. CV: 6–8 = gruppo completo; senza CV operativa nel catalogo, supporto extra da terra. SUB/AIR: 4–6 = una unità, 7–8 = due, 9 = tre (solo AIR). Le unità sono estratte senza ripetere le caselle; i modelli aerei possono comparire più volte se assegnati a più caselle.');
-  note(body,'Le condizioni BB dipendono dal numero di navi realmente estratte, non da un tiro favorevole su una squadra vuota. Le BB/BC e CV utilizzano le scorte indirette delle squadre miste: almeno una DD effettiva nella prima ondata se contiene unità maggiori e almeno una nella forza definitiva se contiene unità maggiori. Se CA1 non fornisce DD, CL1 ha precedenza. Non vengono aggiunte caselle alle squadre BB o CV.');
+ const heading=(body,label)=>text(body,'h4',label,'battle-rules-heading');
+ const para=(body,value)=>text(body,'p',value,'battle-rules-paragraph');
+ const bullets=(body,items)=>{const ul=make('ul','battle-rules-list');for(const item of items)text(ul,'li',item);body.append(ul);};
+ const percent=x=>(x*100).toFixed(1).replace('.',',')+'%';
+ const squadName=id=>{const sq=(model.state.ui_squadre||[]).find(s=>s.id===id);return id+(sq?.nome?' — '+sq.nome:'');};
+ add('1 · Come nasce una battaglia',body=>{
+  para(body,'Il sistema non sceglie una flotta di valore fisso: estrae le squadre già organizzate nel Porto, seguendo la loro priorità. Ogni fazione effettua la propria estrazione.');
+  const flow=make('div','battle-rules-flow');
+  for(const [n,title,desc] of [
+   ['1','Preparazione','Solo caselle assegnate a unità operative e compatibili.'],
+   ['2','Prima ondata','BB1 → BB2 → BB3 → CA1 → CL1 → SUB → CV1 → AIR.'],
+   ['3','Rinforzi','Valutati in sequenza; la probabilità diminuisce con i punti già in mare.'],
+   ['4','Controllo finale','Formazione non vuota, scorta DD se necessaria, totale 150–280 pt.']
+  ]){const cell=make('div','battle-rules-step');text(cell,'span',n,'battle-rules-number');text(cell,'strong',title);text(cell,'p',desc);flow.append(cell);}
+  body.append(flow);
+  note(body,'Leggere le percentuali come probabilità condizionate al singolo passaggio: non sono la frequenza delle squadre nelle battaglie definitive. Il controllo finale, le disponibilità e i nuovi tentativi modificano la distribuzione.');
+  para(body,'Il tiro è un numero intero casuale uniforme nell’intervallo indicato, estremi compresi. Esempio: da 3 a 8 esistono sei esiti equiprobabili; 6, 7 e 8 danno un’uscita, quindi 3/6 = 50%.');
  });
- add('Rinforzi — probabilità progressiva',body=>{
-  note(body,'La seconda fase valuta le squadre nell’ordine seguente, senza ripetere una squadra già in mare. Prima si applicano i vincoli del tiro originale e il limite di 280 punti, poi il fattore di disponibilità al totale già schierato. Una squadra di rinforzo ammessa può essere comunque indisponibile per il fattore progressivo.');
-  table(body,['Ordine','Gruppo','Probabilità base se ammesso'],[
-   ['1–3','IFBB1, IFBB2, IFBB3 (BB in porto; vincoli originali di concentrazione)','33,3% (22,2% una; 11,1% due)'],
-   ['4–5','IFCA1, IFCL1 (squadre non uscite)','33,3%'],
-   ['6','IFCV1 (gruppo non uscito)','33,3%'],
-   ['7','IFAIR (supporto non uscito)','60%'],
-   ['8','CA2 (rinforzo prioritario)','33,3%; 100% se BB di rinforzo estratte'],
-   ['9–11','CA3, CL2, CL3','33,3% ciascuna'],
-   ['12','CL4 (gruppo speciale incrociatori)','33,3%']
+ add('2 · Come si interpreta il tiro',body=>{
+  table(body,['Tipo di squadra','Tiro','Unità selezionate (se disponibili)'],[
+   ['BB1–BB3','0–5','Nessuna'],
+   ['BB1–BB3','6–7','Una BB/BC del nucleo, scelta a caso'],
+   ['BB1–BB3','8','Tutto il nucleo (fino a due BB/BC)'],
+   ['CA/CL','0–5','Nessuna'],
+   ['CA/CL','6–7','Fino a un incrociatore del nucleo + due unità delle caselle aggiuntive, scelte a caso'],
+   ['CA/CL','8','Tutte le unità operative (fino a sei)'],
+   ['CV1','0–5','Nessuna'],
+   ['CV1','6–8','Portaerei assegnata e tutti gli aerei imbarcati compatibili, oppure supporto extra senza CV'],
+   ['SUB / AIR','0–3','Nessuna'],
+   ['SUB / AIR','4–6','Una unità, scelta a caso'],
+   ['SUB / AIR','7–8','Due unità, scelte a caso'],
+   ['AIR','9','Tre unità, scelte a caso']
   ]);
-  table(body,['Punti già in mare','Fattore mantenuto','Miste/BB/CV (base 33,3%)','AIR (base 60%)'],REINFORCEMENT_BANDS.map(([min,max,pct])=>[Number.isFinite(max)?min+'–'+max:'280 o più',pct+'%',(pct/3).toFixed(1).replace('.',',')+'%',(pct*.6).toFixed(1).replace('.',',')+'%']));
-  note(body,'Vincoli BB di rinforzo: IFBB1 può uscire se BB1 è assente, BB2 non è completa e non sono già uscite sia BB2 sia BB3; IFBB2 se BB2 è assente, BB1 e BB3 non sono complete e non sono entrambe uscite; IFBB3 se BB1, BB2, BB3, IFBB1 e IFBB2 non sono uscite. Il sistema conserva le combinazioni eccezionali del regolamento originale; non impone un limite assoluto di due BB alla forza definitiva.');
-  note(body,'Prima ondata leggera (senza BB/BC/CV): i rinforzi BB e CV mantengono soltanto il '+Math.round(LIGHT_WAVE_HEAVY_FACTOR*100)+'% della probabilità già modulata dai punti. La limitazione non riguarda il Supporto Extra No CV né i rinforzi di scorta. Esempio: a 220 pt, 33,3% × 65% × 35% = 7,6%. La battaglia leggera può quindi evolvere in maggiore, ma meno frequentemente.');
-  note(body,'Esempio: con 220 pt una squadra a probabilità base del 33,3% mantiene il 65% di tale probabilità, cioè il 21,7%. CA2 obbligatoria per le BB di rinforzo e i rinforzi misti necessari per trovare una DD disponibile non subiscono il fattore: sotto 280 pt tirano da 6 a 8. La scorta è comunque verificata a fine estrazione.');
-  note(body,'Viene accettata la prima formazione non vuota con scorta valida e totale fra '+BATTLE_LIMITS.min+' e '+BATTLE_LIMITS.max+' pt. Dopo '+BATTLE_LIMITS.attempts+' tentativi, se nessuna rientra nel limite, viene conservata la formazione valida più vicina all’intervallo. Se non esiste una formazione valida, occorre controllare il porto. Il seme riproduce una formazione a parità di versione del motore, turno e porto. Le formazioni già salvate non vengono rigenerate; i semi delle versioni precedenti possono produrre risultati diversi.');
+  bullets(body,['Un tiro escluso dalle condizioni non viene eseguito (probabilità 0%).','Le caselle vuote o indisponibili non sono sostituite con altre navi del catalogo durante l’estrazione. Una squadra può quindi uscire con meno unità del massimo previsto, anche solo con unità delle caselle aggiuntive.','La scelta casuale non ripete le caselle; uno stesso modello aereo può essere presente in più caselle. Una squadra già uscita non può uscire nuovamente.']);
+ });
+ add('3 · Prima ondata: probabilità per ogni squadra',body=>{
+  heading(body,'A. Corazzate e incrociatori da battaglia');
+  para(body,'La BB1 è prioritaria. BB2 e BB3 intervengono in base al numero effettivo di BB/BC già schierate. La prima ondata contiene al massimo due BB/BC.');
+  table(body,['Squadra','Condizione','Tiro','Nessuna','Una BB/BC','Due BB/BC'],[
+   ['BB1','Sempre','3–8','50%','33,3%','16,7%'],
+   ['BB2','BB1 = 0','2–8','57,1%','28,6%','14,3%'],
+   ['BB2','BB1 = 1','1–7','71,4%','28,6%','0%'],
+   ['BB2','BB1 = 2','—','100%','0%','0%'],
+   ['BB3','BB1 + BB2 = 0','1–8','62,5%','25%','12,5%'],
+   ['BB3','BB1 + BB2 = 1','0–7','75%','25%','0%'],
+   ['BB3','BB1 + BB2 = 2','—','100%','0%','0%']
+  ]);
+  heading(body,'B. Incrociatori e scorte');
+  table(body,['Squadra','Condizione','Tiro','Nessuna','Parziale','Completa'],[
+   ['CA1','Almeno una BB/BC effettiva','6–8','0%','66,7%','33,3%'],
+   ['CA1','Nessuna BB/BC','3–8','50%','33,3%','16,7%'],
+   ['CL1','Nessuna DD già estratta','6–8','0%','66,7%','33,3%'],
+   ['CL1','Almeno una DD già estratta','3–8','50%','33,3%','16,7%']
+  ]);
+  para(body,'La CA1 accompagna prioritariamente le corazzate. La CL1 riceve un tiro favorevole se manca ancora una DD, anche quando non sono uscite BB. Le percentuali indicano la modalità estratta, non la certezza di trovare unità operative.');
+  heading(body,'C. Sommergibili, portaerei e supporto aereo');
+  table(body,['Squadra','Condizione','Tiro','Nessuna','1 unità','2 unità','3 unità / gruppo'],[
+   ['SUB','Sempre','1–8','37,5%','37,5%','25%','0%'],
+   ['CV1','Sempre','1–8','62,5%','—','—','37,5% gruppo'],
+   ['AIR','CV1 non effettivamente uscita con tiro 8','0–9','40%','30%','20%','10%'],
+   ['AIR','CV1 effettivamente uscita con tiro 8','—','100%','0%','0%','0%']
+  ]);
+  bullets(body,['Se nel catalogo esiste almeno una CV operativa, CV1 richiede una portaerei operativa assegnata nel Porto. Se non è assegnata, il gruppo resta vuoto.','Se non esiste alcuna CV operativa nel catalogo, CV1 diventa Supporto Extra No CV: fino a un TB e un DB terrestri o imbarcabili, assegnati alle due caselle previste.','La regola che esclude AIR con tiro CV1 = 8 vale anche per il Supporto Extra No CV effettivamente uscito. AIR può comunque essere rivalutato tra i rinforzi.']);
+  note(body,'Il totale della prima ondata è la somma dei punti delle unità estratte prima dei rinforzi. Nel raro caso in cui sia zero, per compatibilità con il calcolo Nhost viene registrato il totale finale.');
+ });
+ add('4 · Rinforzi: ordine e condizioni',body=>{
+  para(body,'La sigla IF identifica un secondo tentativo di una squadra iniziale. Le squadre già uscite non vengono duplicate. Le condizioni per le BB si riferiscono alle uscite effettive nella prima ondata, salvo dove sono indicati i rinforzi precedenti.');
+  table(body,['N.','Gruppo','Condizione di ammissione (totale < 280 pt)','Tiro','Probabilità base'],[
+   ['1','IFBB1','BB1 assente; BB2 non completa; BB2 e BB3 non entrambe uscite','0–8','33,3%'],
+   ['2','IFBB2','BB2 assente; BB1 e BB3 non complete né entrambe uscite','0–8','33,3%'],
+   ['3','IFBB3','BB1, BB2, BB3, IFBB1 e IFBB2 assenti','0–8','33,3%'],
+   ['4','IFCA1','CA1 non uscita','0–8','33,3%'],
+   ['5','IFCL1','CL1 non uscita','0–8','33,3%'],
+   ['6','IFCV1','CV1 non uscita','0–8','33,3%'],
+   ['7','IFAIR','AIR non uscito','0–9','60%'],
+   ['8','CA2','Sempre; tiro favorevole se almeno una BB di rinforzo effettivamente uscita','0–8 / 6–8','33,3% / 100%'],
+   ['9','CA3','Sempre','0–8','33,3%'],
+   ['10','CL2','Sempre','0–8','33,3%'],
+   ['11','CL3','Sempre','0–8','33,3%'],
+   ['12','CL4','Sempre (gruppo speciale incrociatori)','0–8','33,3%']
+  ]);
+  para(body,'Tiro 0–8: 66,7% nessuna, 22,2% parziale e 11,1% completa per BB e squadre miste. Per CV1: 66,7% nessuna e 33,3% gruppo completo. Tiro 6–8: 66,7% parziale e 33,3% completa per squadre miste. AIR con 0–9: 40% nessuna, 30% una, 20% due, 10% tre.');
+  note(body,'I rinforzi possono portare eccezionalmente a più di due BB/BC nella formazione finale: il limite di due riguarda soltanto la prima ondata. Non esiste un tetto separato per il numero finale di BB.');
+ });
+ add('5 · Rinforzi: percentuali dopo i correttivi',body=>{
+  para(body,'Per ogni gruppo facoltativo, il motore combina la probabilità del tiro con il fattore di disponibilità determinato dal totale già in mare in quel momento. Il totale viene aggiornato dopo ogni gruppo estratto.');
+  table(body,['Punti in mare','Fattore','BB/CA/CL/CV ordinari','AIR','BB/CV con prima ondata leggera'],REINFORCEMENT_BANDS.map(([min,max,pct])=>[Number.isFinite(max)?min+'–'+max:'280 o più',pct+'%',percent(pct/100/3),percent(pct/100*.6),percent(pct/100/3*LIGHT_WAVE_HEAVY_FACTOR)]));
+  heading(body,'Esempio: 220 punti già schierati');
+  const example=make('div','battle-rules-examples');
+  for(const [name,value,description] of [['CA3 o CL4','21,7%','33,3% × 65%'],['AIR','39,0%','60% × 65%'],['BB/CV con prima ondata leggera','7,6%','33,3% × 65% × 35%']]){
+   const box=make('div','battle-rules-example');text(box,'strong',name);text(box,'div',value,'battle-rules-result num');text(box,'span',description);example.append(box);
+  }body.append(example);
+  para(body,'Prima ondata leggera = nessuna BB, BC o CV effettivamente estratta nella prima fase. Soltanto i rinforzi BB/BC e il gruppo CV1 quando esiste una CV operativa conservano il 35% della probabilità già ridotta. Il Supporto Extra No CV non riceve questo ulteriore correttivo.');
+  heading(body,'Eccezioni: scorte prioritarie');
+  bullets(body,['CA2: con BB di rinforzo effettivamente uscite e totale sotto 280 pt, tira da 6 a 8 e non subisce il fattore di disponibilità.','Se sono già presenti BB/BC/CV ma nessuna DD, ogni squadra mista di rinforzo non ancora uscita con DD disponibili riceve, sotto 280 pt, un tiro da 6 a 8 senza riduzione.','Un tiro favorevole non garantisce la presenza di DD: se la scorta manca dopo l’estrazione, il candidato viene scartato.']);
+ });
+ add('6 · Controlli finali e casi particolari',body=>{
+  bullets(body,['Scorta indiretta: almeno una DD effettiva nell’insieme della prima ondata se contiene BB/BC/CV, e almeno una nell’insieme definitivo se contiene BB/BC/CV. Non serve una DD per ogni nave maggiore né una scorta inserita nelle caselle BB/CV.','Punti: la prima ondata non è limitata a 280 pt durante i singoli tiri. Un gruppo di rinforzo può far superare 280 pt; da quel momento non vengono ammessi altri rinforzi. Il controllo dell’intervallo avviene alla fine.','Il motore accetta la prima formazione non vuota con scorta valida e totale compreso fra '+BATTLE_LIMITS.min+' e '+BATTLE_LIMITS.max+' pt. Se non è valida, ripete tutta l’estrazione con un nuovo tentativo deterministico.','Dopo '+BATTLE_LIMITS.attempts+' tentativi senza una formazione nell’intervallo, conserva la formazione non vuota con scorta valida più vicina all’intervallo (anche sopra 280, se è il candidato più vicino). A parità di distanza conserva la prima incontrata. Se nessun candidato è valido, segnala l’errore e richiede un controllo del Porto.','Il seme rende riproducibile l’estrazione a parità di motore, turno, catalogo e assegnazioni. Le formazioni già salvate non vengono rigenerate.']);
+  heading(body,'CL4 · gruppo speciale incrociatori');
+  para(body,'Legnani (Axis) / Moore (Allies): 2 CA/CL + 4 CA/CL o DD. Con tiro 6–7 vengono selezionate fino a tre unità; con 8 fino a sei. Può essere composta interamente da incrociatori. In caso di scorta obbligatoria, almeno una DD deve essere presente nella forza complessiva, non necessariamente in CL4.');
  });
  add('Punteggio della campagna — Formula C (v1.73)',body=>{
   note(body,'Il punteggio di ciascuna fazione è calcolato dal server Nhost quando entrambe hanno concluso la battaglia. La nuova formula attenua del 50% il solo bonus per inferiorità numerica, mantenendo la base 1, senza tetto massimo.');
@@ -1286,12 +1348,11 @@ function renderRules(p){const row=make('div','row');
    ['1,00','1,00','3,00'],['1,20','1,10','3,30'],['1,50','1,25','3,75'],['2,00','1,50','4,50'],['3,00','2,00','6,00']
   ]);
   note(body,'Il bonus è dimezzato, non il punteggio complessivo. Il risultato non può essere penalizzato sotto il coefficiente 1. Il calcolo mantiene tutta la precisione; gli arrotondamenti sono solo di visualizzazione.');
-  note(body,'Attivazione Nhost: la formula C entra in vigore al prossimo calcolo di un risultato dopo l’esecuzione dello script 025 di aggiornamento del server. La sola pubblicazione v1.73 non modifica il calcolo del server. I risultati già registrati non sono ricalcolati, inclusi quelli contenuti nei salvataggi precedenti.');
+  note(body,'Formula C attivata su Nhost tramite lo script 025 della v1.73. Si applica ai risultati calcolati dopo l’attivazione. I risultati già registrati non sono ricalcolati, inclusi quelli contenuti nei salvataggi precedenti.');
  });
  add('Organizzazione delle squadre in porto',body=>{
-  note(body,'CL4 è il gruppo speciale incrociatori (Legnani per Axis, Moore per Allies). Diversamente dalle altre squadre miste, le 4 caselle aggiuntive ammettono sia incrociatori CA/CL sia DD. Con tiro 6–7 esce fino a 1 unità del nucleo più 2 delle caselle aggiuntive; con 8 possono uscire tutte e 6 le unità operative. Probabilità base 22,2% parziale e 11,1% completa (33,3% complessiva), prima dei fattori di rinforzo, delle disponibilità e del filtro punti. Se CL4 è necessaria come scorta di BB/BC/CV, vale comunque il controllo DD effettivo previsto dal motore.');
   note(body,'Le qualifiche operative affiancano il nome dell’ammiraglio. Primaria indica la squadra a maggiore priorità, non un obbligo di assegnare le unità più costose. Una squadra troppo forte può essere penalizzata dal limite totale: distribuire la forza tra le squadre è una scelta strategica.');
-  table(body,['Sigla','Ruolo','Indicazione'],Object.entries(SQUAD_ROLES).map(([id,role])=>[id,role,id==='BB1'?'Corazzate migliori / di punta':id==='CA1'?'Incrociatori affidabili e DD operativi':id==='CL1'?'Scorta alternativa da mantenere operativa':id==='BB2'?'Seconda linea di corazzate':id==='BB3'?'Riserva corazzate':id==='CA2'?'Scorta dei rinforzi pesanti':id==='CL4'?'2 incrociatori nel nucleo; 4 caselle aggiuntive per CA/CL o DD. Fino a 6 incrociatori.':'Secondo disponibilità e strategia']));
+  table(body,['Sigla','Ruolo','Indicazione'],Object.entries(SQUAD_ROLES).map(([id,role])=>[squadName(id),role,id==='BB1'?'Corazzate migliori / di punta':id==='CA1'?'Incrociatori affidabili e DD operativi':id==='CL1'?'Scorta alternativa da mantenere operativa':id==='BB2'?'Seconda linea di corazzate':id==='BB3'?'Riserva corazzate':id==='CA2'?'Scorta dei rinforzi pesanti':id==='CL4'?'2 incrociatori nel nucleo; 4 caselle aggiuntive per CA/CL o DD. Fino a 6 incrociatori.':'Secondo disponibilità e strategia']));
  });
 
 }

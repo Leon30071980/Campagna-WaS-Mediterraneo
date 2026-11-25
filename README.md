@@ -1,4 +1,4 @@
-# Campagna W@S Mediterraneo — v1.73 (Nhost)
+# Campagna W@S Mediterraneo — v1.74 (Nhost)
 
 Campagna navale 1940–1943 per due fazioni: Axis (Regia Marina) e Allies (Royal Navy).
 Frontend statico GitHub Pages; dati PostgreSQL, autenticazione Nhost e API Hasura GraphQL.
@@ -14,6 +14,9 @@ Nessun Google Apps Script attivo e nessun servizio a pagamento richiesto da ques
 
 ## Struttura del repository
 Vedere [docs/REPOSITORY.md](docs/REPOSITORY.md) per la divisione common/axis/allies, l’ordine dei fogli di stile e l’inventario. Avvio da index.html, senza build.
+
+## Novità v1.74
+- Regole di estrazione riorganizzate in sei fasi: diagramma di flusso, significato dei tiri, probabilità condizionate di assenza/parziale/completa, ordine e condizioni dei rinforzi, percentuali dopo entrambi i correttivi, controlli finali e CL4. Esempi numerici e nomi delle squadre della fazione corrente. Documentazione esplicita dei casi limite; formula C indicata come attiva dopo conferma dell'utente. Nessun cambiamento al motore o al database.
 
 ## Novità v1.73
 - Regole: nuova formula C del punteggio, C = 1 + 0,5 × (C₀ − 1), con C₀ = max(1, rapporto totale + rapporto prima ondata / 30). Punteggio = danni inflitti × C / 30. Nessun tetto.

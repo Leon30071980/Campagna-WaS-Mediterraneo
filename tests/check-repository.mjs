@@ -93,7 +93,7 @@ assert(fleetCss.includes('/* v1.59 — proposta 3')&&!fleetCss.includes('--fleet
 // v1.66 — stessa geometria Axis, unico riquadro con cornice e targa originali.
 const royalHeaderSource=readFileSync(join(root,'js/allies/header.js'),'utf8');
 const royalMarkup=JSON.parse(royalHeaderSource.slice(royalHeaderSource.indexOf('= ')+2).trim().replace(/;$/,''));
-assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.73'),'fondale ridimensionato');
+assert(royalMarkup.includes('assets/allies/header/banner-v167.webp?v=1.74'),'fondale ridimensionato');
 assert(royalMarkup.includes('viewBox="0 0 1916 821"'),'stesse dimensioni Axis');
 assert(royalMarkup.includes('clip-path="url(#royal-frame-clip)"')&&royalMarkup.includes('clip-path="url(#royal-plaque-clip)"'),'cornice e targa condivise');
 assert(royalMarkup.includes('clip-path="url(#royal-clean-frame-top)"'),'rimozione residui corona Axis');
@@ -200,4 +200,10 @@ assert(mainSource.includes('2 CA/CL + 4 CA/CL o DD'));
 // v1.73 — documentazione del punteggio e attivazione esplicita lato Nhost.
 assert(mainSource.includes('Formula C (v1.73)'));
 assert(mainSource.includes('C = 1 + 0,5 × (C₀ − 1)'));
-assert(mainSource.includes('La sola pubblicazione v1.73 non modifica il calcolo del server'));
+assert(mainSource.includes('Formula C attivata su Nhost tramite lo script 025 della v1.73'));
+
+// v1.74 — guida sequenziale, probabilità condizionate e correttivi dei rinforzi.
+for(const label of ['1 · Come nasce una battaglia','2 · Come si interpreta il tiro','3 · Prima ondata: probabilità per ogni squadra','4 · Rinforzi: ordine e condizioni','5 · Rinforzi: percentuali dopo i correttivi','6 · Controlli finali e casi particolari'])assert(mainSource.includes(label),label);
+assert(mainSource.includes('percent(pct/100/3*LIGHT_WAVE_HEAVY_FACTOR)'));
+assert(mainSource.includes('squadName(id),role'));
+assert(mainSource.includes('A parità di distanza conserva la prima incontrata'));

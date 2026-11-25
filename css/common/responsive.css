@@ -455,3 +455,17 @@ body[data-side] .battle-rules-table{width:100%;border-collapse:collapse;font-siz
 body[data-side] .battle-rules-table th,body[data-side] .battle-rules-table td{padding:7px 9px;text-align:left;border-bottom:1px solid var(--line-soft);vertical-align:top;}
 body[data-side] .battle-rules-table th{color:var(--ink);background:var(--surface2);font-weight:700;}
 body[data-side] .battle-rules-table td:first-child{font-weight:700;white-space:nowrap;}
+
+/* v1.74 — guida alle estrazioni: leggibile su desktop e mobile, colori di fazione. */
+body[data-side] .battle-rules-heading{margin:18px 0 6px;font-size:14px;line-height:1.4;color:var(--ink);font-weight:700;}
+body[data-side] .battle-rules-paragraph{font-size:13px;line-height:1.6;margin:8px 0;}
+body[data-side] .battle-rules-list{font-size:13px;line-height:1.6;margin:10px 0;padding-inline-start:23px;}
+body[data-side] .battle-rules-list li+li{margin-top:7px;}
+body[data-side] .battle-rules-flow,body[data-side] .battle-rules-examples{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;margin:12px 0;}
+body[data-side] .battle-rules-step,body[data-side] .battle-rules-example{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:12px;min-width:0;font-size:12px;line-height:1.45;}
+body[data-side] .battle-rules-step p{margin:0;}
+body[data-side] .battle-rules-number{width:26px;height:26px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;font-weight:700;}
+body[data-side] .battle-rules-result{font-size:24px;line-height:1.15;font-weight:700;}
+body[data-side] .battle-rules-table th{background:var(--surface2,var(--surface));}
+body[data-side] .battle-rules-table tbody tr:nth-child(even){background:var(--surface);}
+@media(max-width:520px){body[data-side] .battle-rules-flow,body[data-side] .battle-rules-examples{grid-template-columns:1fr;}body[data-side] .battle-rules-table{min-width:440px;}}
